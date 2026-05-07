@@ -18,107 +18,131 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:11px;min-height:100vh}
 
-/* ── HEADER ── */
-.hdr{padding:24px 40px 18px;border-bottom:1px solid var(--brd);display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap;background:linear-gradient(180deg,#0a0c10,var(--bg))}
-.hdr h1{font-family:var(--fs);font-size:1.9rem;font-weight:300;letter-spacing:.02em;line-height:1}
+/* HEADER */
+.hdr{padding:20px 32px 16px;border-bottom:1px solid var(--brd);display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap;background:linear-gradient(180deg,#0a0c10,var(--bg))}
+.hdr h1{font-family:var(--fs);font-size:1.7rem;font-weight:300;letter-spacing:.02em;line-height:1}
 .hdr h1 em{color:var(--pe);font-style:italic}
-.hdr-sub{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);margin-top:5px}
-.legend{display:flex;gap:14px;align-items:center;margin-left:auto;flex-wrap:wrap}
+.hdr-sub{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin-top:4px}
+.legend{display:flex;gap:12px;align-items:center;margin-left:auto;flex-wrap:wrap}
 .leg-i{display:flex;align-items:center;gap:5px;font-size:9px;color:var(--mut)}
 .leg-d{width:6px;height:6px;border-radius:50%}
 
-/* ── UPLOAD ZONE ── */
-.upload-zone{
-  margin:32px 40px;border:2px dashed var(--brd2);border-radius:4px;
-  padding:40px;text-align:center;cursor:pointer;transition:all .2s;
-  background:var(--sur)
-}
+/* UPLOAD */
+.upload-zone{margin:28px 32px;border:2px dashed var(--brd2);border-radius:4px;padding:36px;text-align:center;cursor:pointer;transition:all .2s;background:var(--sur)}
 .upload-zone:hover,.upload-zone.drag{border-color:var(--pe);background:var(--pe-d)}
 .upload-zone input{display:none}
-.upload-icon{font-size:2.5rem;margin-bottom:12px;opacity:.5}
-.upload-title{font-family:var(--fs);font-size:1.4rem;font-weight:300;color:var(--txt);margin-bottom:8px}
-.upload-sub{font-size:10px;color:var(--mut);line-height:1.7}
-.upload-btn{
-  display:inline-block;margin-top:16px;padding:9px 24px;
-  border:1px solid var(--pe);color:var(--pe);font-size:10px;
-  letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
-  font-family:var(--fn);background:var(--pe-d);border-radius:2px;
-  transition:all .2s
-}
-.upload-btn:hover{background:rgba(200,169,110,.25)}
+.upload-icon{font-size:2.2rem;margin-bottom:10px;opacity:.5}
+.upload-title{font-family:var(--fs);font-size:1.3rem;font-weight:300;color:var(--txt);margin-bottom:8px}
+.upload-sub{font-size:10px;color:var(--mut);line-height:1.8}
+.upload-btn{display:inline-block;margin-top:14px;padding:8px 22px;border:1px solid var(--pe);color:var(--pe);font-size:10px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;font-family:var(--fn);background:var(--pe-d);border-radius:2px}
 
-/* ── STATUS ── */
-.status{
-  margin:0 40px 20px;padding:10px 16px;border-radius:2px;font-size:10px;
-  display:none;align-items:center;gap:8px
-}
+/* STATUS */
+.status{margin:0 32px 16px;padding:9px 14px;border-radius:2px;font-size:10px;display:none;align-items:center;gap:8px}
 .status.loading{display:flex;background:rgba(110,181,200,.08);border:1px solid rgba(110,181,200,.2);color:var(--jos)}
 .status.error{display:flex;background:rgba(224,86,106,.08);border:1px solid rgba(224,86,106,.2);color:var(--red)}
 .status.ok{display:flex;background:rgba(94,207,140,.08);border:1px solid rgba(94,207,140,.2);color:var(--grn)}
-.spinner{width:14px;height:14px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
+.spinner{width:13px;height:13px;border:2px solid currentColor;border-top-color:transparent;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ── CONTROLS ── */
-.ctrl{padding:14px 40px;border-bottom:1px solid var(--brd);background:var(--sur);display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:sticky;top:0;z-index:50;display:none}
-.ctrl-lbl{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
+/* CONTROLS */
+.ctrl{padding:12px 32px;border-bottom:1px solid var(--brd);background:var(--sur);display:none;align-items:center;gap:14px;flex-wrap:wrap;position:sticky;top:0;z-index:50}
+.ctrl-lbl{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
 .months{display:flex;flex-wrap:wrap;gap:4px}
-.mbtn{padding:5px 10px;font-size:9px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--brd);background:transparent;color:var(--dim);cursor:pointer;font-family:var(--fn);border-radius:2px;transition:all .15s;white-space:nowrap}
+.mbtn{padding:4px 9px;font-size:9px;letter-spacing:.07em;text-transform:uppercase;border:1px solid var(--brd);background:transparent;color:var(--dim);cursor:pointer;font-family:var(--fn);border-radius:2px;transition:all .15s;white-space:nowrap}
 .mbtn:hover{border-color:var(--brd2);color:var(--txt)}
 .mbtn.on{background:var(--pe-d);border-color:rgba(200,169,110,.4);color:var(--pe)}
 .qbtns{display:flex;gap:4px}
-.qbtn{padding:5px 10px;font-size:9px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--brd2);background:transparent;color:var(--dim);cursor:pointer;font-family:var(--fn);border-radius:2px;transition:all .15s}
+.qbtn{padding:4px 9px;font-size:9px;letter-spacing:.07em;text-transform:uppercase;border:1px solid var(--brd2);background:transparent;color:var(--dim);cursor:pointer;font-family:var(--fn);border-radius:2px;transition:all .15s}
 .qbtn:hover{color:var(--txt);background:rgba(255,255,255,.04)}
-.sel-pill{font-size:9px;padding:4px 12px;border-radius:2px;background:var(--pe-d);border:1px solid rgba(200,169,110,.3);color:var(--pe);white-space:nowrap;margin-left:auto}
-.reload-btn{padding:5px 12px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--brd2);background:transparent;color:var(--mut);cursor:pointer;font-family:var(--fn);border-radius:2px;margin-left:4px}
+.sel-pill{font-size:9px;padding:3px 10px;border-radius:2px;background:var(--pe-d);border:1px solid rgba(200,169,110,.3);color:var(--pe);white-space:nowrap;margin-left:auto}
+.reload-btn{padding:4px 10px;font-size:9px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--brd2);background:transparent;color:var(--mut);cursor:pointer;font-family:var(--fn);border-radius:2px}
 .reload-btn:hover{color:var(--txt);border-color:var(--pe)}
 
-/* ── MAIN ── */
-.main{padding:24px 40px;max-width:1400px;margin:0 auto;display:none}
-.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:18px}
-.kpi{background:var(--sur);border:1px solid var(--brd);padding:14px 16px;position:relative;overflow:hidden}
+/* MAIN */
+.main{padding:20px 32px;max-width:1600px;margin:0 auto;display:none}
+
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+.kpi{background:var(--sur);border:1px solid var(--brd);padding:12px 14px;position:relative;overflow:hidden}
 .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
 .kpi.pe::before{background:var(--pe)}.kpi.jos::before{background:var(--jos)}
 .kpi.pos::before{background:var(--grn)}.kpi.neg-r::before{background:var(--red)}
-.kpi-lbl{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin-bottom:7px}
-.kpi-val{font-family:var(--fs);font-size:1.35rem;font-weight:300;line-height:1;letter-spacing:-.01em}
+.kpi-lbl{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:6px}
+.kpi-val{font-family:var(--fs);font-size:1.2rem;font-weight:300;line-height:1}
 .kpi-val.neg{color:var(--red)}.kpi-val.pos{color:var(--grn)}
-.kpi-pct{font-size:9px;color:var(--mut);margin-top:4px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.kpi-pct{font-size:9px;color:var(--mut);margin-top:3px}
+
+/* DUAL-PANEL LAYOUT */
+/* Each company card = two columns: Real | Proyectado */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .full{grid-column:1/-1}
 .blk{background:var(--sur);border:1px solid var(--brd)}
-.blk-hdr{padding:12px 18px;border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between}
-.blk-ttl{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
-.bdg{font-size:9px;padding:3px 9px;border-radius:2px}
+.blk-hdr{padding:10px 16px;border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.blk-ttl{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.blk-hdrs-row{display:grid;gap:0;border-bottom:1px solid var(--brd2)}
+.col-hdr{font-size:8px;letter-spacing:.12em;text-transform:uppercase;padding:5px 10px;text-align:right;color:var(--mut)}
+.col-hdr.real{color:var(--dim)}
+.col-hdr.proy{color:var(--gold);opacity:.7}
+.col-hdr.var{color:var(--mut)}
+.bdg{font-size:9px;padding:2px 8px;border-radius:2px}
 .bdg-pe{background:var(--pe-d);color:var(--pe);border:1px solid rgba(200,169,110,.25)}
 .bdg-jos{background:var(--jos-d);color:var(--jos);border:1px solid rgba(110,181,200,.25)}
 .bdg-tot{background:rgba(240,208,128,.1);color:var(--gold);border:1px solid rgba(240,208,128,.25)}
-.r{display:grid;grid-template-columns:1fr 165px 68px;padding:9px 18px;border-bottom:1px solid rgba(35,40,64,.5);align-items:center;transition:background .1s}
-.r:hover{background:rgba(255,255,255,.015)}
-.r.sh{background:var(--sur2);padding:6px 18px}
-.r.sh .rc{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
-.r.ind{padding-left:32px}.r.ind .rc{color:var(--dim)}
+
+/* TABLE ROWS — 5 columns: concept | real $ | real % | proy $ | var % */
+.r{display:grid;border-bottom:1px solid rgba(35,40,64,.45);align-items:center;transition:background .1s}
+.r:hover{background:rgba(255,255,255,.012)}
+/* grid-template-columns defined inline per block type */
+.rc{font-size:10px;color:var(--txt);padding:7px 10px}
+.rc.dim{color:var(--dim)}
+.rv{text-align:right;font-variant-numeric:tabular-nums;font-size:10px;color:var(--txt);padding:7px 6px}
+.rv.neg{color:var(--red)}.rv.pos{color:var(--grn)}
+.rv.pe-c{color:var(--pe);font-weight:500}.rv.jos-c{color:var(--jos);font-weight:500}.rv.gold-c{color:var(--gold);font-weight:500}
+.rv.big{font-family:var(--fs);font-size:1.2rem;font-weight:300}
+.rv.proy{color:var(--mut)}
+.rv.var-pos{color:var(--grn)}.rv.var-neg{color:var(--red)}.rv.var-neu{color:var(--mut)}
+.rv.pct{font-size:9px;color:var(--mut);padding:7px 8px 7px 2px}
+
+/* Row types */
+.r.sh{background:var(--sur2)}
+.r.sh .rc{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);padding:5px 10px}
+.r.sh .rv{font-size:8px;color:var(--mut);padding:5px 4px}
+.r.ind .rc{color:var(--dim);padding-left:22px}
 .r.sub-t{border-top:1px solid var(--brd);border-bottom:2px solid var(--brd2)}
 .r.tot{border-top:2px solid var(--brd2);background:rgba(255,255,255,.02)}
-.r.gt{border-top:2px solid var(--pe);padding:13px 18px}
-.r.gt-jos{border-top:2px solid var(--jos);padding:13px 18px}
-.r.gt-cons{border-top:2px solid var(--gold);padding:13px 18px}
-.r.gt-fin{border-top:3px solid var(--gold);padding:16px 18px;background:rgba(240,208,128,.04)}
-.rc{font-size:11px;color:var(--txt)}.rc.dim{color:var(--dim)}
-.rv{text-align:right;font-variant-numeric:tabular-nums;font-size:11px;color:var(--txt)}
-.rv.neg{color:var(--red)}.rv.pos{color:var(--grn)}
-.rv.pe-c{color:var(--pe);font-weight:500}.rv.jos-c{color:var(--jos);font-weight:500}
-.rv.gold-c{color:var(--gold);font-weight:500}
-.rv.big{font-family:var(--fs);font-size:1.35rem;font-weight:300}
-.rp{text-align:right;font-size:10px;color:var(--mut)}
-.gap{height:12px;background:var(--bg);border-left:1px solid var(--brd);border-right:1px solid var(--brd)}
+.r.gt{border-top:2px solid var(--pe);background:rgba(200,169,110,.04)}
+.r.gt .rc{font-family:var(--fs);font-size:.95rem;font-weight:300;letter-spacing:.01em;padding:10px 10px}
+.r.gt-jos{border-top:2px solid var(--jos);background:rgba(110,181,200,.04)}
+.r.gt-jos .rc{font-family:var(--fs);font-size:.95rem;font-weight:300;letter-spacing:.01em;padding:10px 10px}
+.r.gt-cons{border-top:2px solid var(--gold);background:rgba(240,208,128,.04)}
+.r.gt-cons .rc{font-family:var(--fs);font-size:.95rem;font-weight:300;letter-spacing:.01em;padding:10px 10px}
+.r.gt-fin{border-top:3px solid var(--gold);background:rgba(240,208,128,.05)}
+.r.gt-fin .rc{font-family:var(--fs);font-size:1.05rem;font-weight:300;letter-spacing:.01em;padding:12px 10px}
+.gap{height:10px;background:var(--bg);border-left:1px solid var(--brd);border-right:1px solid var(--brd)}
 
-@media(max-width:900px){
-  .grid2{grid-template-columns:1fr}.full{grid-column:1}
-  .kpis{grid-template-columns:repeat(2,1fr)}
-  .hdr,.ctrl,.main,.upload-zone,.status{padding-left:16px;padding-right:16px}
-  .upload-zone{margin-left:16px;margin-right:16px}
-  .status{margin-left:16px;margin-right:16px}
-}
+/* Expandable */
+.r.expandable{cursor:pointer}
+.r.expandable:hover{background:rgba(255,255,255,.022)}
+.toggle-icon{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:2px;border:1px solid var(--brd2);color:var(--mut);font-size:8px;margin-right:5px;transition:all .2s;flex-shrink:0;font-style:normal}
+.r.open .toggle-icon{background:var(--pe-d);border-color:rgba(200,169,110,.35);color:var(--pe);transform:rotate(90deg)}
+.r.open-jos .toggle-icon{background:var(--jos-d);border-color:rgba(110,181,200,.35);color:var(--jos);transform:rotate(90deg)}
+.r.open-gold .toggle-icon{background:rgba(240,208,128,.1);border-color:rgba(240,208,128,.3);color:var(--gold);transform:rotate(90deg)}
+.detail-rows{overflow:hidden;max-height:0;transition:max-height .3s ease}
+.detail-rows.visible{max-height:2000px}
+.r.detail{background:rgba(0,0,0,.12)}
+.r.detail .rc{color:var(--mut);font-size:9px;padding-left:28px}
+.r.detail .rv{font-size:9px;color:var(--dim)}
+.r.detail .rv.proy{color:var(--mut);opacity:.7}
+.r.detail:hover{background:rgba(255,255,255,.01)}
+
+/* Variance pill */
+.vpill{display:inline-block;padding:1px 5px;border-radius:2px;font-size:9px}
+.vpill.pos{background:rgba(94,207,140,.12);color:var(--grn)}
+.vpill.neg{background:rgba(224,86,106,.12);color:var(--red)}
+.vpill.neu{color:var(--mut)}
+
+@media(max-width:1100px){.grid2{grid-template-columns:1fr}.full{grid-column:1}.kpis{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.kpis{grid-template-columns:repeat(2,1fr)}.hdr,.ctrl,.main,.upload-zone,.status{padding-left:14px;padding-right:14px}}
 </style>
 </head>
 <body>
@@ -126,39 +150,43 @@ body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:11px;
 <div class="hdr">
   <div>
     <h1>Estado de <em>Resultados</em></h1>
-    <p class="hdr-sub">Consolidado PE + JOS · Cargá tu Excel para generar el reporte</p>
+    <p class="hdr-sub">Consolidado PE + JOS · Real vs Proyectado</p>
   </div>
   <div class="legend">
     <div class="leg-i"><div class="leg-d" style="background:var(--pe)"></div>Planeta Empanada</div>
     <div class="leg-i"><div class="leg-d" style="background:var(--jos)"></div>Joselito</div>
     <div class="leg-i"><div class="leg-d" style="background:var(--gold)"></div>Consolidado</div>
+    <div class="leg-i" style="margin-left:8px;padding-left:8px;border-left:1px solid var(--brd)">
+      <span style="font-size:9px;color:var(--dim)">Real</span>
+      <span style="font-size:9px;color:var(--mut);margin:0 6px">/</span>
+      <span style="font-size:9px;color:var(--gold);opacity:.8">Proyectado</span>
+      <span style="font-size:9px;color:var(--mut);margin:0 6px">/</span>
+      <span class="vpill pos" style="font-size:8px">▲ Desvío</span>
+    </div>
   </div>
 </div>
 
-<!-- UPLOAD ZONE -->
 <div class="upload-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
   <input type="file" id="file-input" accept=".xlsx" onchange="handleFile(this.files[0])">
   <div class="upload-icon">📊</div>
   <div class="upload-title">Arrastrá tu Excel acá</div>
   <div class="upload-sub">
     o hacé clic para seleccionar el archivo<br>
-    <span style="color:var(--dim)">Formato: <strong style="color:var(--txt)">Nueva_base_para_ER_consolidado_PE_y_JOS.xlsx</strong></span><br>
-    <span style="color:var(--mut)">El archivo se procesa localmente en tu navegador · nunca se sube a ningún servidor</span>
+    <span style="color:var(--dim)">Requiere: <strong style="color:var(--txt)">Balances PE · Balances JOS · Clasificacion PE · Clasificacion JOS · ER proyectado PE · ER proyectado JOS</strong></span><br>
+    <span style="color:var(--mut)">El archivo se procesa localmente · nunca se sube a ningún servidor</span>
   </div>
   <div class="upload-btn">Seleccionar archivo</div>
 </div>
 
-<!-- STATUS -->
 <div class="status" id="status">
   <div class="spinner" id="status-spinner"></div>
   <span id="status-text"></span>
 </div>
 
-<!-- CONTROLS -->
 <div class="ctrl" id="ctrl">
   <span class="ctrl-lbl">Períodos</span>
   <div class="months" id="pills"></div>
-  <div style="width:1px;height:18px;background:var(--brd)"></div>
+  <div style="width:1px;height:16px;background:var(--brd)"></div>
   <div class="qbtns">
     <button class="qbtn" onclick="selAll()">Todos</button>
     <button class="qbtn" onclick="selNone()">Ninguno</button>
@@ -168,346 +196,356 @@ body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:11px;
     <button class="qbtn" onclick="selLast(3)">Últ. 3</button>
   </div>
   <div class="sel-pill" id="sel-info">—</div>
-  <button class="reload-btn" onclick="resetApp()" title="Cargar otro archivo">↩ Cambiar Excel</button>
+  <button class="reload-btn" onclick="resetApp()">↩ Cambiar Excel</button>
 </div>
 
-<!-- DASHBOARD -->
 <div class="main" id="main">
   <div class="kpis" id="kpis"></div>
   <div class="grid2" id="grid"></div>
 </div>
 
 <script>
-// ══════════════════════════════════════════════════
-// GROUPINGS (validated against management report)
-// ══════════════════════════════════════════════════
-const PE_PROD  = new Set(['Costo MP  (3)','Costo MO  (2)','Costo MO  I (2)','Costo CF (4)','Costo CF VE (4)','Costo VE (3)']);
-const PE_COML  = new Set(['Costos Locales (5)','Costos Logisticos  (6)','Costos Marketing y Publicidad  (7)','Costos Impositivos','Indemnizaciones']);
-const JOS_PROD = new Set(['Costo MP  (3)','Costo MO  (2)','Costo CF  (4)']);
-const JOS_COML = new Set(['Costos Locales (5)','Costos Logisticos  (6)','Costos Marketing y Publicidad  (7)','Comisiones Agentes','Costos Impositivos','RRHH']);
-const A_COM  = new Set(['Comercial']);
-const A_ADM  = new Set(['Administracion']);
-const A_RH   = new Set(['RRHH']);
-const A_CAL  = new Set(['calidad']);
-const A_HON  = new Set(['Honorarios externos']);
-const A_ADM8 = new Set(['Costos de Administracion  (8)']);
-const A_IND  = new Set(['Indemnizaciones']);
-const INT_S  = new Set(['Intereses Creditos','Intereses Planes','Otros ingresos/ egresos financieros']);
-const ING_F  = new Set(['Ingresos Financieros']);
-const INT_JOS= new Set(['Intereses Creditos','Intereses Planes']);
+// ── Groupings ──────────────────────────────────────────────────────
+const PE_PROD   = ['Costo MP  (3)','Costo MO  (2)','Costo MO  I (2)','Costo CF (4)','Costo CF VE (4)','Costo VE (3)'];
+const PE_COML   = ['Costos Locales (5)','Costos Logisticos  (6)','Costos Marketing y Publicidad  (7)','Costos Impositivos','Indemnizaciones'];
+const JOS_PROD  = ['Costo MP  (3)','Costo MO  (2)','Costo CF  (4)'];
+const JOS_COML  = ['Costos Locales (5)','Costos Logisticos  (6)','Costos Marketing y Publicidad  (7)','Comisiones Agentes','Costos Impositivos','RRHH'];
+const PE_VENTAS = ['Ventas Franquicias','Ventas Locales','Ventas Supermercados','Ventas Tiendas y Comercios'];
+const JOS_VENTAS= ['Ventas Agentes','Ventas Mostrador','Ventas Planeta','Ventas Grupos','Ventas Tiendas y Comercios'];
+const ADMIN_LINES=[
+  ['Comercial',       ['Comercial'],['Comercial']],
+  ['Administración',  ['Administracion'],['Administracion']],
+  ['RRHH',            ['RRHH'],[]],
+  ['Calidad',         ['calidad'],[]],
+  ['Honorarios externos',['Honorarios externos','Costos de Administracion  (8)'],['Honorarios externos']],
+  ['Funcionamiento',  ['Indemnizaciones'],[]]
+];
+const INT_S  = ['Intereses Creditos','Intereses Planes','Otros ingresos/ egresos financieros'];
+const INT_JOS= ['Intereses Creditos','Intereses Planes'];
+const ING_F  = ['Ingresos Financieros'];
+// Projected groupings (slightly different account names)
+const PE_PROD_P  = ['Costo MP  (3)','Costo MO  (2)','Costo CF  (4)'];
+const PE_COML_P  = ['Costos Locales (5)','Costos Logisticos  (6)','Costos Marketing y Publicidad  (7)','Costos Impositivos'];
+const JOS_PROD_P = ['Costo MP  (3)','Costo MO  (2)','Costo CF  (4)'];
+const JOS_COML_P = ['Costos Locales (5)','Costos Logisticos  (6)','Costos Marketing y Publicidad  (7)','Comisiones Agentes','Costos Impositivos'];
 
-// ══════════════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════════════
-let RAW = null;
-let sel = new Set();
-const MN = ['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-const pLbl = p => MN[p%100]+"'"+String(Math.floor(p/100)).slice(2);
+const LABELS={'Costo MP  (3)':'Mat. Prima','Costo MO  (2)':'MO Directa','Costo MO  I (2)':'MO Indirecta','Costo CF (4)':'Costos Fijos','Costo CF VE (4)':'CF Ventas Esp.','Costo VE (3)':'Var. Especiales','Costo CF  (4)':'Costos Fijos','Costos Locales (5)':'Costos Locales','Costos Logisticos  (6)':'Logística','Costos Marketing y Publicidad  (7)':'Marketing','Costos Impositivos':'Impositivos','Indemnizaciones':'Indemnizaciones','Comisiones Agentes':'Comisiones','RRHH':'RRHH','Comercial':'Comercial','Administracion':'Administración','calidad':'Calidad','Honorarios externos':'Honorarios ext.','Costos de Administracion  (8)':'Adm. (8)','Intereses Creditos':'Int. Créditos','Intereses Planes':'Int. Planes','Otros ingresos/ egresos financieros':'Otros Fin.','Ingresos Financieros':'Ing. Financieros','Ventas Franquicias':'Franquicias','Ventas Locales':'Locales','Ventas Supermercados':'Supermercados','Ventas Tiendas y Comercios':'Tiendas y Com.','Ventas Agentes':'Agentes','Ventas Mostrador':'Mostrador','Ventas Planeta':'Planeta','Ventas Grupos':'Grupos'};
+const lbl=k=>LABELS[k]||k;
 
-// ══════════════════════════════════════════════════
-// DRAG & DROP
-// ══════════════════════════════════════════════════
-const dz = document.getElementById('drop-zone');
-dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag'); });
-dz.addEventListener('dragleave', () => dz.classList.remove('drag'));
-dz.addEventListener('drop', e => {
-  e.preventDefault(); dz.classList.remove('drag');
-  const f = e.dataTransfer.files[0];
-  if (f) handleFile(f);
-});
+// ── State ──────────────────────────────────────────────────────────
+let RAW=null, PROY=null, PE_P=[], JOS_P=[], ALL_P=[], sel=new Set();
+const MN=['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+const pLbl=p=>MN[p%100]+"'"+String(Math.floor(p/100)).slice(2);
 
-// ══════════════════════════════════════════════════
-// FILE PARSING
-// ══════════════════════════════════════════════════
-function handleFile(file) {
-  if (!file || !file.name.endsWith('.xlsx')) {
-    showStatus('error', '⚠ El archivo debe ser .xlsx');
-    return;
-  }
-  showStatus('loading', `Procesando ${file.name}…`);
+// ── Drag & drop ────────────────────────────────────────────────────
+const dz=document.getElementById('drop-zone');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag');});
+dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');const f=e.dataTransfer.files[0];if(f)handleFile(f);});
 
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const wb = XLSX.read(e.target.result, { type: 'array', cellDates: false });
-      RAW = parseWorkbook(wb);
-      if (!RAW.pe.length || !RAW.jos.length) throw new Error('No se encontraron datos en las hojas esperadas');
-      showStatus('ok', `✓ ${file.name} — ${[...new Set(RAW.pe.map(d=>d.Periodo))].length} períodos PE, ${[...new Set(RAW.jos.map(d=>d.Periodo))].length} períodos JOS`);
-      setTimeout(() => document.getElementById('status').style.display = 'none', 3000);
+// ── File ───────────────────────────────────────────────────────────
+function handleFile(file){
+  if(!file||!file.name.endsWith('.xlsx')){showStatus('error','⚠ Debe ser .xlsx');return;}
+  showStatus('loading','Procesando '+file.name+'…');
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const wb=XLSX.read(e.target.result,{type:'array',cellDates:false});
+      RAW=parseBalances(wb);
+      PROY=parseProjected(wb);
+      const nPE=[...new Set(RAW.pe.map(d=>d.Periodo))].length;
+      const nJOS=[...new Set(RAW.jos.map(d=>d.Periodo))].length;
+      if(!nPE&&!nJOS)throw new Error('No se encontraron datos. Verificá los nombres de las hojas.');
+      showStatus('ok','✓ '+file.name+' — '+nPE+' períodos PE, '+nJOS+' períodos JOS');
+      setTimeout(()=>document.getElementById('status').style.display='none',3000);
       initDashboard();
-    } catch(err) {
-      showStatus('error', '❌ Error: ' + err.message);
-      console.error(err);
-    }
+    }catch(err){showStatus('error','❌ '+err.message);console.error(err);}
   };
   reader.readAsArrayBuffer(file);
 }
 
-function parseWorkbook(wb) {
-  // Parse clasificaciones
-  const clpe  = parseClasificacion(wb, 'Clasificacion PE');
-  const cljos = parseClasificacion(wb, 'Clasificacion JOS');
-
-  // Parse balances
-  const pe  = parseBalance(wb, 'Balances PE',  clpe,  2, 9);   // header row 2, VarPeriodo col 7 (0-idx)
-  const jos = parseBalance(wb, 'Balances JOS', cljos, 3, 7);   // header row 3
-
-  return { pe, jos };
+// ── Parse balances ─────────────────────────────────────────────────
+function parseBalances(wb){
+  const clpe=parseClasif(wb,'Clasificacion PE');
+  const cljos=parseClasif(wb,'Clasificacion JOS');
+  return{pe:parseBalance(wb,'Balances PE',clpe,2),jos:parseBalance(wb,'Balances JOS',cljos,3)};
 }
-
-function parseClasificacion(wb, sheetName) {
-  const ws = wb.Sheets[sheetName];
-  if (!ws) throw new Error(`Hoja no encontrada: ${sheetName}`);
-  const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: null });
-  const map = new Map();
-  for (let i = 1; i < rows.length; i++) {
-    const r = rows[i];
-    if (!r[0]) continue;
-    map.set(Number(r[0]), { Nivel0: r[2], Nivel1: r[3], Nivel2: r[4] });
-  }
+function parseClasif(wb,sn){
+  const ws=wb.Sheets[sn];if(!ws)throw new Error('Hoja no encontrada: '+sn);
+  const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:null});
+  const map=new Map();
+  for(let i=1;i<rows.length;i++){const r=rows[i];if(!r||r[0]==null)continue;const n=Number(r[0]);if(!n)continue;map.set(n,{Nivel0:r[2],Nivel1:r[3]});}
   return map;
 }
-
-function parseBalance(wb, sheetName, clMap, headerRow, varPeriodoCol) {
-  const ws = wb.Sheets[sheetName];
-  if (!ws) throw new Error(`Hoja no encontrada: ${sheetName}`);
-  const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: null });
-
-  // Aggregate: Periodo + Nivel1 → sum of VarPeriodo
-  const aggMap = new Map(); // key: "periodo|nivel0|nivel1"
-
-  for (let i = headerRow; i < rows.length; i++) {
-    const r = rows[i];
-    const periodo = r[0];
-    if (!periodo || typeof periodo !== 'number') continue;
-    const nroCuenta = Number(r[1]);
-    const varPeriodo = Number(r[varPeriodoCol]) || 0;
-    if (!varPeriodo) continue;
-
-    const cl = clMap.get(nroCuenta);
-    if (!cl || !cl.Nivel0 || !cl.Nivel1) continue;
-    if (!['R+','R-'].includes(cl.Nivel0)) continue;
-
-    const key = `${Math.round(periodo)}|${cl.Nivel0}|${cl.Nivel1}`;
-    aggMap.set(key, (aggMap.get(key) || 0) + varPeriodo);
+function parseBalance(wb,sn,clMap,start){
+  const ws=wb.Sheets[sn];if(!ws)throw new Error('Hoja no encontrada: '+sn);
+  const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:null});
+  const agg=new Map();
+  for(let i=start;i<rows.length;i++){
+    const r=rows[i];if(!r||r[0]==null)continue;
+    const p=Number(r[0]);if(!p||p<200000||p>999999)continue;
+    const n=Number(r[1]),v=Number(r[7])||0;if(!v)continue;
+    const cl=clMap.get(n);if(!cl||!cl.Nivel0||!cl.Nivel1)continue;
+    if(cl.Nivel0!=='R+'&&cl.Nivel0!=='R-')continue;
+    const k=p+'|'+cl.Nivel0+'|'+cl.Nivel1;agg.set(k,(agg.get(k)||0)+v);
   }
+  return[...agg.entries()].map(([k,vp])=>{const p=k.split('|');return{Periodo:Number(p[0]),Nivel0:p[1],Nivel1:p[2],vp:Math.round(vp*100)/100};});
+}
+// Parse projected sheets
+function parseProjected(wb){
+  const parseProy=(sn)=>{
+    const ws=wb.Sheets[sn];if(!ws)return[];
+    const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:null});
+    const out=[];
+    for(let i=1;i<rows.length;i++){
+      const r=rows[i];if(!r||r[0]==null)continue;
+      const p=Number(r[0]),c=r[1],v=Number(r[2])||0;
+      if(!p||!c||p<200000||p>999999)continue;
+      out.push({Periodo:p,Concepto:String(c).trim(),Importe:Math.round(v*100)/100});
+    }
+    return out;
+  };
+  return{pe:parseProy('ER proyectado PE'),jos:parseProy('ER proyectado JOS')};
+}
 
-  return [...aggMap.entries()].map(([k, vp]) => {
-    const [p, n0, n1] = k.split('|');
-    return { Periodo: Number(p), Nivel0: n0, Nivel1: n1, vp: Math.round(vp * 100) / 100 };
+// ── Compute ────────────────────────────────────────────────────────
+function sm(df,ps,n0,fn){return df.filter(d=>ps.includes(d.Periodo)&&d.Nivel0===n0&&fn(d.Nivel1)).reduce((a,d)=>a+d.vp,0);}
+function gc(df,ps,arr){const s=new Set(arr);return -sm(df,ps,'R-',n=>s.has(n));}
+function vc(df,ps){return sm(df,ps,'R+',n=>n.startsWith('Ventas'));}
+function vi(df,ps,arr){const s=new Set(arr);return sm(df,ps,'R+',n=>s.has(n));}
+function gcD(df,ps,arr){const s=new Set(arr),o={};df.filter(d=>ps.includes(d.Periodo)&&d.Nivel0==='R-'&&s.has(d.Nivel1)).forEach(d=>o[d.Nivel1]=(o[d.Nivel1]||0)+d.vp);const r={};Object.entries(o).forEach(([k,v])=>r[k]=Math.round(-v*100)/100);return r;}
+function vcD(df,ps,arr){const s=new Set(arr),o={};df.filter(d=>ps.includes(d.Periodo)&&d.Nivel0==='R+'&&s.has(d.Nivel1)).forEach(d=>o[d.Nivel1]=(o[d.Nivel1]||0)+d.vp);const r={};Object.entries(o).forEach(([k,v])=>r[k]=Math.round(v*100)/100);return r;}
+// Projected helpers
+function spv(arr,ps,arr2){const s=new Set(arr2);return arr.filter(d=>ps.includes(d.Periodo)&&s.has(d.Concepto)).reduce((a,d)=>a+d.Importe,0);}
+function spvFn(arr,ps,fn){return arr.filter(d=>ps.includes(d.Periodo)&&fn(d.Concepto)).reduce((a,d)=>a+d.Importe,0);}
+function spvD(arr,ps,arr2){const s=new Set(arr2),o={};arr.filter(d=>ps.includes(d.Periodo)&&s.has(d.Concepto)).forEach(d=>o[d.Concepto]=(o[d.Concepto]||0)+d.Importe);return o;}
+function spvDFn(arr,ps,fn){const o={};arr.filter(d=>ps.includes(d.Periodo)&&fn(d.Concepto)).forEach(d=>o[d.Concepto]=(o[d.Concepto]||0)+d.Importe);return o;}
+
+function compute(periods){
+  const pp=periods.filter(p=>PE_P.includes(p));
+  const jp=periods.filter(p=>JOS_P.includes(p));
+  // Real
+  const pe_v=vc(RAW.pe,pp),pe_p=gc(RAW.pe,pp,PE_PROD),pe_c=gc(RAW.pe,pp,PE_COML);
+  const pe_rb=pe_v-pe_p,pe_rop=pe_rb-pe_c;
+  const jos_v=vc(RAW.jos,jp),jos_p=gc(RAW.jos,jp,JOS_PROD),jos_c=gc(RAW.jos,jp,JOS_COML);
+  const jos_rb=jos_v-jos_p,jos_rop=jos_rb-jos_c;
+  const rop=pe_rop+jos_rop;
+  let adm_tot=0;
+  const adm_lines=ADMIN_LINES.map(([name,peCols,josCols])=>{
+    const v=gc(RAW.pe,pp,peCols)+gc(RAW.jos,jp,josCols);adm_tot+=v;
+    const det={...gcD(RAW.pe,pp,peCols)};
+    josCols.forEach(c=>{const v2=gc(RAW.jos,jp,[c]);if(v2)det['JOS:'+c]=(det['JOS:'+c]||0)+v2;});
+    return{name,v,det};
   });
-}
-
-// ══════════════════════════════════════════════════
-// COMPUTE
-// ══════════════════════════════════════════════════
-function sm(df, ps, n0, fn) {
-  return df.filter(d => ps.includes(d.Periodo) && d.Nivel0 === n0 && fn(d.Nivel1))
-           .reduce((a, d) => a + d.vp, 0);
-}
-function gc(df, ps, st) { return -sm(df, ps, 'R-', n => st.has(n)); }
-function vc(df, ps)     { return  sm(df, ps, 'R+', n => n.startsWith('Ventas')); }
-function vi(df, ps, st) { return  sm(df, ps, 'R+', n => st.has(n)); }
-
-function compute(periods) {
-  const pp = periods.filter(p => PE_P.includes(p));
-  const jp = periods.filter(p => JOS_P.includes(p));
-
-  const pe_v = vc(RAW.pe,pp), pe_p = gc(RAW.pe,pp,PE_PROD), pe_c = gc(RAW.pe,pp,PE_COML);
-  const pe_rb = pe_v-pe_p, pe_rop = pe_rb-pe_c;
-
-  const jos_v = vc(RAW.jos,jp), jos_p = gc(RAW.jos,jp,JOS_PROD), jos_c = gc(RAW.jos,jp,JOS_COML);
-  const jos_rb = jos_v-jos_p, jos_rop = jos_rb-jos_c;
-
-  const rop = pe_rop + jos_rop;
-
-  const adm_com = gc(RAW.pe,pp,A_COM);
-  const adm_adm = gc(RAW.pe,pp,A_ADM);
-  const adm_rh  = gc(RAW.pe,pp,A_RH);
-  const adm_cal = gc(RAW.pe,pp,A_CAL);
-  const adm_hon = gc(RAW.pe,pp,A_HON) + gc(RAW.jos,jp,A_HON) + gc(RAW.pe,pp,A_ADM8);
-  const adm_fun = gc(RAW.pe,pp,A_IND);
-  const adm_tot = adm_com+adm_adm+adm_rh+adm_cal+adm_hon+adm_fun;
-
-  const res_ai  = rop - adm_tot;
-  const int_eg  = gc(RAW.pe,pp,INT_S) + gc(RAW.jos,jp,INT_JOS);
-  const ing_fi  = vi(RAW.pe,pp,ING_F);
-  const res_fin = res_ai - (int_eg - ing_fi);
-
-  return {
-    pe:  { v:pe_v,  p:pe_p,  rb:pe_rb,  c:pe_c,  rop:pe_rop  },
-    jos: { v:jos_v, p:jos_p, rb:jos_rb, c:jos_c, rop:jos_rop },
-    co:  { rop, adm_com,adm_adm,adm_rh,adm_cal,adm_hon,adm_fun,adm_tot,
-           res_ai, int_eg, ing_fi, res_fin }
+  const res_ai=rop-adm_tot,int_eg=gc(RAW.pe,pp,INT_S)+gc(RAW.jos,jp,INT_JOS);
+  const ing_fi=vi(RAW.pe,pp,ING_F),res_fin=res_ai-(int_eg-ing_fi);
+  // Projected
+  const peProy=PROY?PROY.pe:[], josProy=PROY?PROY.jos:[];
+  const pp_v=spvFn(peProy,pp,c=>c.startsWith('Ventas'));
+  const pp_p=-spv(peProy,pp,PE_PROD_P);
+  const pp_c=-spv(peProy,pp,PE_COML_P);
+  const pp_rop=pp_v-pp_p-pp_c;
+  const jp_v=spvFn(josProy,jp,c=>c.startsWith('Ventas'));
+  const jp_p=-spv(josProy,jp,JOS_PROD_P);
+  const jp_c=-spv(josProy,jp,JOS_COML_P);
+  const jp_rop=jp_v-jp_p-jp_c;
+  const p_rop=pp_rop+jp_rop;
+  // No admin/interest breakdown in projected → use total
+  const p_adm_tot=-spv([...peProy,...josProy],pp.concat(jp),['Comercial','Administracion','RRHH','calidad','Honorarios externos','Costos de Administracion  (8)']);
+  const p_res_ai=p_rop-p_adm_tot;
+  const p_int=-spv([...peProy,...josProy],pp.concat(jp),['Intereses Creditos','Intereses Planes']);
+  const p_res_fin=p_res_ai-p_int;
+  return{
+    pe:{v:pe_v,p:pe_p,rb:pe_rb,c:pe_c,rop:pe_rop,
+        vD:vcD(RAW.pe,pp,PE_VENTAS),pD:gcD(RAW.pe,pp,PE_PROD),cD:gcD(RAW.pe,pp,PE_COML),
+        pv:{v:pp_v,p:pp_p,c:pp_c,rop:pp_rop,
+            vD:spvDFn(peProy,pp,c=>c.startsWith('Ventas')),
+            pD:spvD(peProy,pp,PE_PROD_P),cD:spvD(peProy,pp,PE_COML_P)}},
+    jos:{v:jos_v,p:jos_p,rb:jos_rb,c:jos_c,rop:jos_rop,
+         vD:vcD(RAW.jos,jp,JOS_VENTAS),pD:gcD(RAW.jos,jp,JOS_PROD),cD:gcD(RAW.jos,jp,JOS_COML),
+         pv:{v:jp_v,p:jp_p,c:jp_c,rop:jp_rop,
+             vD:spvDFn(josProy,jp,c=>c.startsWith('Ventas')),
+             pD:spvD(josProy,jp,JOS_PROD_P),cD:spvD(josProy,jp,JOS_COML_P)}},
+    co:{rop,adm_lines,adm_tot,res_ai,int_eg,ing_fi,res_fin,
+        pv:{rop:p_rop,adm_tot:p_adm_tot,res_ai:p_res_ai,int:p_int,res_fin:p_res_fin},
+        intD:{...gcD(RAW.pe,pp,INT_S),...gcD(RAW.jos,jp,INT_JOS)},
+        ingfiD:vcD(RAW.pe,pp,ING_F)}
   };
 }
 
-// ══════════════════════════════════════════════════
-// FORMAT
-// ══════════════════════════════════════════════════
-function fmt(v) {
-  if (v == null) return '—';
-  const a = Math.round(Math.abs(v)), sg = v < 0 ? '-' : '';
-  return sg + a.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-}
-function pct(v, b) {
-  if (!b) return '—';
-  return (v/b*100).toFixed(1).replace('.',',') + '%';
-}
-function cv(v) { return v >= 0 ? '' : 'neg'; }
-
-// ══════════════════════════════════════════════════
-// RENDER HELPERS
-// ══════════════════════════════════════════════════
-function sh(lbl, col='') {
-  return `<div class="r sh"><div class="rc"${col?` style="color:${col}"`:''} >${lbl}</div><div class="rv" style="font-size:9px;color:var(--mut)">Importe ($)</div><div class="rp">% Ventas</div></div>`;
-}
-function rw(lbl, val, base) {
-  return `<div class="r"><div class="rc">${lbl}</div><div class="rv ${cv(val)}">${fmt(val)}</div><div class="rp">${pct(val,base)}</div></div>`;
-}
-function rc(lbl, cost, base) {
-  return `<div class="r ind"><div class="rc dim">— ${lbl}</div><div class="rv neg">-${fmt(cost)}</div><div class="rp">${pct(-cost,base)}</div></div>`;
-}
-function rr(lbl, val, base, cc, cls, big=false) {
-  return `<div class="r ${cls}"><div class="rc" style="font-family:var(--fs);font-size:${big?'1.2rem':'1rem'};font-weight:300;letter-spacing:.02em">${lbl}</div><div class="rv${big?' big':''} ${val>=0?'pos':'neg'} ${cc}">${fmt(val)}</div><div class="rp">${pct(val,base)}</div></div>`;
+// ── Format ─────────────────────────────────────────────────────────
+function fmt(v){if(v==null||isNaN(v))return'—';const a=Math.round(Math.abs(v)),sg=v<0?'-':'';return sg+a.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
+function pct(v,b){if(!b||isNaN(v)||isNaN(b))return'—';return(v/b*100).toFixed(1).replace('.',',')+'\%';}
+function cv(v){return v>=0?'':'neg';}
+function varPct(real,proy){
+  if(!proy||isNaN(real)||isNaN(proy))return{cls:'neu',txt:'—'};
+  const p=((real-proy)/Math.abs(proy)*100);
+  const txt=(p>=0?'+':'')+p.toFixed(1).replace('.',',')+'\%';
+  return{cls:p>=0?'pos':'neg',txt};
 }
 
-// ══════════════════════════════════════════════════
-// RENDER DASHBOARD
-// ══════════════════════════════════════════════════
-function renderAll(d) {
-  const vt = d.pe.v + d.jos.v;
+// ── Column template ────────────────────────────────────────────────
+// 5 cols: concept | real$ | real% | proy$ | var%
+const COLS='grid-template-columns:1fr 115px 52px 115px 60px';
+const COLS_SH='grid-template-columns:1fr 115px 52px 115px 60px';
 
+// ── Render helpers ─────────────────────────────────────────────────
+let _uid=0;
+function sh(label,col=''){
+  return`<div class="r sh" style="${COLS_SH}"><div class="rc"${col?` style="color:${col}"`:''} >${label}</div><div class="rv" style="font-size:8px;color:var(--dim)">Real $</div><div class="rv pct" style="font-size:8px">%Vta</div><div class="rv proy" style="font-size:8px;color:var(--gold);opacity:.7">Proyect. $</div><div class="rv" style="font-size:8px;color:var(--mut)">Desvío</div></div>`;
+}
+function rr(lbl,val,pval,base,cc,cls,big=false){
+  const vp=varPct(val,pval);
+  return`<div class="r ${cls}" style="${COLS}"><div class="rc">${lbl}</div><div class="rv${big?' big':''} ${val>=0?'pos':'neg'} ${cc}">${fmt(val)}</div><div class="rv pct">${pct(val,base)}</div><div class="rv proy">${pval!=null?fmt(pval):'—'}</div><div class="rv var-${vp.cls}"><span class="vpill ${vp.cls}">${vp.txt}</span></div></div>`;
+}
+function rowCost(lbl,cost,pCost,base,indent=true,openCls='open'){
+  // will be wrapped inside makeExp
+  const vp=varPct(cost,pCost);
+  return`<div class="rc dim" style="padding-left:${indent?22:10}px"><em class="toggle-icon">▶</em>${lbl}</div><div class="rv neg">-${fmt(cost)}</div><div class="rv pct">${pct(-cost,base)}</div><div class="rv proy">${pCost!=null?fmt(pCost):'—'}</div><div class="rv var-${vp.cls}"><span class="vpill ${vp.cls}">${vp.txt}</span></div>`;
+}
+function rowIncome(lbl,val,pval,base,indent=true,openCls='open'){
+  const vp=varPct(val,pval);
+  return`<div class="rc dim" style="padding-left:${indent?22:10}px"><em class="toggle-icon">▶</em>${lbl}</div><div class="rv ${cv(val)}">${fmt(val)}</div><div class="rv pct">${pct(val,base)}</div><div class="rv proy">${pval!=null?fmt(pval):'—'}</div><div class="rv var-${vp.cls}"><span class="vpill ${vp.cls}">${vp.txt}</span></div>`;
+}
+function makeExpCost(rowCls,innerHtml,detailReal,detailProy,base,openCls='open'){
+  const id='ex'+(++_uid);
+  // build detail rows
+  const allKeys=[...new Set([...Object.keys(detailReal),...Object.keys(detailProy||{})])];
+  const detRows=allKeys
+    .filter(k=>detailReal[k]||detailProy?.[k])
+    .sort((a,b)=>(detailReal[b]||0)-(detailReal[a]||0))
+    .map(k=>{
+      const r=detailReal[k]||0, p=(detailProy||{})[k]||0;
+      const name=k.startsWith('JOS:')?'JOS — '+lbl(k.slice(4)):lbl(k);
+      const vp=p?varPct(r,p):{cls:'neu',txt:'—'};
+      return`<div class="r detail" style="${COLS}"><div class="rc" style="padding-left:28px">${name}</div><div class="rv neg" style="font-size:9px">-${fmt(r)}</div><div class="rv pct" style="font-size:9px">${pct(r,base)}</div><div class="rv proy" style="font-size:9px">${p?fmt(p):'—'}</div><div class="rv var-${vp.cls}" style="font-size:9px"><span class="vpill ${vp.cls}" style="font-size:8px">${vp.txt}</span></div></div>`;
+    }).join('');
+  return`<div class="r ind expandable ${rowCls}" style="${COLS}" onclick="td('${id}','${openCls}')">${innerHtml}</div><div class="detail-rows" id="${id}">${detRows}</div>`;
+}
+function makeExpIncome(rowCls,innerHtml,detailReal,detailProy,base,openCls='open'){
+  const id='ex'+(++_uid);
+  const allKeys=[...new Set([...Object.keys(detailReal),...Object.keys(detailProy||{})])];
+  const detRows=allKeys
+    .filter(k=>detailReal[k]||detailProy?.[k])
+    .sort((a,b)=>(detailReal[b]||0)-(detailReal[a]||0))
+    .map(k=>{
+      const r=detailReal[k]||0, p=(detailProy||{})[k]||0;
+      const vp=p?varPct(r,p):{cls:'neu',txt:'—'};
+      return`<div class="r detail" style="${COLS}"><div class="rc" style="padding-left:28px">${lbl(k)}</div><div class="rv" style="font-size:9px">${fmt(r)}</div><div class="rv pct" style="font-size:9px">${pct(r,base)}</div><div class="rv proy" style="font-size:9px">${p?fmt(p):'—'}</div><div class="rv var-${vp.cls}" style="font-size:9px"><span class="vpill ${vp.cls}" style="font-size:8px">${vp.txt}</span></div></div>`;
+    }).join('');
+  return`<div class="r ind expandable ${rowCls}" style="${COLS}" onclick="td('${id}','${openCls}')">${innerHtml}</div><div class="detail-rows" id="${id}">${detRows}</div>`;
+}
+function subtotalRow(lbl,val,base){
+  return`<div class="r sub-t" style="${COLS}"><div class="rc">${lbl}</div><div class="rv ${cv(val)}">${fmt(val)}</div><div class="rv pct">${pct(val,base)}</div><div class="rv proy">—</div><div class="rv">—</div></div>`;
+}
+function simpleRow(lbl,val,pval,base,rowCls=''){
+  const vp=varPct(val,pval);
+  return`<div class="r ${rowCls}" style="${COLS}"><div class="rc">${lbl}</div><div class="rv ${cv(val)}">${fmt(val)}</div><div class="rv pct">${pct(val,base)}</div><div class="rv proy">${pval!=null?fmt(pval):'—'}</div><div class="rv var-${vp.cls}"><span class="vpill ${vp.cls}">${vp.txt}</span></div></div>`;
+}
+function td(id,oc){const el=document.getElementById(id),row=el.previousElementSibling,open=el.classList.contains('visible');el.classList.toggle('visible',!open);row.classList.toggle(oc,!open);}
+
+// ── Render dashboard ───────────────────────────────────────────────
+function renderAll(d){
+  const vt=d.pe.v+d.jos.v;
+  const pvt=(d.pe.pv.v||0)+(d.jos.pv.v||0);
   // KPIs
-  const ks = [
-    {l:'Ventas PE',        v:d.pe.v,       c:'pe'},
-    {l:'Ventas JOS',       v:d.jos.v,      c:'jos'},
-    {l:'Res. Op. Total',   v:d.co.rop,     c:d.co.rop>=0?'pos':'neg-r'},
-    {l:'Res. s/Intereses', v:d.co.res_ai,  c:d.co.res_ai>=0?'pos':'neg-r'},
-    {l:'Resultado Neto',   v:d.co.res_fin, c:d.co.res_fin>=0?'pos':'neg-r'},
-  ];
-  document.getElementById('kpis').innerHTML = ks.map(k => `
-    <div class="kpi ${k.c}">
-      <div class="kpi-lbl">${k.l}</div>
-      <div class="kpi-val ${k.v<0?'neg':k.c==='pos'?'pos':''}">${fmt(k.v)}</div>
-      <div class="kpi-pct">${pct(k.v, k.c==='pe'?d.pe.v : k.c==='jos'?d.jos.v : vt)} s/ventas</div>
-    </div>`).join('');
-
-  // P&L grid
-  let g = '';
-
-  // PE
-  g += `<div class="blk"><div class="blk-hdr"><span class="blk-ttl">Planeta Empanada</span><span class="bdg bdg-pe">PE</span></div>`;
-  g += sh('INGRESOS Y COSTOS OPERATIVOS');
-  g += rw('Ventas Totales (1)', d.pe.v, d.pe.v);
-  g += rc('Costo de Producción', d.pe.p, d.pe.v);
-  g += `<div class="r sub-t"><div class="rc">Resultado Bruto</div><div class="rv ${cv(d.pe.rb)}">${fmt(d.pe.rb)}</div><div class="rp">${pct(d.pe.rb,d.pe.v)}</div></div>`;
-  g += rc('Costo de Comercialización', d.pe.c, d.pe.v);
-  g += rr('Resultado Operativo PLANETA', d.pe.rop, d.pe.v, 'pe-c', 'gt');
-  g += '</div>';
-
-  // JOS
-  g += `<div class="blk"><div class="blk-hdr"><span class="blk-ttl">Joselito</span><span class="bdg bdg-jos">JOS</span></div>`;
-  g += sh('INGRESOS Y COSTOS OPERATIVOS');
-  g += rw('Ventas Totales (1)', d.jos.v, d.jos.v);
-  g += rc('Costo de Producción', d.jos.p, d.jos.v);
-  g += `<div class="r sub-t"><div class="rc">Resultado Bruto</div><div class="rv ${cv(d.jos.rb)}">${fmt(d.jos.rb)}</div><div class="rp">${pct(d.jos.rb,d.jos.v)}</div></div>`;
-  g += rc('Costo de Comercialización', d.jos.c, d.jos.v);
-  g += rr('Resultado Operativo JOSELITO', d.jos.rop, d.jos.v, 'jos-c', 'gt-jos');
-  g += '</div>';
-
-  // Consolidado
-  g += `<div class="blk full"><div class="blk-hdr"><span class="blk-ttl">Consolidado PE + JOS</span><span class="bdg bdg-tot">CONSOLIDADO</span></div>`;
-  g += sh('RESULTADO OPERATIVO CONSOLIDADO', 'var(--gold)');
-  g += `<div class="r"><div class="rc">Resultado Operativo Planeta Empanada</div><div class="rv ${cv(d.pe.rop)} pe-c">${fmt(d.pe.rop)}</div><div class="rp">${pct(d.pe.rop,vt)}</div></div>`;
-  g += `<div class="r"><div class="rc">Resultado Operativo Joselito</div><div class="rv ${cv(d.jos.rop)} jos-c">${fmt(d.jos.rop)}</div><div class="rp">${pct(d.jos.rop,vt)}</div></div>`;
-  g += `<div class="r tot"><div class="rc" style="font-weight:500">Resultado Operativo PE + JOS</div><div class="rv ${cv(d.co.rop)} gold-c">${fmt(d.co.rop)}</div><div class="rp">${pct(d.co.rop,vt)}</div></div>`;
-  g += '<div class="gap"></div>';
-
-  g += sh('COSTOS DE ADMINISTRACIÓN (8)', 'var(--red)');
-  [['Comercial',d.co.adm_com],['Administración',d.co.adm_adm],['RRHH',d.co.adm_rh],
-   ['Calidad',d.co.adm_cal],['Honorarios externos',d.co.adm_hon],['Funcionamiento',d.co.adm_fun]
-  ].forEach(([n,v2]) => {
-    if (v2 > 0) g += `<div class="r ind"><div class="rc dim">${n}</div><div class="rv neg">-${fmt(v2)}</div><div class="rp">${pct(-v2,vt)}</div></div>`;
-  });
-  g += `<div class="r tot"><div class="rc" style="color:var(--red)">Total Costos Administración (8)</div><div class="rv neg">-${fmt(d.co.adm_tot)}</div><div class="rp">${pct(-d.co.adm_tot,vt)}</div></div>`;
-  g += '<div class="gap"></div>';
-  g += rr('Resultado Neto antes de Intereses', d.co.res_ai, vt, 'gold-c', 'gt-cons');
-  g += '<div class="gap"></div>';
-
-  g += sh('INTERESES E INGRESOS FINANCIEROS');
-  g += `<div class="r ind"><div class="rc dim">— Intereses financieros (créditos + planes)</div><div class="rv neg">-${fmt(d.co.int_eg)}</div><div class="rp">${pct(-d.co.int_eg,vt)}</div></div>`;
-  g += `<div class="r ind"><div class="rc dim">+ Ingresos financieros</div><div class="rv pos">+${fmt(d.co.ing_fi)}</div><div class="rp">${pct(d.co.ing_fi,vt)}</div></div>`;
-  g += '<div class="gap"></div>';
-  g += rr('RESULTADO NETO', d.co.res_fin, vt, 'gold-c', 'gt-fin', true);
-  g += `<div style="padding:6px 18px;font-size:9px;color:var(--mut);border-top:1px solid var(--brd)">% calculado sobre Ventas Totales consolidadas (${fmt(vt)})</div>`;
-  g += '</div>';
-
-  document.getElementById('grid').innerHTML = g;
-}
-
-// ══════════════════════════════════════════════════
-// PERIOD SELECTION
-// ══════════════════════════════════════════════════
-let PE_P = [], JOS_P = [], ALL_P = [];
-
-function buildPills() {
-  document.getElementById('pills').innerHTML = ALL_P.map(p => {
-    const hPE=PE_P.includes(p), hJOS=JOS_P.includes(p);
-    return `<button class="mbtn" data-p="${p}" onclick="toggle(${p})" title="PE:${hPE?'✓':'✗'} JOS:${hJOS?'✓':'✗'}">${pLbl(p)}</button>`;
+  const ks=[{l:'Ventas PE',v:d.pe.v,p:d.pe.pv.v,c:'pe'},{l:'Ventas JOS',v:d.jos.v,p:d.jos.pv.v,c:'jos'},
+            {l:'Res. Op. Total',v:d.co.rop,p:d.co.pv.rop,c:d.co.rop>=0?'pos':'neg-r'},
+            {l:'Res. s/Intereses',v:d.co.res_ai,p:d.co.pv.res_ai,c:d.co.res_ai>=0?'pos':'neg-r'},
+            {l:'Resultado Neto',v:d.co.res_fin,p:d.co.pv.res_fin,c:d.co.res_fin>=0?'pos':'neg-r'}];
+  document.getElementById('kpis').innerHTML=ks.map(k=>{
+    const vp=varPct(k.v,k.p);
+    return`<div class="kpi ${k.c}"><div class="kpi-lbl">${k.l}</div><div class="kpi-val ${k.v<0?'neg':k.c==='pos'?'pos':''}">${fmt(k.v)}</div><div class="kpi-pct">${pct(k.v,k.c==='pe'?d.pe.v:k.c==='jos'?d.jos.v:vt)} s/vta · <span class="vpill ${vp.cls}" style="font-size:8px">${vp.txt} vs proy.</span></div></div>`;
   }).join('');
+
+  let g='';
+
+  // ── PE ──
+  g+=`<div class="blk"><div class="blk-hdr"><span class="blk-ttl">Planeta Empanada</span><span class="bdg bdg-pe">PE</span></div>`;
+  g+=sh('INGRESOS Y COSTOS OPERATIVOS');
+  g+=makeExpIncome('',rowIncome('Ventas Totales (1)',d.pe.v,d.pe.pv.v,d.pe.v),d.pe.vD,d.pe.pv.vD,d.pe.v,'open');
+  g+=makeExpCost('',rowCost('Costo de Producción',d.pe.p,d.pe.pv.p,d.pe.v),d.pe.pD,d.pe.pv.pD,d.pe.v,'open');
+  g+=subtotalRow('Resultado Bruto',d.pe.rb,d.pe.v);
+  g+=makeExpCost('',rowCost('Costo de Comercialización',d.pe.c,d.pe.pv.c,d.pe.v),d.pe.cD,d.pe.pv.cD,d.pe.v,'open');
+  g+=rr('Resultado Operativo PLANETA',d.pe.rop,d.pe.pv.rop,d.pe.v,'pe-c','gt');
+  g+='</div>';
+
+  // ── JOS ──
+  g+=`<div class="blk"><div class="blk-hdr"><span class="blk-ttl">Joselito</span><span class="bdg bdg-jos">JOS</span></div>`;
+  g+=sh('INGRESOS Y COSTOS OPERATIVOS');
+  g+=makeExpIncome('',rowIncome('Ventas Totales (1)',d.jos.v,d.jos.pv.v,d.jos.v),d.jos.vD,d.jos.pv.vD,d.jos.v,'open-jos');
+  g+=makeExpCost('',rowCost('Costo de Producción',d.jos.p,d.jos.pv.p,d.jos.v),d.jos.pD,d.jos.pv.pD,d.jos.v,'open-jos');
+  g+=subtotalRow('Resultado Bruto',d.jos.rb,d.jos.v);
+  g+=makeExpCost('',rowCost('Costo de Comercialización',d.jos.c,d.jos.pv.c,d.jos.v),d.jos.cD,d.jos.pv.cD,d.jos.v,'open-jos');
+  g+=rr('Resultado Operativo JOSELITO',d.jos.rop,d.jos.pv.rop,d.jos.v,'jos-c','gt-jos');
+  g+='</div>';
+
+  // ── Consolidado ──
+  g+=`<div class="blk full"><div class="blk-hdr"><span class="blk-ttl">Consolidado PE + JOS</span><span class="bdg bdg-tot">CONSOLIDADO</span></div>`;
+  g+=sh('RESULTADO OPERATIVO CONSOLIDADO','var(--gold)');
+  g+=simpleRow('Resultado Operativo Planeta Empanada',d.pe.rop,d.pe.pv.rop,vt,'');
+  g+=simpleRow('Resultado Operativo Joselito',d.jos.rop,d.jos.pv.rop,vt,'');
+  g+=`<div class="r tot" style="${COLS}"><div class="rc" style="font-weight:500">Resultado Operativo PE + JOS</div><div class="rv ${cv(d.co.rop)} gold-c">${fmt(d.co.rop)}</div><div class="rv pct">${pct(d.co.rop,vt)}</div><div class="rv proy">${fmt(d.co.pv.rop)}</div><div class="rv var-${varPct(d.co.rop,d.co.pv.rop).cls}"><span class="vpill ${varPct(d.co.rop,d.co.pv.rop).cls}">${varPct(d.co.rop,d.co.pv.rop).txt}</span></div></div>`;
+  g+='<div class="gap"></div>';
+
+  g+=sh('COSTOS DE ADMINISTRACIÓN (8)','var(--red)');
+  d.co.adm_lines.forEach(({name,v,det})=>{
+    if(v>0) g+=makeExpCost('',`<div class="rc dim" style="padding-left:22px"><em class="toggle-icon">▶</em>${name}</div><div class="rv neg">-${fmt(v)}</div><div class="rv pct">${pct(-v,vt)}</div><div class="rv proy">—</div><div class="rv">—</div>`,det,{},vt,'open-gold');
+  });
+  const pa=d.co.pv.adm_tot;
+  const va=varPct(d.co.adm_tot,pa);
+  g+=`<div class="r tot" style="${COLS}"><div class="rc" style="color:var(--red)">Total Costos Adm. (8)</div><div class="rv neg">-${fmt(d.co.adm_tot)}</div><div class="rv pct">${pct(-d.co.adm_tot,vt)}</div><div class="rv proy">${fmt(pa)}</div><div class="rv var-${va.cls}"><span class="vpill ${va.cls}">${va.txt}</span></div></div>`;
+  g+='<div class="gap"></div>';
+  g+=rr('Resultado Neto antes de Intereses',d.co.res_ai,d.co.pv.res_ai,vt,'gold-c','gt-cons');
+  g+='<div class="gap"></div>';
+  g+=sh('INTERESES E INGRESOS FINANCIEROS');
+  g+=makeExpCost('',`<div class="rc dim" style="padding-left:22px"><em class="toggle-icon">▶</em>Intereses financieros</div><div class="rv neg">-${fmt(d.co.int_eg)}</div><div class="rv pct">${pct(-d.co.int_eg,vt)}</div><div class="rv proy">${fmt(d.co.pv.int)}</div><div class="rv var-${varPct(d.co.int_eg,d.co.pv.int).cls}"><span class="vpill ${varPct(d.co.int_eg,d.co.pv.int).cls}">${varPct(d.co.int_eg,d.co.pv.int).txt}</span></div>`,d.co.intD,{},vt,'open-gold');
+  g+=makeExpIncome('',`<div class="rc dim" style="padding-left:22px"><em class="toggle-icon">▶</em>+ Ingresos financieros</div><div class="rv pos">+${fmt(d.co.ing_fi)}</div><div class="rv pct">${pct(d.co.ing_fi,vt)}</div><div class="rv proy">—</div><div class="rv">—</div>`,d.co.ingfiD,{},vt,'open-gold');
+  g+='<div class="gap"></div>';
+  g+=rr('RESULTADO NETO',d.co.res_fin,d.co.pv.res_fin,vt,'gold-c','gt-fin',true);
+  g+=`<div style="padding:5px 10px;font-size:8px;color:var(--mut);border-top:1px solid var(--brd);display:grid;${COLS}"><span>▶ Hacé clic para expandir · % sobre ventas consolidadas</span><span></span><span></span><span style="color:var(--gold);opacity:.6;text-align:right">Proyectado</span><span style="text-align:right">Desvío</span></div>`;
+  g+='</div>';
+
+  document.getElementById('grid').innerHTML=g;
 }
 
-function toggle(p) { sel.has(p) ? sel.delete(p) : sel.add(p); refresh(); }
-function selAll()  { ALL_P.forEach(p => sel.add(p)); refresh(); }
-function selNone() { sel.clear(); refresh(); }
-function selYear(y){ ALL_P.filter(p => Math.floor(p/100)===y).forEach(p => sel.add(p)); refresh(); }
-function selLast(n){ sel.clear(); ALL_P.slice(-n).forEach(p => sel.add(p)); refresh(); }
-
-function refresh() {
-  document.querySelectorAll('.mbtn').forEach(b => b.classList.toggle('on', sel.has(+b.dataset.p)));
-  const ps = [...sel].sort();
-  const info = document.getElementById('sel-info');
-  if (!ps.length) { info.textContent = 'Sin selección'; document.getElementById('grid').innerHTML=''; document.getElementById('kpis').innerHTML=''; return; }
-  const lbs = ps.map(pLbl);
-  info.textContent = lbs.length===1 ? lbs[0] : `${lbs[0]} → ${lbs[lbs.length-1]} (${lbs.length} meses)`;
+// ── Pills ──────────────────────────────────────────────────────────
+function buildPills(){document.getElementById('pills').innerHTML=ALL_P.map(p=>{const hPE=PE_P.includes(p),hJOS=JOS_P.includes(p);return`<button class="mbtn" data-p="${p}" onclick="toggle(${p})" title="PE:${hPE?'✓':'✗'} JOS:${hJOS?'✓':'✗'}">${pLbl(p)}</button>`;}).join('');}
+function toggle(p){sel.has(p)?sel.delete(p):sel.add(p);refresh();}
+function selAll(){ALL_P.forEach(p=>sel.add(p));refresh();}
+function selNone(){sel.clear();refresh();}
+function selYear(y){ALL_P.filter(p=>Math.floor(p/100)===y).forEach(p=>sel.add(p));refresh();}
+function selLast(n){sel.clear();ALL_P.slice(-n).forEach(p=>sel.add(p));refresh();}
+function refresh(){
+  document.querySelectorAll('.mbtn').forEach(b=>b.classList.toggle('on',sel.has(+b.dataset.p)));
+  const ps=[...sel].sort(),info=document.getElementById('sel-info');
+  if(!ps.length){info.textContent='Sin selección';document.getElementById('grid').innerHTML='';document.getElementById('kpis').innerHTML='';return;}
+  const lbs=ps.map(pLbl);
+  info.textContent=lbs.length===1?lbs[0]:`${lbs[0]} → ${lbs[lbs.length-1]} (${lbs.length} meses)`;
   renderAll(compute(ps));
 }
-
-// ══════════════════════════════════════════════════
-// INIT / RESET
-// ══════════════════════════════════════════════════
-function initDashboard() {
-  PE_P  = [...new Set(RAW.pe.map(d=>d.Periodo))].sort();
-  JOS_P = [...new Set(RAW.jos.map(d=>d.Periodo))].sort();
-  ALL_P = [...new Set([...PE_P,...JOS_P])].sort();
-
-  sel.clear();
-  sel.add(ALL_P[ALL_P.length-1]); // default: último período
-
-  document.getElementById('drop-zone').style.display = 'none';
-  document.getElementById('ctrl').style.display = 'flex';
-  document.getElementById('main').style.display = 'block';
-
-  buildPills();
-  refresh();
+function initDashboard(){
+  PE_P=[...new Set(RAW.pe.map(d=>d.Periodo))].sort();
+  JOS_P=[...new Set(RAW.jos.map(d=>d.Periodo))].sort();
+  ALL_P=[...new Set([...PE_P,...JOS_P])].sort();
+  sel.clear();sel.add(ALL_P[ALL_P.length-1]);
+  document.getElementById('drop-zone').style.display='none';
+  document.getElementById('ctrl').style.display='flex';
+  document.getElementById('main').style.display='block';
+  buildPills();refresh();
 }
-
-function resetApp() {
-  RAW = null; sel.clear();
-  document.getElementById('drop-zone').style.display = 'block';
-  document.getElementById('ctrl').style.display = 'none';
-  document.getElementById('main').style.display = 'none';
-  document.getElementById('status').style.display = 'none';
-  document.getElementById('file-input').value = '';
+function resetApp(){
+  RAW=null;PROY=null;sel.clear();
+  document.getElementById('drop-zone').style.display='block';
+  document.getElementById('ctrl').style.display='none';
+  document.getElementById('main').style.display='none';
+  document.getElementById('status').style.display='none';
+  document.getElementById('file-input').value='';
 }
-
-function showStatus(type, msg) {
-  const el = document.getElementById('status');
-  el.className = 'status ' + type;
-  el.style.display = 'flex';
-  document.getElementById('status-spinner').style.display = type==='loading' ? 'block' : 'none';
-  document.getElementById('status-text').textContent = msg;
+function showStatus(type,msg){
+  const el=document.getElementById('status');el.className='status '+type;el.style.display='flex';
+  document.getElementById('status-spinner').style.display=type==='loading'?'block':'none';
+  document.getElementById('status-text').textContent=msg;
 }
 </script>
 </body>
