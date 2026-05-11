@@ -270,15 +270,25 @@ function parseClasif(wb,sn){
 function parseBalance(wb,sn,clMap,start){
   const ws=wb.Sheets[sn];if(!ws)throw new Error('Hoja no encontrada: '+sn);
   const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:null});
+  // Detectar columnas por nombre buscando la fila de header
+  let colVP=7, colVA=-1;
+  for(let i=0;i<Math.min(start,rows.length);i++){
+    const r=rows[i];if(!r)continue;
+    for(let j=0;j<r.length;j++){
+      const h=String(r[j]||'').toLowerCase().trim();
+      if(h==='variacion periodo'||h==='variación periodo')colVP=j;
+      if(h.includes('ajustada'))colVA=j;
+    }
+  }
   const agg=new Map();
   for(let i=start;i<rows.length;i++){
     const r=rows[i];if(!r||r[0]==null)continue;
     const p=Number(r[0]);if(!p||p<200000||p>999999)continue;
     const n=Number(r[1]);
-    // Usar VarAjustada (col 8) si existe, si no VarPeriodo (col 7)
-    const v=(r[8]!=null&&r[8]!==''&&!isNaN(Number(r[8]))&&Number(r[8])!==0)
-             ? Number(r[8])
-             : (Number(r[7])||0);
+    // Usar VarAjustada si existe y es distinta de 0, si no VarPeriodo
+    const va=colVA>=0?Number(r[colVA]):NaN;
+    const vp=Number(r[colVP])||0;
+    const v=(colVA>=0&&!isNaN(va)&&va!==0)?va:vp;
     if(!v)continue;
     const cl=clMap.get(n);if(!cl||!cl.Nivel0||!cl.Nivel1)continue;
     if(cl.Nivel0!=='R+'&&cl.Nivel0!=='R-')continue;
@@ -305,10 +315,14 @@ function parseProjected(wb){
 
 // ── Compute helpers ────────────────────────────────────────────────
 function sm(df,ps,n0,fn){return df.filter(d=>ps.includes(d.Periodo)&&d.Nivel0===n0&&fn(d.Nivel1)).reduce((a,d)=>a+d.vp,0);}
+// gcNet: suma TODOS los Nivel0 (R+ y R-) para cuentas con Nivel1 mixto (ej: sobrantes/faltantes de caja)
+function smNet(df,ps,fn){return df.filter(d=>ps.includes(d.Periodo)&&fn(d.Nivel1)).reduce((a,d)=>a+d.vp,0);}
 // R+ income
 function gv(df,ps,arr){const s=new Set(arr);return sm(df,ps,'R+',n=>s.has(n));}
 // R- costs (returned as positive)
 function gc(df,ps,arr){const s=new Set(arr);return -sm(df,ps,'R-',n=>s.has(n));}
+// gcMix: neto de todas las cuentas (R+ y R-) con esos Nivel1s — para grupos con signo mixto
+function gcMix(df,ps,arr){const s=new Set(arr);return -smNet(df,ps,n=>s.has(n));}
 // R- detail by Nivel1
 function gcD(df,ps,arr){
   const s=new Set(arr),o={};
@@ -334,7 +348,9 @@ function compute(periods){
   // Real PE
   const pe_v=gv(RAW.pe,pp,PE_VENTAS), pe_oi=gv(RAW.pe,pp,PE_OTROS);
   const pe_ing=pe_v+pe_oi;
-  const pe_p=gc(RAW.pe,pp,PE_PROD), pe_c=gc(RAW.pe,pp,PE_COML);
+  // Costos Locales PE: gcMix para incluir sobrantes R+ como reducción de costo
+  const pe_p=gc(RAW.pe,pp,PE_PROD);
+  const pe_c=gcMix(RAW.pe,pp,['Costos Locales (5)'])+gc(RAW.pe,pp,['Costos Logisticos (6)','Costos Marketing y Publicidad (7)','Costos Impositivos','Indemnizaciones']);
   const pe_rb=pe_ing-pe_p, pe_rop=pe_rb-pe_c;
   // R+ FCI (neteable con R- FCI en sección intereses)
   const pe_fci_pos=gv(RAW.pe,pp,PE_ING_FI_R_PLUS);
@@ -368,7 +384,12 @@ function compute(periods){
   const pe_vD=gvD(RAW.pe,pp,PE_VENTAS);
   const pe_oiD=gvD(RAW.pe,pp,PE_OTROS);
   const pe_pD=gcD(RAW.pe,pp,PE_PROD);
-  const pe_cD=gcD(RAW.pe,pp,PE_COML);
+  // Detail de Costos Locales incluye R+ (sobrantes) con signo invertido
+  const pe_cl5_detail={};
+  RAW.pe.filter(d=>pp.includes(d.Periodo)&&d.Nivel1==='Costos Locales (5)').forEach(d=>{pe_cl5_detail['Costos Locales (5)']=(pe_cl5_detail['Costos Locales (5)']||0)+d.vp;});
+  if(pe_cl5_detail['Costos Locales (5)'])pe_cl5_detail['Costos Locales (5)']=-pe_cl5_detail['Costos Locales (5)'];
+  const pe_cD_rest=gcD(RAW.pe,pp,['Costos Logisticos (6)','Costos Marketing y Publicidad (7)','Costos Impositivos','Indemnizaciones']);
+  const pe_cD={...pe_cl5_detail,...pe_cD_rest};
   const pe_intD=gcD(RAW.pe,pp,PE_INT);
   const jos_vD=gvD(RAW.jos,jp,JOS_VENTAS);
   const jos_oiD=gvD(RAW.jos,jp,JOS_OTROS);
