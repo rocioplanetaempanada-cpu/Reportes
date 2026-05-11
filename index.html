@@ -172,7 +172,7 @@ const PE_OTROS   = ['Otros Ingresos'];
 const PE_PROD    = ['Costo MP Indiada (3)','Costo MO Indiada (2)','Costo CF Indiada (4)',
                     'Costo MP Vegetales (3)','Costo MO Vegetales (2)','Costo CF Vegetales (4)'];
 const PE_COML    = ['Costos Locales (5)','Costos Logisticos (6)',
-                    'Costos Marketing y Publicidad (7)','Costos Impositivos','Indemnizaciones'];
+                    'Costos Marketing y Publicidad (7)','Costos Impositivos'];
 const JOS_VENTAS = ['Ventas Agentes','Ventas Mostrador'];
 const JOS_OTROS  = ['Otros Ingresos'];
 const JOS_PROD   = ['Costo MP  (3)','Costo MO  (2)','Costo CF  (4)'];
@@ -254,7 +254,7 @@ function handleFile(file){
 function parseBalances(wb){
   const clpe=parseClasif(wb,'Clasificacion PE');
   const cljos=parseClasif(wb,'Clasificacion JOS');
-  return{pe:parseBalance(wb,'Balances PE',clpe,2),jos:parseBalance(wb,'Balances JOS',cljos,3)};
+  return{pe:parseBalance(wb,'Balances PE',clpe,2),jos:parseBalance(wb,'Balances JOS',cljos,2,1)};
 }
 function parseClasif(wb,sn){
   const ws=wb.Sheets[sn];if(!ws)throw new Error('Hoja no encontrada: '+sn);
@@ -262,22 +262,24 @@ function parseClasif(wb,sn){
   const map=new Map();
   for(let i=1;i<rows.length;i++){
     const r=rows[i];if(!r||r[0]==null)continue;
-    const n=Number(r[0]);if(!n)continue;
-    map.set(n,{Nivel0:String(r[2]||'').trim(),Nivel1:String(r[3]||'').trim()});
+    const n=Number(String(r[0]||'').replace(/'/g,''));if(!n)continue;
+    map.set(n,{Nivel0:String(r[2]||'').replace(/'/g,'').trim(),Nivel1:String(r[3]||'').replace(/'/g,'').trim()});
   }
   return map;
 }
-function parseBalance(wb,sn,clMap,start){
+function parseBalance(wb,sn,clMap,start,signFix=1){
   const ws=wb.Sheets[sn];if(!ws)throw new Error('Hoja no encontrada: '+sn);
   const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:null});
-  // Detectar columnas por nombre buscando la fila de header
-  let colVP=7, colVA=-1;
+  // Detectar columnas por nombre — limpiar comillas simples que Excel agrega
+  let colVP=7, colVA=9; // defaults: VarPeriodo=7, VarAjustadaAValor=9
   for(let i=0;i<Math.min(start,rows.length);i++){
     const r=rows[i];if(!r)continue;
     for(let j=0;j<r.length;j++){
-      const h=String(r[j]||'').toLowerCase().trim();
-      if(h==='variacion periodo'||h==='variación periodo')colVP=j;
-      if(h.includes('ajustada'))colVA=j;
+      // Limpiar comillas simples y espacios que puede agregar Excel
+      const h=String(r[j]||'').replace(/'/g,'').toLowerCase().trim();
+      if(h==='variacion periodo'||h==='variacion periodo')colVP=j;
+      if(h.includes('ajustada a v'))colVA=j;
+      else if(h.includes('ajustada')&&colVA===9)colVA=j;
     }
   }
   const agg=new Map();
@@ -288,7 +290,7 @@ function parseBalance(wb,sn,clMap,start){
     // Usar VarAjustada si existe y es distinta de 0, si no VarPeriodo
     const va=colVA>=0?Number(r[colVA]):NaN;
     const vp=Number(r[colVP])||0;
-    const v=(colVA>=0&&!isNaN(va)&&va!==0)?va:vp;
+    const v=(colVA>=0&&!isNaN(va)&&va!==0)?va*signFix:vp;
     if(!v)continue;
     const cl=clMap.get(n);if(!cl||!cl.Nivel0||!cl.Nivel1)continue;
     if(cl.Nivel0!=='R+'&&cl.Nivel0!=='R-')continue;
@@ -350,7 +352,7 @@ function compute(periods){
   const pe_ing=pe_v+pe_oi;
   // Costos Locales PE: gcMix para incluir sobrantes R+ como reducción de costo
   const pe_p=gc(RAW.pe,pp,PE_PROD);
-  const pe_c=gcMix(RAW.pe,pp,['Costos Locales (5)'])+gc(RAW.pe,pp,['Costos Logisticos (6)','Costos Marketing y Publicidad (7)','Costos Impositivos','Indemnizaciones']);
+  const pe_c=gcMix(RAW.pe,pp,['Costos Locales (5)'])+gc(RAW.pe,pp,['Costos Logisticos (6)','Costos Marketing y Publicidad (7)','Costos Impositivos']);
   const pe_rb=pe_ing-pe_p, pe_rop=pe_rb-pe_c;
   // R+ FCI (neteable con R- FCI en sección intereses)
   const pe_fci_pos=gv(RAW.pe,pp,PE_ING_FI_R_PLUS);
@@ -388,7 +390,7 @@ function compute(periods){
   const pe_cl5_detail={};
   RAW.pe.filter(d=>pp.includes(d.Periodo)&&d.Nivel1==='Costos Locales (5)').forEach(d=>{pe_cl5_detail['Costos Locales (5)']=(pe_cl5_detail['Costos Locales (5)']||0)+d.vp;});
   if(pe_cl5_detail['Costos Locales (5)'])pe_cl5_detail['Costos Locales (5)']=-pe_cl5_detail['Costos Locales (5)'];
-  const pe_cD_rest=gcD(RAW.pe,pp,['Costos Logisticos (6)','Costos Marketing y Publicidad (7)','Costos Impositivos','Indemnizaciones']);
+  const pe_cD_rest=gcD(RAW.pe,pp,['Costos Logisticos (6)','Costos Marketing y Publicidad (7)','Costos Impositivos']);
   const pe_cD={...pe_cl5_detail,...pe_cD_rest};
   const pe_intD=gcD(RAW.pe,pp,PE_INT);
   const jos_vD=gvD(RAW.jos,jp,JOS_VENTAS);
@@ -408,9 +410,9 @@ function compute(periods){
   const jp_rop=jp_v-jp_p-jp_c;
   const p_rop=pp_rop+jp_rop;
   const allProy=[...peProy.filter(d=>pp.includes(d.Periodo)),...josProy.filter(d=>jp.includes(d.Periodo))];
-  const p_adm=-allProy.filter(d=>['Comercial','Administracion','RRHH','calidad','Honorarios externos'].includes(d.Concepto)).reduce((a,d)=>a+d.Importe,0);
+  const p_adm=-allProy.filter(d=>['Comercial','Administracion','RRHH','Calidad','calidad','Honorarios externos','Funcionamiento'].includes(d.Concepto)).reduce((a,d)=>a+d.Importe,0);
   const p_res_ai=p_rop-p_adm;
-  const p_int=-allProy.filter(d=>['Intereses Creditos','Intereses Planes'].includes(d.Concepto)).reduce((a,d)=>a+d.Importe,0);
+  const p_int=-allProy.filter(d=>['Intereses Creditos','Intereses Planes','Intereses Financieros','Otros ingresos/ egresos financieros'].includes(d.Concepto)).reduce((a,d)=>a+d.Importe,0);
   const p_res_fin=p_res_ai-p_int;
 
   return{
