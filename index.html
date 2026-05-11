@@ -274,7 +274,12 @@ function parseBalance(wb,sn,clMap,start){
   for(let i=start;i<rows.length;i++){
     const r=rows[i];if(!r||r[0]==null)continue;
     const p=Number(r[0]);if(!p||p<200000||p>999999)continue;
-    const n=Number(r[1]),v=Number(r[7])||0;if(!v)continue;
+    const n=Number(r[1]);
+    // Usar VarAjustada (col 8) si existe, si no VarPeriodo (col 7)
+    const v=(r[8]!=null&&r[8]!==''&&!isNaN(Number(r[8]))&&Number(r[8])!==0)
+             ? Number(r[8])
+             : (Number(r[7])||0);
+    if(!v)continue;
     const cl=clMap.get(n);if(!cl||!cl.Nivel0||!cl.Nivel1)continue;
     if(cl.Nivel0!=='R+'&&cl.Nivel0!=='R-')continue;
     const k=p+'|'+cl.Nivel0+'|'+cl.Nivel1;
