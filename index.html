@@ -180,12 +180,12 @@ const JOS_COML   = ['Costos Locales (5)','Costos Logisticos  (6)',
                     'Costos Marketing y Publicidad  (7)','Comisiones Agentes','Costos Impositivos','RRHH'];
 // Admin lines: [label, PE cols, JOS cols]
 const ADMIN_LINES = [
-  ['Comercial',          ['Comercial'],                                    ['Comercial']],
-  ['Administración',     ['Administracion'],                               ['Administracion']],
-  ['RRHH',               ['RRHH'],                                         []],
-  ['Calidad',            ['calidad'],                                      []],
-  ['Honorarios externos',['Honorarios externos','Costos de Administracion  (8)'],['Honorarios externos']],
-  ['Funcionamiento',     ['Indemnizaciones'],                              []],
+  ['Comercial',          ['Comercial'],                  ['Comercial']],
+  ['Administración',     ['Administracion'],             ['Administracion']],
+  ['RRHH',               ['RRHH'],                       []],
+  ['Calidad',            ['calidad'],                    []],
+  ['Honorarios externos',['Honorarios externos'],        ['Honorarios externos']],
+  ['Indemnizaciones',    ['Indemnizaciones'],             ['Indemnizaciones']],
 ];
 const PE_INT  = ['Intereses Creditos','Intereses Planes','Otros ingresos/ egresos financieros'];
 const JOS_INT = ['Intereses Creditos','Intereses Planes','Otros ingresos/ egresos financieros'];
@@ -370,12 +370,20 @@ function compute(periods){
 
   // Admin lines with PE+JOS detail
   let adm_tot=0;
+  // Projected data for this period selection
+  const allProy=[...peProy.filter(d=>pp.includes(d.Periodo)),...josProy.filter(d=>jp.includes(d.Periodo))];
+  // Map admin line names to projected concept names
+  const ADMIN_PROY_MAP={'Comercial':'Comercial','Administración':'Administracion','RRHH':'RRHH',
+    'Calidad':'Calidad','Honorarios externos':'Honorarios externos','Indemnizaciones':'Funcionamiento'};
   const adm_lines=ADMIN_LINES.map(([name,peCols,josCols])=>{
     const peV=gc(RAW.pe,pp,peCols);
     const josV=gc(RAW.jos,jp,josCols);
     const tot=peV+josV;
     adm_tot+=tot;
-    return{name, tot, peV, josV};
+    // Projected for this line
+    const proyConcepto=ADMIN_PROY_MAP[name]||name;
+    const proy=allProy.filter(d=>d.Concepto===proyConcepto).reduce((a,d)=>a-d.Importe,0);
+    return{name, tot, peV, josV, proy};
   });
 
   const res_ai=rop-adm_tot;
@@ -409,7 +417,7 @@ function compute(periods){
   const jp_c=-spv(josProy,jp,JOS_COML_P);
   const jp_rop=jp_v-jp_p-jp_c;
   const p_rop=pp_rop+jp_rop;
-  const allProy=[...peProy.filter(d=>pp.includes(d.Periodo)),...josProy.filter(d=>jp.includes(d.Periodo))];
+  // allProy defined earlier in compute()
   const p_adm=-allProy.filter(d=>['Comercial','Administracion','RRHH','Calidad','calidad','Honorarios externos','Funcionamiento'].includes(d.Concepto)).reduce((a,d)=>a+d.Importe,0);
   const p_res_ai=p_rop-p_adm;
   const p_int=-allProy.filter(d=>['Intereses Creditos','Intereses Planes','Intereses Financieros','Otros ingresos/ egresos financieros'].includes(d.Concepto)).reduce((a,d)=>a+d.Importe,0);
@@ -499,13 +507,14 @@ function expIncRow(rowCls,label,val,pVal,base,detailReal,detailProy,openCls){
 }
 
 // Expandable admin row — two sub-lines: PE and JOS
-function expAdminRow(name,tot,peV,josV,base){
+function expAdminRow(name,tot,peV,josV,base,proy){
   const id='ex'+(++_uid);
+  const vp=varPct(tot,proy);
   const detRows=[
     peV>0?`<div class="r detail-adm" style="${COLS}"><div class="rc" style="padding-left:32px;color:var(--pe)">▸ Planeta Empanada</div><div class="rv neg" style="color:var(--pe);opacity:.8;font-size:9px">-${fmt(peV)}</div><div class="rp" style="font-size:9px">${pct(peV,base)}</div><div class="rv proy">—</div><div class="rv">—</div></div>`:'',
     josV>0?`<div class="r detail-adm" style="${COLS}"><div class="rc" style="padding-left:32px;color:var(--jos)">▸ Joselito</div><div class="rv neg" style="color:var(--jos);opacity:.8;font-size:9px">-${fmt(josV)}</div><div class="rp" style="font-size:9px">${pct(josV,base)}</div><div class="rv proy">—</div><div class="rv">—</div></div>`:'',
   ].join('');
-  return`<div class="r ind expandable" style="${COLS}" onclick="td('${id}','open-gold')"><div class="rc dim"><em class="toggle-icon">▶</em>${name}</div><div class="rv neg">-${fmt(tot)}</div><div class="rp">${pct(-tot,base)}</div><div class="rv proy">—</div><div class="rv">—</div></div><div class="detail-rows" id="${id}">${detRows}</div>`;
+  return`<div class="r ind expandable" style="${COLS}" onclick="td('${id}','open-gold')"><div class="rc dim"><em class="toggle-icon">▶</em>${name}</div><div class="rv neg">-${fmt(tot)}</div><div class="rp">${pct(-tot,base)}</div><div class="rv proy">${proy?fmt(proy):'—'}</div><div class="rv var-${vp.cls}"><span class="vpill ${vp.cls}">${vp.txt}</span></div></div><div class="detail-rows" id="${id}">${detRows}</div>`;
 }
 
 // ── Render dashboard ───────────────────────────────────────────────
@@ -559,11 +568,13 @@ function renderAll(d){
   g+='<div class="gap"></div>';
 
   g+=shRow('COSTOS DE ADMINISTRACIÓN (8)','var(--red)');
-  d.co.adm_lines.forEach(({name,tot,peV,josV})=>{
-    if(tot>0) g+=expAdminRow(name,tot,peV,josV,vt);
+  d.co.adm_lines.forEach(({name,tot,peV,josV,proy})=>{
+    if(tot>0) g+=expAdminRow(name,tot,peV,josV,vt,proy||0);
   });
-  const va=varPct(d.co.adm_tot,d.co.pv.adm_tot);
-  g+=`<div class="r tot" style="${COLS}"><div class="rc" style="color:var(--red)">Total Costos Adm. (8)</div><div class="rv neg">-${fmt(d.co.adm_tot)}</div><div class="rp">${pct(-d.co.adm_tot,vt)}</div><div class="rv proy">${fmt(d.co.pv.adm_tot)}</div><div class="rv var-${va.cls}"><span class="vpill ${va.cls}">${va.txt}</span></div></div>`;
+  // Recalculate projected admin total from individual lines
+  const p_adm_tot_lines=d.co.adm_lines.reduce((s,l)=>s+(l.proy||0),0);
+  const va=varPct(d.co.adm_tot,p_adm_tot_lines||d.co.pv.adm_tot);
+  g+=`<div class="r tot" style="${COLS}"><div class="rc" style="color:var(--red)">Total Costos Adm. (8)</div><div class="rv neg">-${fmt(d.co.adm_tot)}</div><div class="rp">${pct(-d.co.adm_tot,vt)}</div><div class="rv proy">${fmt(p_adm_tot_lines||d.co.pv.adm_tot)}</div><div class="rv var-${va.cls}"><span class="vpill ${va.cls}">${va.txt}</span></div></div>`;
   g+='<div class="gap"></div>';
   g+=resRow('Resultado Neto antes de Intereses', d.co.res_ai, d.co.pv.res_ai, vt, 'gold-c','gt-cons');
   g+='<div class="gap"></div>';
