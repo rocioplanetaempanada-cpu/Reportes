@@ -178,6 +178,9 @@ const ACCT_DETAIL = {"pe_det": [{"Periodo": 202508, "Nivel0": "R+", "Nivel1": "V
 // ── GROUPINGS (nombres actualizados v6) ────────────────────────────
 const PE_VENTAS  = ['Ventas Franquicias','Ventas Locales','Ventas Supermercados','Ventas Tiendas y Comercios'];
 const PE_OTROS   = ['Otros Ingresos'];
+const ADMIN_PROY_MAP={'Comercial':'Comercial','Administración':'Administracion','RRHH':'RRHH',
+  'Calidad':'Calidad','Honorarios externos':'Honorarios externos',
+  'Funcionamiento':'Funcionamiento','Indemnizaciones':'Indemnizaciones'};
 const PE_PROD    = ['Costo MP Indiada (3)','Costo MO Indiada (2)','Costo CF Indiada (4)',
                     'Costo MP Vegetales (3)','Costo MO Vegetales (2)','Costo CF Vegetales (4)'];
 const PE_COML    = ['Costos Locales (5)','Costos Logisticos (6)',
@@ -405,10 +408,7 @@ function compute(periods){
   let adm_tot=0;
   // Projected data for this period selection
   const allProy=[...peProy.filter(d=>pp.includes(d.Periodo)),...josProy.filter(d=>jp.includes(d.Periodo))];
-  // Map admin line names to projected concept names
-  const ADMIN_PROY_MAP={'Comercial':'Comercial','Administración':'Administracion','RRHH':'RRHH',
-    'Calidad':'Calidad','Honorarios externos':'Honorarios externos',
-    'Funcionamiento':'Funcionamiento','Indemnizaciones':'Indemnizaciones'};
+  // ADMIN_PROY_MAP defined globally below ADMIN_LINES
   const adm_lines=ADMIN_LINES.map(([name,peCols,josCols])=>{
     const peV=gc(RAW.pe,pp,peCols);
     const josV=gc(RAW.jos,jp,josCols);
