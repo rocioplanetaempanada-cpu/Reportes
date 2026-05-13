@@ -325,7 +325,7 @@ const N2_UN = {'Ventas Lamadrid':'Locales','Ventas Punta Alta':'Locales',
   'Sueldos Operacion Lamadrid':'Locales','Sueldos Operacion Zelarrayan':'Locales',
   'Sueldos Delivery Lamadrid':'Locales','Sueldos Delivery Zelarrayan':'Locales',
   'Sueldos Eventos Especiales':'Locales',
-  'Alquiler Lamdrid':'Locales','Alquiler Lamadrid':'Locales','Alquiler Zelarrayan':'Locales','Alquiler Eventos Especiales':'Locales',
+  'Alquiler Lamdrid':'Locales','Alquiler Lamadrid':'Locales','Alquiler Monte Hermoso':'Locales','Alquiler Zelarrayan':'Locales','Alquiler Eventos Especiales':'Locales',
   'Packaging Lamadrid':'Locales','Packaging Zelarrayan':'Locales','Packaging Eventos Especiales':'Locales',
   'PYA Lamadrid':'Locales','PYA Zelarrayan':'Locales','PYA Punta Alta':'Locales','PYA Monte Hermoso':'Locales',
   'Franquicias':'Franquicias',
@@ -347,7 +347,7 @@ const N2_LOC = {'Ventas Lamadrid':'Lamadrid','Ventas Monte Hermoso':'Monte Hermo
   'Sueldos Operacion Lamadrid':'Lamadrid','Sueldos Operacion Zelarrayan':'Zelarrayan',
   'Sueldos Delivery Lamadrid':'Lamadrid','Sueldos Delivery Zelarrayan':'Zelarrayan',
   'Sueldos Eventos Especiales':'Lamadrid',
-  'Alquiler Lamdrid':'Lamadrid','Alquiler Lamadrid':'Lamadrid','Alquiler Zelarrayan':'Zelarrayan','Alquiler Eventos Especiales':'Lamadrid',
+  'Alquiler Lamdrid':'Lamadrid','Alquiler Lamadrid':'Lamadrid','Alquiler Monte Hermoso':'Monte Hermoso','Alquiler Zelarrayan':'Zelarrayan','Alquiler Eventos Especiales':'Lamadrid',
   'Packaging Lamadrid':'Lamadrid','Packaging Zelarrayan':'Zelarrayan','Packaging Eventos Especiales':'Lamadrid',
   'PYA Lamadrid':'Lamadrid','PYA Zelarrayan':'Zelarrayan','PYA Punta Alta':'Punta Alta','PYA Monte Hermoso':'Monte Hermoso',
 };
@@ -357,7 +357,7 @@ const LOC_SL_LABELS= {'cv':'Costo de Ventas','alquiler':'Alquiler','sueldos':'Su
   'pya':'Pedido Ya','packaging':'Packaging','servicios':'Gs. Servicios','otros':'Administración'};
 const N2_SL = {
   'CV Lamadrid':'cv','CV Zelarrayan':'cv','CV Monte Hermoso':'cv','CV Punta Alta':'cv',
-  'Alquiler Lamdrid':'alquiler','Alquiler Lamadrid':'alquiler','Alquiler Zelarrayan':'alquiler','Alquiler Eventos Especiales':'alquiler',
+  'Alquiler Lamdrid':'alquiler','Alquiler Lamadrid':'alquiler','Alquiler Monte Hermoso':'alquiler','Alquiler Zelarrayan':'alquiler','Alquiler Eventos Especiales':'alquiler',
   'Sueldos Operacion Lamadrid':'sueldos','Sueldos Operacion Zelarrayan':'sueldos',
   'Sueldos Delivery Lamadrid':'sueldos','Sueldos Delivery Zelarrayan':'sueldos','Sueldos Eventos Especiales':'sueldos',
   'PYA Lamadrid':'pya','PYA Zelarrayan':'pya','PYA Punta Alta':'pya','PYA Monte Hermoso':'pya',
@@ -728,7 +728,9 @@ function renderUN(ps) {
 
   const res={};
   UNS.forEach(u=>res[u]={ventas:0,oi:0,prod:0,coml:0,
-    coml_locales:0,coml_logistica:0,coml_marketing:0,coml_impositivos:0});
+    coml_locales:0,coml_logistica:0,
+    coml_marketing_dir:0,coml_marketing:0,
+    coml_impositivos:0});
   pe.forEach(r=>{
     if(!ps.includes(r.p))return;
     const {n0,n1,n2,va}=r;
@@ -744,18 +746,21 @@ function renderUN(ps) {
         UNS.forEach(u=>res[u][line]+=va*pct_un[u]);
         // Track coml sub-components
         if(line==='coml'){
-          if(n1==='Costos Logisticos (6)')          UNS.forEach(u=>res[u].coml_logistica +=va*pct_un[u]);
-          else if(n1==='Costos Marketing y Publicidad (7)') UNS.forEach(u=>res[u].coml_marketing +=va*pct_un[u]);
-          else if(n1==='Costos Impositivos')         UNS.forEach(u=>res[u].coml_impositivos+=va*pct_un[u]);
-          else if(n1==='Costos Locales (5)')         UNS.forEach(u=>res[u].coml_locales   +=va*pct_un[u]);
+          if(n1==='Costos Logisticos (6)')          UNS.forEach(u=>res[u].coml_logistica   +=va*pct_un[u]);
+          else if(n1==='Costos Marketing y Publicidad (7)') UNS.forEach(u=>res[u].coml_marketing+=va*pct_un[u]);
+          else if(n1==='Costos Impositivos')         UNS.forEach(u=>res[u].coml_impositivos +=va*pct_un[u]);
+          else if(n1==='Costos Locales (5)')         UNS.forEach(u=>res[u].coml_locales     +=va*pct_un[u]);
         }
       }
     } else {
       const u=N2_UN[n2];
       if(u){
         res[u][line]+=va;
-        // coml_locales only for accounts directly assigned to Locales channel
-        if(line==='coml' && u==='Locales') res[u].coml_locales+=va;
+        if(line==='coml' && u==='Locales'){
+          // Split direct Locales costs by N1
+          if(n1==='Costos Marketing y Publicidad (7)') res[u].coml_marketing_dir+=va;
+          else res[u].coml_locales+=va;
+        }
       }
     }
   });
@@ -763,7 +768,9 @@ function renderUN(ps) {
   res._grand=grand;
 
   const tot={ventas:0,oi:0,ing:0,prod:0,rb:0,coml:0,rop:0,
-    coml_locales:0,coml_logistica:0,coml_marketing:0,coml_impositivos:0};
+    coml_locales:0,coml_logistica:0,
+    coml_marketing_dir:0,coml_marketing:0,
+    coml_impositivos:0};
   UNS.forEach(u=>Object.keys(tot).forEach(k=>{if(res[u][k]!==undefined)tot[k]+=res[u][k];}));
 
   document.getElementById('main-un').innerHTML = `
@@ -790,10 +797,11 @@ function unLines(res,tot){
   const comlExpRow=(()=>{
     const id='x'+(++_uid);
     const subItems=[
-      ['coml_locales',    'Costos Locales (5)'],
-      ['coml_logistica',  'Costos Logísticos (6)'],
-      ['coml_marketing',  'Costos Marketing y Pub. (7)'],
-      ['coml_impositivos','Costos Impositivos'],
+      ['coml_locales',      'Costos Locales (5)'],
+      ['coml_marketing_dir','Costos Marketing y Pub. (7) — directo'],
+      ['coml_logistica',    'Costos Logísticos (6) — prorrateado'],
+      ['coml_marketing',    'Costos Marketing y Pub. (7) — prorrateado'],
+      ['coml_impositivos',  'Costos Impositivos — prorrateado'],
     ];
     const subRows=subItems.map(([sk,slbl])=>{
       const svals=UNS.map(u=>res[u][sk]);
