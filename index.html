@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Gestión PE + JOS</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0d0f14;--sur:#13161e;--sur2:#1a1e2a;--brd:#232840;--brd2:#2e3450;
   --pe:#c8a96e;--pe-d:rgba(200,169,110,.12);--jos:#6eb5c8;--jos-d:rgba(110,181,200,.12);
   --grn:#5ecf8c;--red:#e0566a;--gold:#f0d080;--txt:#e8e4dc;--dim:#8b8fa8;--mut:#4a4f6a;
   --loc:#7ec8a0;--fra:var(--pe);--sup:var(--jos);--tyc:#b07ecf;
-  --fn:'DM Mono',monospace;--fs:'Cormorant Garamond',serif}
+  --fn:'Montserrat',sans-serif;--fs:'Montserrat',sans-serif;--fw-data:400;--fw-title:500}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:11px;min-height:100vh;display:flex}
+body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:12px;min-height:100vh;display:flex}
 
 /* SIDEBAR */
 .sb{width:190px;min-height:100vh;background:#0a0c10;border-right:1px solid var(--brd);
@@ -22,12 +22,12 @@ body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:11px;
 .sb-logo h2{font-family:var(--fs);font-size:1.1rem;font-weight:300;color:var(--txt)}
 .sb-logo span{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
 .nav{display:flex;align-items:center;gap:9px;padding:8px 14px;cursor:pointer;
-  font-size:10px;color:var(--dim);transition:all .15s;border-left:2px solid transparent}
+  font-size:11px;font-weight:400;color:var(--dim);transition:all .15s;border-left:2px solid transparent}
 .nav:hover{background:rgba(255,255,255,.03);color:var(--txt)}
 .nav.on{color:var(--pe);border-left-color:var(--pe);background:var(--pe-d)}
 .nav-ic{font-size:13px;width:18px;text-align:center;opacity:.8}
 .nav-sep{height:1px;background:var(--brd);margin:6px 14px}
-.nav-section{font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);padding:8px 14px 4px}
+.nav-section{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);padding:8px 14px 4px;font-weight:500}
 
 /* CONTENT */
 .cw{flex:1;min-width:0;display:flex;flex-direction:column}
@@ -35,8 +35,8 @@ body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:11px;
 
 /* HEADER */
 .hdr{padding:18px 28px 14px;border-bottom:1px solid var(--brd);display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;background:linear-gradient(180deg,#0a0c10,var(--bg));flex-shrink:0}
-.hdr h1{font-family:var(--fs);font-size:1.7rem;font-weight:300;letter-spacing:.02em;line-height:1}
-.hdr h1 em{color:var(--pe);font-style:italic}.hdr-sub{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin-top:4px}
+.hdr h1{font-family:var(--fs);font-size:15px;font-weight:600;letter-spacing:.03em;line-height:1.2;text-transform:uppercase}
+.hdr h1 em{color:var(--pe);font-style:italic}.hdr-sub{font-size:10px;letter-spacing:.10em;text-transform:uppercase;color:var(--mut);margin-top:4px}
 .legend{display:flex;gap:10px;align-items:center;margin-left:auto;flex-wrap:wrap}
 .leg{display:flex;align-items:center;gap:5px;font-size:9px;color:var(--mut)}
 .leg-d{width:6px;height:6px;border-radius:50%}
@@ -56,9 +56,9 @@ body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:11px;
 
 /* CONTROLS */
 .ctrl{padding:10px 28px;border-bottom:1px solid var(--brd);background:var(--sur);display:flex;align-items:center;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:50;flex-shrink:0}
-.ctrl-lbl{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
+.ctrl-lbl{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut);white-space:nowrap;font-weight:500}
 .pills{display:flex;flex-wrap:wrap;gap:3px}
-.pill{padding:4px 9px;font-size:9px;letter-spacing:.07em;text-transform:uppercase;border:1px solid var(--brd);background:transparent;color:var(--dim);cursor:pointer;font-family:var(--fn);border-radius:2px;transition:all .15s}
+.pill{padding:4px 9px;font-size:10px;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--brd);background:transparent;color:var(--dim);cursor:pointer;font-family:var(--fn);border-radius:2px;transition:all .15s}
 .pill:hover{border-color:var(--brd2);color:var(--txt)}
 .pill.on{background:var(--pe-d);border-color:rgba(200,169,110,.4);color:var(--pe)}
 .qbtns{display:flex;gap:3px}
@@ -68,18 +68,33 @@ body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:11px;
 
 /* MAIN */
 .main{padding:18px 28px;flex:1;overflow-y:auto}
+
+/* SPLIT SCREEN */
+.split-wrap{display:flex;flex:1;min-height:0;overflow:hidden}
+.split-panel{flex:1;min-width:0;overflow-y:auto;border-right:2px solid var(--brd)}
+.split-panel:last-child{border-right:none}
+.split-panel .main{padding:14px 18px}
+.split-ctrl{padding:8px 18px;border-bottom:1px solid var(--brd);background:var(--sur);display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex-shrink:0}
+.split-lbl{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--pe);font-weight:600;white-space:nowrap;min-width:16px}
+.split-lbl.b{color:var(--jos)}
+.split-toggle{display:flex;gap:0;margin-left:auto}
+.split-toggle button{padding:4px 12px;font-size:9px;font-family:var(--fn);border:1px solid var(--brd2);background:transparent;color:var(--dim);cursor:pointer;transition:all .15s}
+.split-toggle button:first-child{border-radius:2px 0 0 2px}
+.split-toggle button:last-child{border-radius:0 2px 2px 0;border-left:none}
+.split-toggle button.on{background:var(--pe-d);color:var(--pe);border-color:rgba(200,169,110,.4)}
+.split-toggle button{letter-spacing:.05em;text-transform:uppercase;font-weight:500}
 .kpis{display:grid;gap:8px;margin-bottom:14px}
 .kpi{background:var(--sur);border:1px solid var(--brd);padding:12px 14px;position:relative;overflow:hidden}
 .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-.kpi-lbl{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:5px}
-.kpi-val{font-family:var(--fs);font-size:1.15rem;font-weight:300;line-height:1}
+.kpi-lbl{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin-bottom:5px;font-weight:500}
+.kpi-val{font-family:var(--fs);font-size:15px;font-weight:600;line-height:1}
 .kpi-val.neg{color:var(--red)}.kpi-val.pos{color:var(--grn)}
 .kpi-sub{font-size:9px;color:var(--mut);margin-top:3px}
 
 /* BLOCKS */
 .blk{background:var(--sur);border:1px solid var(--brd);margin-bottom:12px}
 .blk-hdr{padding:9px 14px;border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between}
-.blk-ttl{font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+.blk-ttl{font-size:10px;letter-spacing:.10em;text-transform:uppercase;color:var(--dim);font-weight:500}
 .bdg{font-size:9px;padding:2px 8px;border-radius:2px}
 .bdg-pe{background:var(--pe-d);color:var(--pe);border:1px solid rgba(200,169,110,.25)}
 .bdg-jos{background:var(--jos-d);color:var(--jos);border:1px solid rgba(110,181,200,.25)}
@@ -91,19 +106,19 @@ body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:11px;
 .r{display:grid;border-bottom:1px solid rgba(35,40,64,.45);align-items:center;transition:background .1s}
 .r:hover{background:rgba(255,255,255,.01)}
 .r.sh{background:var(--sur2)}
-.r.sh .rc{font-size:8px;letter-spacing:.11em;text-transform:uppercase;color:var(--mut);padding:5px 10px}
-.r.sh .rv,.r.sh .rp{font-size:8px;color:var(--mut);padding:5px 4px}
+.r.sh .rc{font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut);padding:5px 10px;font-weight:500}
+.r.sh .rv,.r.sh .rp{font-size:9px;color:var(--mut);padding:5px 4px;font-weight:500}
 .r.ind .rc{color:var(--dim);padding-left:22px}
-.r.sub-t{border-top:1px solid var(--brd);border-bottom:2px solid var(--brd2)}
+.r.sub-t{border-top:1px solid var(--brd);border-bottom:2px solid var(--brd2);font-size:13px;font-weight:500}
 .r.tot{border-top:2px solid var(--brd2);background:rgba(255,255,255,.02)}
 .r.gt-pe{border-top:2px solid var(--pe);background:rgba(200,169,110,.04)}
 .r.gt-jos{border-top:2px solid var(--jos);background:rgba(110,181,200,.04)}
 .r.gt-cons{border-top:2px solid var(--gold);background:rgba(240,208,128,.04)}
 .r.gt-fin{border-top:3px solid var(--gold);background:rgba(240,208,128,.05)}
-.r.gt-pe .rc,.r.gt-jos .rc,.r.gt-cons .rc,.r.gt-fin .rc{font-family:var(--fs);font-size:.95rem;font-weight:300;padding:10px 10px}
-.r.gt-fin .rc{font-size:1.05rem;padding:12px 10px}
-.rc{font-size:10px;color:var(--txt);padding:7px 10px}
-.rv{text-align:right;font-variant-numeric:tabular-nums;font-size:10px;color:var(--txt);padding:7px 6px}
+.r.gt-pe .rc,.r.gt-jos .rc,.r.gt-cons .rc,.r.gt-fin .rc{font-family:var(--fs);font-size:15px;font-weight:600;padding:10px 10px}
+.r.gt-fin .rc{font-size:15px;padding:12px 10px;font-weight:700}
+.rc{font-size:12px;color:var(--txt);padding:7px 10px}
+.rv{text-align:right;font-variant-numeric:tabular-nums;font-size:12px;color:var(--txt);padding:7px 6px}
 .rv.neg{color:var(--red)}.rv.pos{color:var(--grn)}
 .rv.pe-c{color:var(--pe);font-weight:500}.rv.jos-c{color:var(--jos);font-weight:500}
 .rv.gold-c{color:var(--gold);font-weight:500}.rv.big{font-family:var(--fs);font-size:1.15rem;font-weight:300}
@@ -119,13 +134,13 @@ body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:11px;
 .r.xgold .ti{background:rgba(240,208,128,.1);border-color:rgba(240,208,128,.3);color:var(--gold);transform:rotate(90deg)}
 .r.xloc .ti{transform:rotate(90deg)}
 .dr{overflow:hidden;max-height:0;transition:max-height .3s ease}.dr.open{max-height:3000px}
-.r.d1{background:rgba(0,0,0,.15)}.r.d1 .rc{color:var(--mut);font-size:9px;padding-left:28px}
-.r.d1 .rv,.r.d1 .rp{font-size:9px;color:var(--dim)}
-.r.d2{background:rgba(0,0,0,.22)}.r.d2 .rc{color:var(--mut);font-size:8.5px;padding-left:46px}
-.r.d2 .rv,.r.d2 .rp{font-size:8.5px;color:var(--mut);opacity:.8}
+.r.d1{background:rgba(0,0,0,.15)}.r.d1 .rc{color:var(--mut);font-size:11px;padding-left:28px}
+.r.d1 .rv,.r.d1 .rp{font-size:11px;color:var(--dim)}
+.r.d2{background:rgba(0,0,0,.22)}.r.d2 .rc{color:var(--mut);font-size:10px;padding-left:46px}
+.r.d2 .rv,.r.d2 .rp{font-size:10px;color:var(--mut);opacity:.8}
 
 /* VPILL */
-.vp{display:inline-block;padding:1px 5px;border-radius:2px;font-size:8.5px}
+.vp{display:inline-block;padding:1px 5px;border-radius:2px;font-size:10px}
 .vp.pos{background:rgba(94,207,140,.12);color:var(--grn)}
 .vp.neg{background:rgba(224,86,106,.12);color:var(--red)}
 .vp.neu{color:var(--mut)}
@@ -167,21 +182,42 @@ body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:11px;
       <div class="leg"><div class="leg-d" style="background:var(--gold)"></div>Consolidado</div>
     </div>
   </div>
-  <div class="ctrl" id="ctrl-pl">
-    <span class="ctrl-lbl">Períodos</span>
-    <div class="pills" id="pills-pl"></div>
-    <div style="width:1px;height:14px;background:var(--brd)"></div>
-    <div class="qbtns">
-      <button class="qbtn" onclick="qsel('pl','all')">Todos</button>
-      <button class="qbtn" onclick="qsel('pl','none')">Ninguno</button>
-      <button class="qbtn" onclick="qsel('pl','y2026')">2026</button>
-      <button class="qbtn" onclick="qsel('pl','last1')">Último</button>
-      <button class="qbtn" onclick="qsel('pl','last3')">Últ. 3</button>
+  <div style="display:flex;align-items:center;padding:6px 18px;background:var(--sur);border-bottom:1px solid var(--brd);gap:10px;flex-shrink:0">
+    <div class="split-toggle">
+      <button class="on" id="split-btn-pl" onclick="toggleSplit('pl')">◫ Comparar períodos</button>
     </div>
-    <span class="sel-info" id="info-pl">—</span>
     <button class="refresh-btn" onclick="showUpload()">↩ Cambiar Excel</button>
   </div>
-  <div class="main" id="main-pl"></div>
+  <div class="split-wrap" id="split-wrap-pl">
+    <div class="split-panel">
+      <div class="split-ctrl">
+        <span class="split-lbl">A</span>
+        <div class="pills" id="pills-pl"></div>
+        <div class="qbtns">
+          <button class="qbtn" onclick="qsel('pl','last1')">Últ.</button>
+          <button class="qbtn" onclick="qsel('pl','last3')">Últ.3</button>
+          <button class="qbtn" onclick="qsel('pl','y2026')">2026</button>
+          <button class="qbtn" onclick="qsel('pl','all')">Todo</button>
+        </div>
+        <span class="sel-info" id="info-pl">—</span>
+      </div>
+      <div class="main" id="main-pl" style="padding:14px 18px"></div>
+    </div>
+    <div class="split-panel" id="panel-b-pl" style="display:none">
+      <div class="split-ctrl">
+        <span class="split-lbl b">B</span>
+        <div class="pills" id="pills-plb"></div>
+        <div class="qbtns">
+          <button class="qbtn" onclick="qsel('plb','last1')">Últ.</button>
+          <button class="qbtn" onclick="qsel('plb','last3')">Últ.3</button>
+          <button class="qbtn" onclick="qsel('plb','y2026')">2026</button>
+          <button class="qbtn" onclick="qsel('plb','all')">Todo</button>
+        </div>
+        <span class="sel-info" id="info-plb">—</span>
+      </div>
+      <div class="main" id="main-plb" style="padding:14px 18px"></div>
+    </div>
+  </div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
@@ -197,20 +233,41 @@ body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:11px;
       <div class="leg"><div class="leg-d" style="background:var(--tyc)"></div>T &amp; C</div>
     </div>
   </div>
-  <div class="ctrl" id="ctrl-un">
-    <span class="ctrl-lbl">Períodos</span>
-    <div class="pills" id="pills-un"></div>
-    <div style="width:1px;height:14px;background:var(--brd)"></div>
-    <div class="qbtns">
-      <button class="qbtn" onclick="qsel('un','all')">Todos</button>
-      <button class="qbtn" onclick="qsel('un','none')">Ninguno</button>
-      <button class="qbtn" onclick="qsel('un','y2026')">2026</button>
-      <button class="qbtn" onclick="qsel('un','last1')">Último</button>
-      <button class="qbtn" onclick="qsel('un','last3')">Últ. 3</button>
+  <div style="display:flex;align-items:center;padding:6px 18px;background:var(--sur);border-bottom:1px solid var(--brd);gap:10px;flex-shrink:0">
+    <div class="split-toggle">
+      <button class="on" id="split-btn-un" onclick="toggleSplit('un')">◫ Comparar períodos</button>
     </div>
-    <span class="sel-info" id="info-un">—</span>
   </div>
-  <div class="main" id="main-un"></div>
+  <div class="split-wrap" id="split-wrap-un">
+    <div class="split-panel">
+      <div class="split-ctrl">
+        <span class="split-lbl">A</span>
+        <div class="pills" id="pills-un"></div>
+        <div class="qbtns">
+          <button class="qbtn" onclick="qsel('un','last1')">Últ.</button>
+          <button class="qbtn" onclick="qsel('un','last3')">Últ.3</button>
+          <button class="qbtn" onclick="qsel('un','y2026')">2026</button>
+          <button class="qbtn" onclick="qsel('un','all')">Todo</button>
+        </div>
+        <span class="sel-info" id="info-un">—</span>
+      </div>
+      <div class="main" id="main-un" style="padding:14px 18px"></div>
+    </div>
+    <div class="split-panel" id="panel-b-un" style="display:none">
+      <div class="split-ctrl">
+        <span class="split-lbl b">B</span>
+        <div class="pills" id="pills-unb"></div>
+        <div class="qbtns">
+          <button class="qbtn" onclick="qsel('unb','last1')">Últ.</button>
+          <button class="qbtn" onclick="qsel('unb','last3')">Últ.3</button>
+          <button class="qbtn" onclick="qsel('unb','y2026')">2026</button>
+          <button class="qbtn" onclick="qsel('unb','all')">Todo</button>
+        </div>
+        <span class="sel-info" id="info-unb">—</span>
+      </div>
+      <div class="main" id="main-unb" style="padding:14px 18px"></div>
+    </div>
+  </div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
@@ -226,20 +283,41 @@ body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:11px;
       <div class="leg"><div class="leg-d" style="background:var(--tyc)"></div>Punta Alta</div>
     </div>
   </div>
-  <div class="ctrl" id="ctrl-loc">
-    <span class="ctrl-lbl">Períodos</span>
-    <div class="pills" id="pills-loc"></div>
-    <div style="width:1px;height:14px;background:var(--brd)"></div>
-    <div class="qbtns">
-      <button class="qbtn" onclick="qsel('loc','all')">Todos</button>
-      <button class="qbtn" onclick="qsel('loc','none')">Ninguno</button>
-      <button class="qbtn" onclick="qsel('loc','y2026')">2026</button>
-      <button class="qbtn" onclick="qsel('loc','last1')">Último</button>
-      <button class="qbtn" onclick="qsel('loc','last3')">Últ. 3</button>
+  <div style="display:flex;align-items:center;padding:6px 18px;background:var(--sur);border-bottom:1px solid var(--brd);gap:10px;flex-shrink:0">
+    <div class="split-toggle">
+      <button class="on" id="split-btn-loc" onclick="toggleSplit('loc')">◫ Comparar períodos</button>
     </div>
-    <span class="sel-info" id="info-loc">—</span>
   </div>
-  <div class="main" id="main-loc"></div>
+  <div class="split-wrap" id="split-wrap-loc">
+    <div class="split-panel">
+      <div class="split-ctrl">
+        <span class="split-lbl">A</span>
+        <div class="pills" id="pills-loc"></div>
+        <div class="qbtns">
+          <button class="qbtn" onclick="qsel('loc','last1')">Últ.</button>
+          <button class="qbtn" onclick="qsel('loc','last3')">Últ.3</button>
+          <button class="qbtn" onclick="qsel('loc','y2026')">2026</button>
+          <button class="qbtn" onclick="qsel('loc','all')">Todo</button>
+        </div>
+        <span class="sel-info" id="info-loc">—</span>
+      </div>
+      <div class="main" id="main-loc" style="padding:14px 18px"></div>
+    </div>
+    <div class="split-panel" id="panel-b-loc" style="display:none">
+      <div class="split-ctrl">
+        <span class="split-lbl b">B</span>
+        <div class="pills" id="pills-locb"></div>
+        <div class="qbtns">
+          <button class="qbtn" onclick="qsel('locb','last1')">Últ.</button>
+          <button class="qbtn" onclick="qsel('locb','last3')">Últ.3</button>
+          <button class="qbtn" onclick="qsel('locb','y2026')">2026</button>
+          <button class="qbtn" onclick="qsel('locb','all')">Todo</button>
+        </div>
+        <span class="sel-info" id="info-locb">—</span>
+      </div>
+      <div class="main" id="main-locb" style="padding:14px 18px"></div>
+    </div>
+  </div>
 </div>
 
 <!-- UPLOAD SCREEN (shown on start and when changing file) -->
@@ -372,7 +450,7 @@ const LOC_COML_PRORR_N1 = new Set(['Costos Logisticos (6)','Costos Marketing y P
 // STATE
 // ════════════════════════════════════════════════════════════════
 let D = null; // loaded data
-const SEL = {pl: new Set(), un: new Set(), loc: new Set()};
+const SEL = {pl: new Set(), un: new Set(), loc: new Set(), plb: new Set(), unb: new Set(), locb: new Set()};
 const ALL_P = {pl:[], un:[], loc:[]};
 const MN = ['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 const pLbl = p => MN[p%100]+"'"+String(Math.floor(p/100)).slice(2);
@@ -400,12 +478,20 @@ function initAll() {
   ALL_P.pl  = allPeriods;
   ALL_P.un  = pePeriods;
   ALL_P.loc = pePeriods;
+  // Panel B shares same period list as panel A
+  ALL_P.plb = allPeriods;
+  ALL_P.unb = pePeriods;
+  ALL_P.locb= pePeriods;
 
-  // Default: last period
+  // Default: last period for panel A; last 3 for panel B
   ['pl','un','loc'].forEach(pg => {
     SEL[pg].clear();
     SEL[pg].add(ALL_P[pg][ALL_P[pg].length-1]);
     buildPills(pg);
+  });
+  // Init panel B selectors (empty until split is activated)
+  ['plb','unb','locb'].forEach(pg => {
+    if(!SEL[pg]) SEL[pg] = new Set();
   });
 
   refresh('pl'); refresh('un'); refresh('loc');
@@ -442,9 +528,9 @@ function refresh(pg) {
 
   if (!ps.length) { document.getElementById('main-'+pg).innerHTML=''; return; }
 
-  if (pg==='pl')  renderPL(ps);
-  if (pg==='un')  renderUN(ps);
-  if (pg==='loc') renderLOC(ps);
+  if (pg==='pl'||pg==='plb')  renderPL(ps, pg==='plb'?'main-plb':'main-pl');
+  if (pg==='un'||pg==='unb')  renderUN(ps, pg==='unb'?'main-unb':'main-un');
+  if (pg==='loc'||pg==='locb')renderLOC(ps, pg==='locb'?'main-locb':'main-loc');
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -578,7 +664,7 @@ function adminDetailRows(peV, josV, peNivel1s, josNivel1s, ps, base){
 // ════════════════════════════════════════════════════════════════
 // RENDER P&L CONSOLIDADO
 // ════════════════════════════════════════════════════════════════
-function renderPL(ps) {
+function renderPL(ps, targetId='main-pl') {
   const pe=D.pe, jos=D.jos, pp=D.proy_pe, pj=D.proy_jos;
 
   // Real
@@ -622,7 +708,7 @@ function renderPL(ps) {
     {l:'Res. Op.',v:rop,p:p_rop,b:vt,c:rop>=0?'grn':'red'},{l:'s/Intereses',v:res_ai,p:p_resai,b:vt,c:res_ai>=0?'grn':'red'},
     {l:'Resultado Neto',v:res_fin,p:p_resfin,b:vt,c:res_fin>=0?'grn':'red'}];
   
-  document.getElementById('main-pl').innerHTML = `
+  document.getElementById(targetId).innerHTML = `
   <div class="kpis" style="grid-template-columns:repeat(5,1fr)">
     ${kpis.map(k=>{const vv=vp(k.v,k.p||0);return`<div class="kpi" style="border-top:2px solid var(--${k.c==='grn'?'grn':k.c==='red'?'red':k.c})">
       <div class="kpi-lbl">${k.l}</div>
@@ -630,11 +716,9 @@ function renderPL(ps) {
       <div class="kpi-sub">${pct(k.v,k.b)} s/vta${k.p?` · <span class="vp ${vv.c}">${vv.t}</span>`:''}</div>
     </div>`}).join('')}
   </div>
-  <div class="grid2">
-    ${plBlock('Planeta Empanada','bdg-pe','PE',pe_ing,pe_v,pe_oi,pe_p,pe_rb,pe_c,pe_rop,pp_v,pp_p,pp_c,pp_rop=pp_v-pp_p-pp_c,pe_vD,pe_pD,pe_cD,'xpe','gt-pe',ps,'pe')}
-    ${plBlock('Joselito','bdg-jos','JOS',jos_ing,jos_v,jos_oi,jos_p,jos_rb,jos_c,jos_rop,jp_v,jp_p,jp_c,jp_rop=jp_v-jp_p-jp_c,jos_vD,jos_pD,jos_cD,'xjos','gt-jos',ps,'jos')}
-    ${consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_resai,int_tot,p_int,res_fin,p_resfin,pe_int,jos_int,pe_fci,ps)}
-  </div>`;
+  ${plBlock('Planeta Empanada','bdg-pe','PE',pe_ing,pe_v,pe_oi,pe_p,pe_rb,pe_c,pe_rop,pp_v,pp_p,pp_c,pp_rop=pp_v-pp_p-pp_c,pe_vD,pe_pD,pe_cD,'xpe','gt-pe',ps,'pe')}
+  ${plBlock('Joselito','bdg-jos','JOS',jos_ing,jos_v,jos_oi,jos_p,jos_rb,jos_c,jos_rop,jp_v,jp_p,jp_c,jp_rop=jp_v-jp_p-jp_c,jos_vD,jos_pD,jos_cD,'xjos','gt-jos',ps,'jos')}
+  ${consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_resai,int_tot,p_int,res_fin,p_resfin,pe_int,jos_int,pe_fci,ps)}`;
 }
 
 function plBlock(title,bdgCls,bdgTxt,base,v,oi,p,rb,c,rop,pv,pp,pc,prop,vD,pD,cD,xCls,gtCls,ps,empresa){
@@ -654,7 +738,7 @@ function plBlock(title,bdgCls,bdgTxt,base,v,oi,p,rb,c,rop,pv,pp,pc,prop,vD,pD,cD
     return expRow('ind',inner,incDetailRows(det,base),xCls);
   };
   const ropVP=vp(rop,prop), vcv=vp(v,pv), vcRb=vp(rb,pv-(pp||0));
-  return `<div class="blk"><div class="blk-hdr"><span class="blk-ttl">${title}</span><span class="bdg ${bdgCls}">${bdgTxt}</span></div>
+  return `<div class="blk full"><div class="blk-hdr"><span class="blk-ttl">${title}</span><span class="bdg ${bdgCls}">${bdgTxt}</span></div>
     ${shRow('INGRESOS Y COSTOS')}
     ${mkExpInc('Ventas Totales (1)',v,pv,vD)}
     ${oi?`<div class="r ind" style="${COLS5}"><div class="rc dim">+ Otros Ingresos</div><div class="rv">${fmt(oi)}</div><div class="rp">${pct(oi,base)}</div><div class="rv proy">—</div><div class="rv">—</div></div>`:''}
@@ -718,7 +802,7 @@ function consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_
 // ════════════════════════════════════════════════════════════════
 // RENDER P&L POR U.N.
 // ════════════════════════════════════════════════════════════════
-function renderUN(ps) {
+function renderUN(ps, targetId='main-un') {
   const pe=D.pe, units=D.units;
   // Unit weights
   const uTot={};UNS.forEach(u=>uTot[u]=0);
@@ -773,7 +857,7 @@ function renderUN(ps) {
     coml_impositivos:0};
   UNS.forEach(u=>Object.keys(tot).forEach(k=>{if(res[u][k]!==undefined)tot[k]+=res[u][k];}));
 
-  document.getElementById('main-un').innerHTML = `
+  document.getElementById(targetId).innerHTML = `
   <div class="kpis" style="grid-template-columns:repeat(4,1fr)">
     ${UNS.map(u=>`<div class="kpi" style="border-top:2px solid ${UN_COLORS[u]}">
       <div class="kpi-lbl">${UN_SHORT[u]}</div>
@@ -856,7 +940,7 @@ function unLines(res,tot){
 // ════════════════════════════════════════════════════════════════
 // RENDER P&L POR LOCAL
 // ════════════════════════════════════════════════════════════════
-function renderLOC(ps){
+function renderLOC(ps, targetId='main-loc'){
   const pe=D.pe, units=D.units;
   // Unit weights per local
   const locU={};LOCALES.forEach(l=>locU[l]=0);
@@ -921,7 +1005,7 @@ function renderLOC(ps){
     LOC_SUBLINES.forEach(sl=>slTot[sl]+=res[l][sl]);
   });
 
-  document.getElementById('main-loc').innerHTML = `
+  document.getElementById(targetId).innerHTML = `
   <div class="kpis" style="grid-template-columns:repeat(4,1fr)">
     ${LOCALES.map(l=>`<div class="kpi" style="border-top:2px solid ${LOC_COLORS[l]}">
       <div class="kpi-lbl">${l}</div>
@@ -996,6 +1080,34 @@ function showPage(id){
   document.querySelectorAll('.nav').forEach(n=>n.classList.remove('on'));
   document.getElementById('page-'+id).classList.add('on');
   document.getElementById('nav-'+id).classList.add('on');
+}
+
+// ── SPLIT SCREEN ──────────────────────────────────────────────────
+const SPLIT_ACTIVE = {pl:false, un:false, loc:false};
+const PANEL_B_PG = {pl:'plb', un:'unb', loc:'locb'};
+
+function toggleSplit(pg){
+  SPLIT_ACTIVE[pg] = !SPLIT_ACTIVE[pg];
+  const panel = document.getElementById('panel-b-'+pg);
+  const btn   = document.getElementById('split-btn-'+pg);
+  if(SPLIT_ACTIVE[pg]){
+    panel.style.display='flex';
+    panel.style.flexDirection='column';
+    btn.textContent='◧ Un panel';
+    btn.classList.add('on');
+    // Init panel B — always refresh when first shown
+    const bpg = PANEL_B_PG[pg];
+    ALL_P[bpg] = [...ALL_P[pg]];
+    if(!SEL[bpg] || SEL[bpg].size===0){
+      SEL[bpg] = new Set(ALL_P[bpg].slice(-3));
+    }
+    buildPills(bpg);
+    refresh(bpg);
+  } else {
+    panel.style.display='none';
+    btn.textContent='◫ Comparar períodos';
+    btn.classList.remove('on');
+  }
 }
 
 // ════════════════════════════════════════════════════════════════
