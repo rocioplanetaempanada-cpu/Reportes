@@ -357,16 +357,16 @@ const PE_COML_MIX = 'Costos Locales (5)'; // includes R+ sobrantes de caja
 
 const JOS_VENTAS = ['Ventas Agentes','Ventas Mostrador','Ventas Grupos','Ventas Planeta','Ventas Tiendas y Comercios'];
 const JOS_OTROS  = ['Otros Ingresos'];
-const JOS_PROD   = ['Costo MP  (3)','Costo MO  (2)','Costo CF  (4)'];
-const JOS_COML   = ['Costos Locales (5)','Costos Logisticos  (6)','Costos Marketing y Publicidad  (7)',
-                    'Comisiones Agentes','Costos Impositivos','RRHH'];
+const JOS_PROD   = ['Costo MP (3)','Costo MO (2)','Costo CF (4)'];
+const JOS_COML   = ['Costos Locales (5)','Costos Logisticos (6)','Costos Marketing y Publicidad (7)',
+                    'Comisiones Agentes','Costos Impositivos'];
 
 const ADMIN_LINES = [
   // [label, pe_n1s, jos_n1s, proy_concepto]
   ['Comercial',          ['Comercial'],                ['Comercial'],          'Comercial'],
   ['Administración',     ['Administracion'],           ['Administracion'],     'Administracion'],
-  ['RRHH',               ['RRHH'],                     [],                     'RRHH'],
-  ['Calidad',            ['calidad'],                  [],                     'Calidad'],
+  ['RRHH',               ['RRHH'],                     ['RRHH'],               'RRHH'],
+  ['Calidad',            ['calidad','Calidad'],        ['Calidad'],            'Calidad'],
   ['Honorarios externos',['Honorarios externos'],      ['Honorarios externos'],'Honorarios externos'],
   ['Funcionamiento',     ['Funcionamiento'],            ['Funcionamiento'],     'Funcionamiento'],
   ['Indemnizaciones',    ['Indemnizaciones'],           ['Indemnizaciones'],    'Indemnizaciones'],
@@ -377,10 +377,10 @@ const JOS_INT = ['Intereses Creditos','Intereses Planes','Otros ingresos/ egreso
 const PE_FCI  = 'Otros ingresos/ egresos financieros'; // R+ FCI neteado
 
 // PROY concepts
-const PROY_PROD_PE  = ['Costo MP  (3)','Costo MO  (2)','Costo CF  (4)'];
-const PROY_COML_PE  = ['Costos Locales (5)','Costos Logisticos  (6)','Costos Marketing y Publicidad  (7)','Costos Impositivos'];
-const PROY_PROD_JOS = ['Costo MP  (3)','Costo MO  (2)','Costo CF  (4)'];
-const PROY_COML_JOS = ['Costos Locales (5)','Costos Logisticos  (6)','Costos Marketing y Publicidad  (7)','Comisiones Agentes','Costos Impositivos'];
+const PROY_PROD_PE  = ['Costo MP (3)','Costo MO (2)','Costo CF (4)'];
+const PROY_COML_PE  = ['Costos Locales (5)','Costos Logisticos (6)','Costos Marketing y Publicidad (7)','Costos Impositivos'];
+const PROY_PROD_JOS = ['Costo MP (3)','Costo MO (2)','Costo CF (4)'];
+const PROY_COML_JOS = ['Costos Locales (5)','Costos Logisticos (6)','Costos Marketing y Publicidad (7)','Comisiones Agentes','Costos Impositivos'];
 
 // UN CONFIG
 const UNS       = ['Locales','Franquicias','Supermercados','Tiendas y Comercios'];
@@ -539,6 +539,7 @@ function refresh(pg) {
 let _uid = 0;
 const fmt = v => { if(v==null||isNaN(v))return'—'; const a=Math.round(Math.abs(v)),s=v<0?'-':''; return s+a.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.'); };
 const pct = (v,b) => (!b||isNaN(v))?'—':(v/b*100).toFixed(1).replace('.',',')+'%';
+const ppct = (v,pb) => (!pb||isNaN(v)) ? '—' : (Math.abs(v)/Math.abs(pb)*100).toFixed(1).replace('.',',')+'%';
 const vp  = (r,p2) => {
   if(!p2||isNaN(r)||isNaN(p2))return{c:'neu',t:'—'};
   const x=((r-p2)/Math.abs(p2)*100);
@@ -580,12 +581,12 @@ function acctDetail(arr,ps,fn){
 }
 
 // Expandable row builder
-const COLS5 = 'grid-template-columns:1fr 115px 50px 115px 58px';
+const COLS5 = 'grid-template-columns:1fr 115px 50px 115px 50px 58px';
 const COLS_UN = 'grid-template-columns:160px repeat(4,1fr) 110px';
 const COLS_LOC= 'grid-template-columns:160px repeat(4,1fr) 110px';
 
 function shRow(label,col=''){
-  return `<div class="r sh" style="${COLS5}"><div class="rc"${col?` style="color:${col}"`:''} >${label}</div><div class="rv">Real $</div><div class="rp">%Vta</div><div class="rv proy" style="color:var(--gold);opacity:.7">Proy $</div><div class="rv" style="font-size:8px;color:var(--mut)">Desvío</div></div>`;
+  return `<div class="r sh" style="${COLS5}"><div class="rc"${col?` style="color:${col}"`:''} >${label}</div><div class="rv">Real $</div><div class="rp">%Vta</div><div class="rv proy" style="color:var(--gold);opacity:.7">Proy $</div><div class="rv proy" style="color:var(--gold);opacity:.5;font-size:8px">Proy%</div><div class="rv" style="font-size:8px;color:var(--mut)">Desvío</div></div>`;
 }
 
 function expRow(cls, innerHtml, detRows, openCls){
@@ -603,9 +604,53 @@ function xopen(id,oc){
 // Preferred display order for cost sub-items
 const PROD_ORDER = ['Costo MO Indiada (2)','Costo MO Vegetales (2)','Costo MP Indiada (3)',
   'Costo MP Vegetales (3)','Costo CF Indiada (4)','Costo CF Vegetales (4)',
-  'Costo MO  (2)','Costo MP  (3)','Costo CF  (4)'];
-const COML_ORDER = ['Costos Locales (5)','Costos Logisticos (6)','Costos Logisticos  (6)',
-  'Costos Marketing y Publicidad (7)','Costos Marketing y Publicidad  (7)',
+  'Costo MO (2)','Costo MP (3)','Costo CF (4)'];
+
+// Production cost groups: MO, MP, CF — each with Indiada + Vegetales sub-items
+const PROD_GROUPS_PE = [
+  {label:'MO (2)', keys:['Costo MO Indiada (2)','Costo MO Vegetales (2)'], projKey:'Costo MO (2)'},
+  {label:'MP (3)', keys:['Costo MP Indiada (3)','Costo MP Vegetales (3)'], projKey:'Costo MP (2)'},
+  {label:'CF (4)', keys:['Costo CF Indiada (4)','Costo CF Vegetales (4)'], projKey:'Costo CF (4)'},
+];
+// Fix: MP projKey
+const PROD_GROUPS = [
+  {label:'MO (2)', keys:['Costo MO Indiada (2)','Costo MO Vegetales (2)','Costo MO (2)'], projKey:'Costo MO (2)'},
+  {label:'MP (3)', keys:['Costo MP Indiada (3)','Costo MP Vegetales (3)','Costo MP (3)'], projKey:'Costo MP (3)'},
+  {label:'CF (4)', keys:['Costo CF Indiada (4)','Costo CF Vegetales (4)','Costo CF (4)'], projKey:'Costo CF (4)'},
+];
+
+function prodDetailRows(detail, pDetail, base){
+  return PROD_GROUPS.map(g=>{
+    const groupTotal = g.keys.reduce((s,k)=>s+(detail[k]||0), 0);
+    if(!groupTotal) return '';
+    const projTotal = (pDetail||{})[g.projKey]||0;
+    const vv = projTotal ? vp(groupTotal, projTotal) : {c:'neu',t:'—'};
+    // Sub-rows (Indiada / Vegetales)
+    const subId = 'x'+(++_uid);
+    const subRows = g.keys.map(k=>{
+      const v=detail[k]||0; if(!v) return '';
+      return `<div class="r d2" style="${COLS5}">
+        <div class="rc" style="padding-left:46px">${k}</div>
+        <div class="rv neg" style="font-size:9px">-${fmt(v)}</div>
+        <div class="rp" style="font-size:9px">${pct(v,base)}</div>
+        <div class="rv proy" style="font-size:9px">—</div>
+        <div class="rv proy" style="font-size:9px">—</div>
+        <div class="rv" style="font-size:9px">—</div>
+      </div>`;
+    }).join('');
+    return `<div class="r d1 exp" style="${COLS5}" onclick="xopen('${subId}','xloc')">
+      <div class="rc" style="padding-left:28px"><em class="ti">▶</em>${g.label}</div>
+      <div class="rv neg" style="font-size:9px">-${fmt(groupTotal)}</div>
+      <div class="rp" style="font-size:9px">${pct(groupTotal,base)}</div>
+      <div class="rv proy" style="font-size:9px">${projTotal?fmt(projTotal):'—'}</div>
+      <div class="rv proy" style="font-size:9px">—</div>
+      <div class="rv" style="font-size:9px"><span class="vp ${vv.c}">${vv.t}</span></div>
+    </div>
+    <div class="dr" id="${subId}">${subRows}</div>`;
+  }).join('');
+}
+const COML_ORDER = ['Costos Locales (5)','Costos Logisticos (6)',
+  'Costos Marketing y Publicidad (7)',
   'Costos Impositivos','Indemnizaciones','Comisiones Agentes','RRHH'];
 function costOrder(k){
   let i=PROD_ORDER.indexOf(k); if(i>=0) return i;
@@ -613,9 +658,10 @@ function costOrder(k){
   return 999;
 }
 
-function costDetailRows(detail, pDetail, base, depth=1){
+function costDetailRows(detail, pDetail, base, depth=1, p_base){
   const cls = depth===1?'d1':'d2';
   const pl = depth===1?28:46;
+  const _cBase = p_base||0;
   return Object.entries(detail)
     .filter(([,v])=>v!==0)
     .sort(([a],[b])=>costOrder(a)-costOrder(b)||Math.abs(detail[b])-Math.abs(detail[a]))
@@ -627,20 +673,28 @@ function costDetailRows(detail, pDetail, base, depth=1){
         <div class="rv neg" style="font-size:9px">-${fmt(v)}</div>
         <div class="rp" style="font-size:9px">${pct(v,base)}</div>
         <div class="rv proy" style="font-size:9px">${p2?fmt(p2):'—'}</div>
+        <div class="rv proy" style="font-size:9px">${(p2&&_cBase)?ppct(p2,_cBase):'—'}</div>
         <div class="rv var-${vv.c}" style="font-size:9px"><span class="vp ${vv.c}">${vv.t}</span></div>
       </div>`;
     }).join('');
 }
 
-function incDetailRows(detail, base, depth=1){
+function incDetailRows(detail, base, depth=1, pDetail, p_base){
   const cls=depth===1?'d1':'d2', pl=depth===1?28:46;
   return Object.entries(detail)
     .filter(([,v])=>v!==0).sort(([,a],[,b])=>b-a)
-    .map(([k,v])=>`<div class="r ${cls}" style="${COLS5}">
-      <div class="rc" style="padding-left:${pl}px">${k}</div>
-      <div class="rv" style="font-size:9px">${fmt(v)}</div>
-      <div class="rp" style="font-size:9px">${pct(v,base)}</div>
-      <div class="rv proy">—</div><div class="rv">—</div></div>`).join('');
+    .map(([k,v])=>{
+      const p2=(pDetail||{})[k]||0;
+      const vv=p2?vp(v,p2):{c:'neu',t:'—'};
+      return `<div class="r ${cls}" style="${COLS5}">
+        <div class="rc" style="padding-left:${pl}px">${k}</div>
+        <div class="rv" style="font-size:9px">${fmt(v)}</div>
+        <div class="rp" style="font-size:9px">${pct(v,base)}</div>
+        <div class="rv proy" style="font-size:9px">${p2?fmt(p2):'—'}</div>
+        <div class="rv proy" style="font-size:9px">${(p2&&p_base)?ppct(p2,p_base):'—'}</div>
+        <div class="rv" style="font-size:9px"><span class="vp ${vv.c}">${vv.t}</span></div>
+      </div>`;
+    }).join('');
 }
 
 function adminDetailRows(peV, josV, peNivel1s, josNivel1s, ps, base){
@@ -702,6 +756,11 @@ function renderPL(ps, targetId='main-pl') {
   // Detail for expandables
   const pe_vD=gvDetail(pe,ps,PE_VENTAS), pe_pD=gcDetail(pe,ps,PE_PROD), pe_cD=gcDetail(pe,ps,PE_COML);
   const jos_vD=gvDetail(jos,ps,JOS_VENTAS), jos_pD=gcDetail(jos,ps,JOS_PROD), jos_cD=gcDetail(jos,ps,JOS_COML);
+  // Projected detail per sub-item
+  const ppv_detail={}; pp.filter(r=>ps.includes(r.p)&&r.concepto.startsWith('Ventas')).forEach(r=>{const k=r.concepto.replace(/  +/g,' ').trim();ppv_detail[k]=(ppv_detail[k]||0)+r.v;});
+  const jpv_detail={}; pj.filter(r=>ps.includes(r.p)&&r.concepto.startsWith('Ventas')).forEach(r=>{const k=r.concepto.replace(/  +/g,' ').trim();jpv_detail[k]=(jpv_detail[k]||0)+r.v;});
+  const ppc_detail={}; pp.filter(r=>ps.includes(r.p)&&['Costos Locales (5)','Costos Logisticos (6)','Costos Marketing y Publicidad (7)','Costos Impositivos'].includes(r.concepto)).forEach(r=>{ppc_detail[r.concepto]=(ppc_detail[r.concepto]||0)+Math.abs(r.v);});
+  const jpc_detail={}; pj.filter(r=>ps.includes(r.p)&&['Costos Locales (5)','Costos Logisticos (6)','Costos Marketing y Publicidad (7)','Comisiones Agentes','Costos Impositivos'].includes(r.concepto)).forEach(r=>{jpc_detail[r.concepto]=(jpc_detail[r.concepto]||0)+Math.abs(r.v);});
 
   // KPIs
   const kpis=[{l:'Ventas PE',v:pe_v,b:pe_ing,c:'pe'},{l:'Ventas JOS',v:jos_v,b:jos_ing,c:'jos'},
@@ -716,44 +775,47 @@ function renderPL(ps, targetId='main-pl') {
       <div class="kpi-sub">${pct(k.v,k.b)} s/vta${k.p?` · <span class="vp ${vv.c}">${vv.t}</span>`:''}</div>
     </div>`}).join('')}
   </div>
-  ${plBlock('Planeta Empanada','bdg-pe','PE',pe_ing,pe_v,pe_oi,pe_p,pe_rb,pe_c,pe_rop,pp_v,pp_p,pp_c,pp_rop=pp_v-pp_p-pp_c,pe_vD,pe_pD,pe_cD,'xpe','gt-pe',ps,'pe')}
-  ${plBlock('Joselito','bdg-jos','JOS',jos_ing,jos_v,jos_oi,jos_p,jos_rb,jos_c,jos_rop,jp_v,jp_p,jp_c,jp_rop=jp_v-jp_p-jp_c,jos_vD,jos_pD,jos_cD,'xjos','gt-jos',ps,'jos')}
-  ${consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_resai,int_tot,p_int,res_fin,p_resfin,pe_int,jos_int,pe_fci,ps)}`;
+  ${plBlock('Planeta Empanada','bdg-pe','PE',pe_ing,pe_v,pe_oi,pe_p,pe_rb,pe_c,pe_rop,pp_v,pp_p,pp_c,pp_rop=pp_v-pp_p-pp_c,pe_vD,pe_pD,pe_cD,'xpe','gt-pe',ps,'pe',pp_v,pp,ppv_detail,ppc_detail)}
+  ${plBlock('Joselito','bdg-jos','JOS',jos_ing,jos_v,jos_oi,jos_p,jos_rb,jos_c,jos_rop,jp_v,jp_p,jp_c,jp_rop=jp_v-jp_p-jp_c,jos_vD,jos_pD,jos_cD,'xjos','gt-jos',ps,'jos',jp_v,pj,jpv_detail,jpc_detail)}
+  ${consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_resai,int_tot,p_int,res_fin,p_resfin,pe_int,jos_int,pe_fci,ps,pp_v+jp_v)}`;
 }
 
-function plBlock(title,bdgCls,bdgTxt,base,v,oi,p,rb,c,rop,pv,pp,pc,prop,vD,pD,cD,xCls,gtCls,ps,empresa){
-  const mkExp=(lbl,cost,pCost,det,pDet,isCost,cls)=>{
+function plBlock(title,bdgCls,bdgTxt,base,v,oi,p,rb,c,rop,pv,pp,pc,prop,vD,pD,cD,xCls,gtCls,ps,empresa,p_base,proy_arr,vD_proy,cD_proy){
+  const mkExp=(lbl,cost,pCost,det,pDet,isCost,cls,isProd)=>{
     const vv=vp(cost,pCost), inner=`<div class="rc dim"><em class="ti">▶</em>${lbl}</div>
       <div class="rv neg">-${fmt(cost)}</div><div class="rp">${pct(-cost,base)}</div>
       <div class="rv proy">${pCost?fmt(pCost):'—'}</div>
+      <div class="rv proy" style="font-size:10px">${pCost?ppct(pCost,p_base):'—'}</div>
       <div class="rv var-${vv.c}"><span class="vp ${vv.c}">${vv.t}</span></div>`;
-    const dRows=costDetailRows(det,pDet||{},base);
+    const dRows=isProd ? prodDetailRows(det,pDet||{},base) : costDetailRows(det,pDet||{},base,1,p_base);
     return expRow('ind',inner,dRows,cls);
   };
-  const mkExpInc=(lbl,val,pVal,det)=>{
+  const mkExpInc=(lbl,val,pVal,det,pDet)=>{
     const vv=vp(val,pVal), inner=`<div class="rc dim"><em class="ti">▶</em>${lbl}</div>
       <div class="rv ${val<0?'neg':''}">${fmt(val)}</div><div class="rp">${pct(val,base)}</div>
       <div class="rv proy">${pVal?fmt(pVal):'—'}</div>
+      <div class="rv proy" style="font-size:10px">${pVal?ppct(pVal,p_base):'—'}</div>
       <div class="rv var-${vv.c}"><span class="vp ${vv.c}">${vv.t}</span></div>`;
-    return expRow('ind',inner,incDetailRows(det,base),xCls);
+    return expRow('ind',inner,incDetailRows(det,base,1,pDet,p_base),xCls);
   };
   const ropVP=vp(rop,prop), vcv=vp(v,pv), vcRb=vp(rb,pv-(pp||0));
   return `<div class="blk full"><div class="blk-hdr"><span class="blk-ttl">${title}</span><span class="bdg ${bdgCls}">${bdgTxt}</span></div>
     ${shRow('INGRESOS Y COSTOS')}
-    ${mkExpInc('Ventas Totales (1)',v,pv,vD)}
-    ${oi?`<div class="r ind" style="${COLS5}"><div class="rc dim">+ Otros Ingresos</div><div class="rv">${fmt(oi)}</div><div class="rp">${pct(oi,base)}</div><div class="rv proy">—</div><div class="rv">—</div></div>`:''}
-    ${mkExp('Costo de Producción',p,pp,pD,{},true,xCls)}
-    <div class="r sub-t" style="${COLS5}"><div class="rc">Resultado Bruto</div><div class="rv ${rb<0?'neg':''}">${fmt(rb)}</div><div class="rp">${pct(rb,base)}</div><div class="rv proy">—</div><div class="rv">—</div></div>
-    ${mkExp('Costo de Comercialización',c,pc,cD,{},true,xCls)}
+    ${mkExpInc('Ventas Totales (1)',v,pv,vD,vD_proy||{})}
+    ${oi?`<div class="r ind" style="${COLS5}"><div class="rc dim">+ Otros Ingresos</div><div class="rv">${fmt(oi)}</div><div class="rp">${pct(oi,base)}</div><div class="rv proy">—</div><div class="rv proy">—</div><div class="rv">—</div></div>`:''}
+    ${mkExp('Costo de Producción',p,pp,pD,proy_arr?{'Costo MO (2)':-spv(proy_arr,ps,['Costo MO (2)']),'Costo MP (3)':-spv(proy_arr,ps,['Costo MP (3)']),'Costo CF (4)':-spv(proy_arr,ps,['Costo CF (4)'])}:{},true,xCls,true)}
+    <div class="r sub-t" style="${COLS5}"><div class="rc">Resultado Bruto</div><div class="rv ${rb<0?'neg':''}">${fmt(rb)}</div><div class="rp">${pct(rb,base)}</div><div class="rv proy">${fmt(pv-pp)}</div><div class="rv proy" style="font-size:10px">${ppct(pv-pp,p_base)}</div><div class="rv">—</div></div>
+    ${mkExp('Costo de Comercialización',c,pc,cD,cD_proy||{},true,xCls,false)}
     <div class="r ${gtCls}" style="${COLS5}"><div class="rc">Resultado Operativo</div>
       <div class="rv big ${rop<0?'neg':'pos'} ${empresa===('pe')?'pe-c':'jos-c'}">${fmt(rop)}</div>
       <div class="rp">${pct(rop,base)}</div>
       <div class="rv proy">${prop?fmt(prop):'—'}</div>
+      <div class="rv proy" style="font-size:10px">${prop?ppct(prop,p_base):'—'}</div>
       <div class="rv var-${ropVP.c}"><span class="vp ${ropVP.c}">${ropVP.t}</span></div>
     </div></div>`;
 }
 
-function consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_resai,int_tot,p_int,res_fin,p_resfin,pe_int,jos_int,pe_fci,ps){
+function consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_resai,int_tot,p_int,res_fin,p_resfin,pe_int,jos_int,pe_fci,ps,p_vt){
   const ropVP=vp(rop,p_rop), admVP=vp(adm_tot,p_adm);
   const aiVP=vp(res_ai,p_resai), finVP=vp(res_fin,p_resfin);
   const admRows=adm_lines.map(({label,pv,jv,tot,projV,pe_n1,jos_n1})=>{
@@ -763,6 +825,7 @@ function consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_
     const inner=`<div class="rc dim"><em class="ti">▶</em>${label}</div>
       <div class="rv neg">-${fmt(tot)}</div><div class="rp">${pct(-tot,vt)}</div>
       <div class="rv proy">${projV?fmt(projV):'—'}</div>
+      <div class="rv proy" style="font-size:10px">${projV?ppct(projV,p_vt):'—'}</div>
       <div class="rv var-${vv.c}"><span class="vp ${vv.c}">${vv.t}</span></div>`;
     return expRow('ind',inner,dRows,'xgold');
   }).join('');
@@ -777,24 +840,25 @@ function consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_
   const intInner=`<div class="rc dim"><em class="ti">▶</em>Intereses financieros (neto)</div>
     <div class="rv neg">-${fmt(int_tot)}</div><div class="rp">${pct(-int_tot,vt)}</div>
     <div class="rv proy">${p_int?fmt(p_int):'—'}</div>
+    <div class="rv proy" style="font-size:10px">${p_int?ppct(p_int,p_vt):'—'}</div>
     <div class="rv var-${intVP.c}"><span class="vp ${intVP.c}">${intVP.t}</span></div>`;
 
   return `<div class="blk full"><div class="blk-hdr"><span class="blk-ttl">Consolidado PE + JOS</span><span class="bdg bdg-cons">CONSOLIDADO</span></div>
     ${shRow('RESULTADO OPERATIVO CONSOLIDADO','var(--gold)')}
-    <div class="r" style="${COLS5}"><div class="rc">Resultado Operativo PE</div><div class="rv ${pe_rop<0?'neg':''} pe-c">${fmt(pe_rop)}</div><div class="rp">${pct(pe_rop,vt)}</div><div class="rv proy">—</div><div class="rv">—</div></div>
-    <div class="r" style="${COLS5}"><div class="rc">Resultado Operativo JOS</div><div class="rv ${jos_rop<0?'neg':''} jos-c">${fmt(jos_rop)}</div><div class="rp">${pct(jos_rop,vt)}</div><div class="rv proy">—</div><div class="rv">—</div></div>
-    <div class="r tot" style="${COLS5}"><div class="rc" style="font-weight:500">Resultado Operativo PE + JOS</div><div class="rv ${rop<0?'neg':''} gold-c">${fmt(rop)}</div><div class="rp">${pct(rop,vt)}</div><div class="rv proy">${p_rop?fmt(p_rop):'—'}</div><div class="rv var-${ropVP.c}"><span class="vp ${ropVP.c}">${ropVP.t}</span></div></div>
+    <div class="r" style="${COLS5}"><div class="rc">Resultado Operativo PE</div><div class="rv ${pe_rop<0?'neg':''} pe-c">${fmt(pe_rop)}</div><div class="rp">${pct(pe_rop,vt)}</div><div class="rv proy">—</div><div class="rv proy">—</div><div class="rv">—</div></div>
+    <div class="r" style="${COLS5}"><div class="rc">Resultado Operativo JOS</div><div class="rv ${jos_rop<0?'neg':''} jos-c">${fmt(jos_rop)}</div><div class="rp">${pct(jos_rop,vt)}</div><div class="rv proy">—</div><div class="rv proy">—</div><div class="rv">—</div></div>
+    <div class="r tot" style="${COLS5}"><div class="rc" style="font-weight:500">Resultado Operativo PE + JOS</div><div class="rv ${rop<0?'neg':''} gold-c">${fmt(rop)}</div><div class="rp">${pct(rop,vt)}</div><div class="rv proy">${p_rop?fmt(p_rop):'—'}</div><div class="rv proy" style="font-size:10px">${p_rop?ppct(p_rop,p_vt):'—'}</div><div class="rv var-${ropVP.c}"><span class="vp ${ropVP.c}">${ropVP.t}</span></div></div>
     <div class="gap"></div>
     ${shRow('COSTOS DE ADMINISTRACIÓN (8)','var(--red)')}
     ${admRows}
-    <div class="r tot" style="${COLS5}"><div class="rc" style="color:var(--red)">Total Costos Adm.</div><div class="rv neg">-${fmt(adm_tot)}</div><div class="rp">${pct(-adm_tot,vt)}</div><div class="rv proy">${p_adm?fmt(p_adm):'—'}</div><div class="rv var-${admVP.c}"><span class="vp ${admVP.c}">${admVP.t}</span></div></div>
+    <div class="r tot" style="${COLS5}"><div class="rc" style="color:var(--red)">Total Costos Adm.</div><div class="rv neg">-${fmt(adm_tot)}</div><div class="rp">${pct(-adm_tot,vt)}</div><div class="rv proy">${p_adm?fmt(p_adm):'—'}</div><div class="rv proy" style="font-size:10px">${p_adm?ppct(p_adm,p_vt):'—'}</div><div class="rv var-${admVP.c}"><span class="vp ${admVP.c}">${admVP.t}</span></div></div>
     <div class="gap"></div>
-    <div class="r gt-cons" style="${COLS5}"><div class="rc">Resultado Neto antes de Intereses</div><div class="rv ${res_ai<0?'neg':'pos'} gold-c">${fmt(res_ai)}</div><div class="rp">${pct(res_ai,vt)}</div><div class="rv proy">${p_resai?fmt(p_resai):'—'}</div><div class="rv var-${aiVP.c}"><span class="vp ${aiVP.c}">${aiVP.t}</span></div></div>
+    <div class="r gt-cons" style="${COLS5}"><div class="rc">Resultado Neto antes de Intereses</div><div class="rv ${res_ai<0?'neg':'pos'} gold-c">${fmt(res_ai)}</div><div class="rp">${pct(res_ai,vt)}</div><div class="rv proy">${p_resai?fmt(p_resai):'—'}</div><div class="rv proy" style="font-size:10px">${p_resai?ppct(p_resai,p_vt):'—'}</div><div class="rv var-${aiVP.c}"><span class="vp ${aiVP.c}">${aiVP.t}</span></div></div>
     <div class="gap"></div>
     ${shRow('INTERESES E INGRESOS FINANCIEROS')}
     ${expRow('ind',intInner,intRows,'xgold')}
     <div class="gap"></div>
-    <div class="r gt-fin" style="${COLS5}"><div class="rc">RESULTADO NETO</div><div class="rv big ${res_fin<0?'neg':'pos'} gold-c">${fmt(res_fin)}</div><div class="rp">${pct(res_fin,vt)}</div><div class="rv proy">${p_resfin?fmt(p_resfin):'—'}</div><div class="rv var-${finVP.c}"><span class="vp ${finVP.c}">${finVP.t}</span></div></div>
+    <div class="r gt-fin" style="${COLS5}"><div class="rc">RESULTADO NETO</div><div class="rv big ${res_fin<0?'neg':'pos'} gold-c">${fmt(res_fin)}</div><div class="rp">${pct(res_fin,vt)}</div><div class="rv proy">${p_resfin?fmt(p_resfin):'—'}</div><div class="rv proy" style="font-size:10px">${p_resfin?ppct(p_resfin,p_vt):'—'}</div><div class="rv var-${finVP.c}"><span class="vp ${finVP.c}">${finVP.t}</span></div></div>
     <div style="padding:5px 10px;font-size:8px;color:var(--mut);border-top:1px solid var(--brd)">▶ Hacé clic para expandir · % sobre ingresos totales consolidados</div>
   </div>`;
 }
@@ -1149,8 +1213,8 @@ function processExcel(wb){
       const r=rows[i];if(!r||r[0]==null)continue;
       const n=Number(String(r[0]||'').replace(/'/g,''));if(!n)continue;
       map[n]={n0:String(r[2]||'').replace(/'/g,'').trim(),
-              n1:String(r[3]||'').replace(/'/g,'').trim(),
-              n2:String(r[4]||'').replace(/'/g,'').trim(),
+              n1:String(r[3]||'').replace(/'/g,'').trim().replace(/  +/g,' '),
+              n2:String(r[4]||'').replace(/'/g,'').trim().replace(/  +/g,' '),
               deno:String(r[1]||'').replace(/'/g,'').trim()};
     }
     return map;
@@ -1193,7 +1257,7 @@ function processExcel(wb){
       let p=Number(r[0]);const v=Number(r[2])||0;
       if(!v)continue;
       if(String(p).length===5)p=(Math.floor(p/10)*100)+(p%10);
-      out.push({p,concepto:String(r[1]).trim(),v:Math.round(v*100)/100});
+      out.push({p,concepto:String(r[1]).trim().replace(/  +/g,' '),v:Math.round(v*100)/100});
     }
     return out;
   };
