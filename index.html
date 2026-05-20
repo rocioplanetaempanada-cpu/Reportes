@@ -621,7 +621,7 @@ const PROD_GROUPS = [
   {label:'CF (4)', keys:['Costo CF Indiada (4)','Costo CF Vegetales (4)','Costo CF (4)'], projKey:'Costo CF (4)'},
 ];
 
-function prodDetailRows(detail, pDetail, base){
+function prodDetailRows(detail, pDetail, base, p_base){
   return PROD_GROUPS.map(g=>{
     const groupTotal = g.keys.reduce((s,k)=>s+(detail[k]||0), 0);
     if(!groupTotal) return '';
@@ -644,8 +644,8 @@ function prodDetailRows(detail, pDetail, base){
       <div class="rc" style="padding-left:28px"><em class="ti">▶</em>${g.label}</div>
       <div class="rv neg" style="font-size:9px">-${fmt(groupTotal)}</div>
       <div class="rp" style="font-size:9px">${pct(groupTotal,base)}</div>
-      <div class="rv proy" style="font-size:9px">${projTotal?fmt(projTotal):'—'}</div>
-      <div class="rv proy" style="font-size:9px">—</div>
+      <div class="rv proy neg" style="font-size:9px">${projTotal?'-'+fmt(projTotal):'—'}</div>
+      <div class="rv proy" style="font-size:9px">${(projTotal&&p_base)?ppct(projTotal,p_base):'—'}</div>
       <div class="rv" style="font-size:9px"><span class="vp ${vv.c}">${vv.t}</span></div>
     </div>
     <div class="dr" id="${subId}">${subRows}</div>`;
@@ -674,7 +674,7 @@ function costDetailRows(detail, pDetail, base, depth=1, p_base){
         <div class="rc" style="padding-left:${pl}px">${k}</div>
         <div class="rv neg" style="font-size:9px">-${fmt(v)}</div>
         <div class="rp" style="font-size:9px">${pct(v,base)}</div>
-        <div class="rv proy" style="font-size:9px">${p2?fmt(p2):'—'}</div>
+        <div class="rv proy neg" style="font-size:9px">${p2?'-'+fmt(p2):'—'}</div>
         <div class="rv proy" style="font-size:9px">${(p2&&_cBase)?ppct(p2,_cBase):'—'}</div>
         <div class="rv var-${vv.c}" style="font-size:9px"><span class="vp ${vv.c}">${vv.t}</span></div>
       </div>`;
@@ -683,15 +683,22 @@ function costDetailRows(detail, pDetail, base, depth=1, p_base){
 
 function incDetailRows(detail, base, depth=1, pDetail, p_base){
   const cls=depth===1?'d1':'d2', pl=depth===1?28:46;
-  return Object.entries(detail)
-    .filter(([,v])=>v!==0).sort(([,a],[,b])=>b-a)
-    .map(([k,v])=>{
+  // Union of real and projected keys so proy-only items also appear
+  const allKeys=[...new Set([...Object.keys(detail||{}), ...Object.keys(pDetail||{})])];
+  return allKeys
+    .filter(k=>((detail||{})[k]||0)!==0 || ((pDetail||{})[k]||0)!==0)
+    .sort((a,b)=>{
+      const va=(detail||{})[a]||0, vb=(detail||{})[b]||0;
+      return vb-va;
+    })
+    .map(k=>{
+      const v=(detail||{})[k]||0;
       const p2=(pDetail||{})[k]||0;
-      const vv=p2?vp(v,p2):{c:'neu',t:'—'};
+      const vv=(v&&p2)?vp(v,p2):{c:'neu',t:'—'};
       return `<div class="r ${cls}" style="${COLS5}">
         <div class="rc" style="padding-left:${pl}px">${k}</div>
-        <div class="rv" style="font-size:9px">${fmt(v)}</div>
-        <div class="rp" style="font-size:9px">${pct(v,base)}</div>
+        <div class="rv" style="font-size:9px">${v?fmt(v):'—'}</div>
+        <div class="rp" style="font-size:9px">${v?pct(v,base):'—'}</div>
         <div class="rv proy" style="font-size:9px">${p2?fmt(p2):'—'}</div>
         <div class="rv proy" style="font-size:9px">${(p2&&p_base)?ppct(p2,p_base):'—'}</div>
         <div class="rv" style="font-size:9px"><span class="vp ${vv.c}">${vv.t}</span></div>
@@ -752,7 +759,8 @@ function renderPL(ps, targetId='main-pl') {
   // Projected
   const pp_v=spvFn(pp,ps,c=>c.startsWith('Ventas')), pp_p=-spv(pp,ps,PROY_PROD_PE), pp_c=-spv(pp,ps,PROY_COML_PE);
   const jp_v=spvFn(pj,ps,c=>c.startsWith('Ventas')), jp_p=-spv(pj,ps,PROY_PROD_JOS), jp_c=-spv(pj,ps,PROY_COML_JOS);
-  const p_rop=(pp_v-pp_p-pp_c)+(jp_v-jp_p-jp_c);
+  const pp_rop=pp_v-pp_p-pp_c, jp_rop=jp_v-jp_p-jp_c;
+  const p_rop=pp_rop+jp_rop;
   const p_adm=-spv([...pp,...pj],ps,ADMIN_LINES.map(l=>l[3]));
   const p_resai=p_rop-p_adm, p_int=-spv([...pp,...pj],ps,['Intereses Creditos','Intereses Planes']);
   const p_resfin=p_resai-p_int;
@@ -779,19 +787,19 @@ function renderPL(ps, targetId='main-pl') {
       <div class="kpi-sub">${pct(k.v,k.b)} s/vta${k.p?` · <span class="vp ${vv.c}">${vv.t}</span>`:''}</div>
     </div>`}).join('')}
   </div>
-  ${plBlock('Planeta Empanada','bdg-pe','PE',pe_ing,pe_v,pe_oi,pe_p,pe_rb,pe_c,pe_rop,pp_v,pp_p,pp_c,pp_rop=pp_v-pp_p-pp_c,pe_vD,pe_pD,pe_cD,'xpe','gt-pe',ps,'pe',pp_v,pp,ppv_detail,ppc_detail)}
-  ${plBlock('Joselito','bdg-jos','JOS',jos_ing,jos_v,jos_oi,jos_p,jos_rb,jos_c,jos_rop,jp_v,jp_p,jp_c,jp_rop=jp_v-jp_p-jp_c,jos_vD,jos_pD,jos_cD,'xjos','gt-jos',ps,'jos',jp_v,pj,jpv_detail,jpc_detail)}
-  ${consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_resai,int_tot,p_int,res_fin,p_resfin,pe_int,jos_int,pe_fci,ps,pp_v+jp_v,D)}`;
+  ${plBlock('Planeta Empanada','bdg-pe','PE',pe_ing,pe_v,pe_oi,pe_p,pe_rb,pe_c,pe_rop,pp_v,pp_p,pp_c,pp_rop,pe_vD,pe_pD,pe_cD,'xpe','gt-pe',ps,'pe',pp_v,pp,ppv_detail,ppc_detail)}
+  ${plBlock('Joselito','bdg-jos','JOS',jos_ing,jos_v,jos_oi,jos_p,jos_rb,jos_c,jos_rop,jp_v,jp_p,jp_c,jp_rop,jos_vD,jos_pD,jos_cD,'xjos','gt-jos',ps,'jos',jp_v,pj,jpv_detail,jpc_detail)}
+  ${consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_resai,int_tot,p_int,res_fin,p_resfin,pe_int,jos_int,pe_fci,ps,pp_v+jp_v,D,pp_rop,jp_rop)}`;
 }
 
 function plBlock(title,bdgCls,bdgTxt,base,v,oi,p,rb,c,rop,pv,pp,pc,prop,vD,pD,cD,xCls,gtCls,ps,empresa,p_base,proy_arr,vD_proy,cD_proy){
   const mkExp=(lbl,cost,pCost,det,pDet,isCost,cls,isProd)=>{
     const vv=vp(cost,pCost), inner=`<div class="rc dim"><em class="ti">▶</em>${lbl}</div>
       <div class="rv neg">-${fmt(cost)}</div><div class="rp">${pct(-cost,base)}</div>
-      <div class="rv proy">${pCost?fmt(pCost):'—'}</div>
+      <div class="rv proy neg">${pCost?'-'+fmt(pCost):'—'}</div>
       <div class="rv proy" style="font-size:10px">${pCost?ppct(pCost,p_base):'—'}</div>
       <div class="rv var-${vv.c}"><span class="vp ${vv.c}">${vv.t}</span></div>`;
-    const dRows=isProd ? prodDetailRows(det,pDet||{},base) : costDetailRows(det,pDet||{},base,1,p_base);
+    const dRows=isProd ? prodDetailRows(det,pDet||{},base,p_base) : costDetailRows(det,pDet||{},base,1,p_base);
     return expRow('ind',inner,dRows,cls);
   };
   const mkExpInc=(lbl,val,pVal,det,pDet)=>{
@@ -868,7 +876,7 @@ function controlBlock(ps, res_fin, data){
   </div>`;
 }
 
-function consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_resai,int_tot,p_int,res_fin,p_resfin,pe_int,jos_int,pe_fci,ps,p_vt,D){
+function consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_resai,int_tot,p_int,res_fin,p_resfin,pe_int,jos_int,pe_fci,ps,p_vt,D,pp_rop,jp_rop){
   const ropVP=vp(rop,p_rop), admVP=vp(adm_tot,p_adm);
   const aiVP=vp(res_ai,p_resai), finVP=vp(res_fin,p_resfin);
   const admRows=adm_lines.map(({label,pv,jv,tot,projV,pe_n1,jos_n1})=>{
@@ -877,7 +885,7 @@ function consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_
     const dRows=adminDetailRows(pv,jv,pe_n1,jos_n1,ps,vt);
     const inner=`<div class="rc dim"><em class="ti">▶</em>${label}</div>
       <div class="rv neg">-${fmt(tot)}</div><div class="rp">${pct(-tot,vt)}</div>
-      <div class="rv proy">${projV?fmt(projV):'—'}</div>
+      <div class="rv proy neg">${projV?'-'+fmt(projV):'—'}</div>
       <div class="rv proy" style="font-size:10px">${projV?ppct(projV,p_vt):'—'}</div>
       <div class="rv var-${vv.c}"><span class="vp ${vv.c}">${vv.t}</span></div>`;
     return expRow('ind',inner,dRows,'xgold');
@@ -892,19 +900,19 @@ function consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_
   const intVP=vp(int_tot,p_int);
   const intInner=`<div class="rc dim"><em class="ti">▶</em>Intereses financieros (neto)</div>
     <div class="rv neg">-${fmt(int_tot)}</div><div class="rp">${pct(-int_tot,vt)}</div>
-    <div class="rv proy">${p_int?fmt(p_int):'—'}</div>
+    <div class="rv proy neg">${p_int?'-'+fmt(p_int):'—'}</div>
     <div class="rv proy" style="font-size:10px">${p_int?ppct(p_int,p_vt):'—'}</div>
     <div class="rv var-${intVP.c}"><span class="vp ${intVP.c}">${intVP.t}</span></div>`;
 
   return `<div class="blk full"><div class="blk-hdr"><span class="blk-ttl">Consolidado PE + JOS</span><span class="bdg bdg-cons">CONSOLIDADO</span></div>
     ${shRow('RESULTADO OPERATIVO CONSOLIDADO','var(--gold)')}
-    <div class="r" style="${COLS5}"><div class="rc">Resultado Operativo PE</div><div class="rv ${pe_rop<0?'neg':''} pe-c">${fmt(pe_rop)}</div><div class="rp">${pct(pe_rop,vt)}</div><div class="rv proy">—</div><div class="rv proy">—</div><div class="rv">—</div></div>
-    <div class="r" style="${COLS5}"><div class="rc">Resultado Operativo JOS</div><div class="rv ${jos_rop<0?'neg':''} jos-c">${fmt(jos_rop)}</div><div class="rp">${pct(jos_rop,vt)}</div><div class="rv proy">—</div><div class="rv proy">—</div><div class="rv">—</div></div>
+    <div class="r" style="${COLS5}"><div class="rc">Resultado Operativo PE</div><div class="rv ${pe_rop<0?'neg':''} pe-c">${fmt(pe_rop)}</div><div class="rp">${pct(pe_rop,vt)}</div><div class="rv proy ${pp_rop<0?'neg':''}">${pp_rop?fmt(pp_rop):'—'}</div><div class="rv proy" style="font-size:10px">${pp_rop?ppct(pp_rop,p_vt):'—'}</div><div class="rv var-${vp(pe_rop,pp_rop).c}"><span class="vp ${vp(pe_rop,pp_rop).c}">${pp_rop?vp(pe_rop,pp_rop).t:'—'}</span></div></div>
+    <div class="r" style="${COLS5}"><div class="rc">Resultado Operativo JOS</div><div class="rv ${jos_rop<0?'neg':''} jos-c">${fmt(jos_rop)}</div><div class="rp">${pct(jos_rop,vt)}</div><div class="rv proy ${jp_rop<0?'neg':''}">${jp_rop?fmt(jp_rop):'—'}</div><div class="rv proy" style="font-size:10px">${jp_rop?ppct(jp_rop,p_vt):'—'}</div><div class="rv var-${vp(jos_rop,jp_rop).c}"><span class="vp ${vp(jos_rop,jp_rop).c}">${jp_rop?vp(jos_rop,jp_rop).t:'—'}</span></div></div>
     <div class="r tot" style="${COLS5}"><div class="rc" style="font-weight:500">Resultado Operativo PE + JOS</div><div class="rv ${rop<0?'neg':''} gold-c">${fmt(rop)}</div><div class="rp">${pct(rop,vt)}</div><div class="rv proy">${p_rop?fmt(p_rop):'—'}</div><div class="rv proy" style="font-size:10px">${p_rop?ppct(p_rop,p_vt):'—'}</div><div class="rv var-${ropVP.c}"><span class="vp ${ropVP.c}">${ropVP.t}</span></div></div>
     <div class="gap"></div>
     ${shRow('COSTOS DE ADMINISTRACIÓN (8)','var(--red)')}
     ${admRows}
-    <div class="r tot" style="${COLS5}"><div class="rc" style="color:var(--red)">Total Costos Adm.</div><div class="rv neg">-${fmt(adm_tot)}</div><div class="rp">${pct(-adm_tot,vt)}</div><div class="rv proy">${p_adm?fmt(p_adm):'—'}</div><div class="rv proy" style="font-size:10px">${p_adm?ppct(p_adm,p_vt):'—'}</div><div class="rv var-${admVP.c}"><span class="vp ${admVP.c}">${admVP.t}</span></div></div>
+    <div class="r tot" style="${COLS5}"><div class="rc" style="color:var(--red)">Total Costos Adm.</div><div class="rv neg">-${fmt(adm_tot)}</div><div class="rp">${pct(-adm_tot,vt)}</div><div class="rv proy neg">${p_adm?'-'+fmt(p_adm):'—'}</div><div class="rv proy" style="font-size:10px">${p_adm?ppct(p_adm,p_vt):'—'}</div><div class="rv var-${admVP.c}"><span class="vp ${admVP.c}">${admVP.t}</span></div></div>
     <div class="gap"></div>
     <div class="r gt-cons" style="${COLS5}"><div class="rc">Resultado Neto antes de Intereses</div><div class="rv ${res_ai<0?'neg':'pos'} gold-c">${fmt(res_ai)}</div><div class="rp">${pct(res_ai,vt)}</div><div class="rv proy">${p_resai?fmt(p_resai):'—'}</div><div class="rv proy" style="font-size:10px">${p_resai?ppct(p_resai,p_vt):'—'}</div><div class="rv var-${aiVP.c}"><span class="vp ${aiVP.c}">${aiVP.t}</span></div></div>
     <div class="gap"></div>
