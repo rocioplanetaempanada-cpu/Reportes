@@ -362,14 +362,15 @@ const JOS_COML   = ['Costos Locales (5)','Costos Logisticos (6)','Costos Marketi
                     'Comisiones Agentes','Costos Impositivos'];
 
 const ADMIN_LINES = [
-  // [label, pe_n1s, jos_n1s, proy_concepto]
-  ['Comercial',          ['Comercial'],                ['Comercial'],          'Comercial'],
-  ['Administración',     ['Administracion'],           ['Administracion'],     'Administracion'],
-  ['RRHH',               ['RRHH'],                     ['RRHH'],               'RRHH'],
-  ['Calidad',            ['calidad','Calidad'],        ['Calidad'],            'Calidad'],
-  ['Honorarios externos',['Honorarios externos'],      ['Honorarios externos'],'Honorarios externos'],
-  ['Funcionamiento',     ['Funcionamiento'],            ['Funcionamiento'],     'Funcionamiento'],
-  ['Indemnizaciones',    ['Indemnizaciones'],           ['Indemnizaciones'],    'Indemnizaciones'],
+  // [label, pe_n1s, jos_n1s, proy_concepto, useMix]
+  // useMix=true: sum ALL signs (R+ and R-) like gcMix — for accounts with sobrantes/faltantes
+  ['Comercial',          ['Comercial'],                ['Comercial'],          'Comercial',          false],
+  ['Administración',     ['Administracion'],           ['Administracion'],     'Administracion',     false],
+  ['RRHH',               ['RRHH'],                     ['RRHH'],               'RRHH',               false],
+  ['Calidad',            ['calidad','Calidad'],        ['Calidad'],            'Calidad',            false],
+  ['Honorarios externos',['Honorarios externos'],      ['Honorarios externos'],'Honorarios externos',false],
+  ['Funcionamiento',     ['Funcionamiento'],            ['Funcionamiento'],     'Funcionamiento',     true],
+  ['Indemnizaciones',    ['Indemnizaciones'],           ['Indemnizaciones'],    'Indemnizaciones',    false],
 ];
 
 const PE_INT  = ['Intereses Creditos','Intereses Planes','Otros ingresos/ egresos financieros'];
@@ -548,6 +549,7 @@ const vp  = (r,p2) => {
 
 // Sum helpers on D.pe / D.jos
 function sum(arr, ps, fn) { return arr.filter(r=>ps.includes(r.p)&&fn(r)).reduce((a,r)=>a+r.va,0); }
+function gcMixN1(arr,ps,nl){ const s=new Set(nl); return -sum(arr,ps,r=>s.has(r.n1)); }
 function gv(arr,ps,nl){ const s=new Set(nl); return sum(arr,ps,r=>r.n0==='R+'&&s.has(r.n1)); }
 function gc(arr,ps,nl){ const s=new Set(nl); return -sum(arr,ps,r=>r.n0==='R-'&&s.has(r.n1)); }
 function gcMix(arr,ps,n1){ return -sum(arr,ps,r=>r.n1===n1); } // all signs, by n1
@@ -736,8 +738,10 @@ function renderPL(ps, targetId='main-pl') {
   const rop=pe_rop+jos_rop, vt=pe_ing+jos_ing;
 
   let adm_tot=0;
-  const adm_lines=ADMIN_LINES.map(([label,pe_n1,jos_n1,prc])=>{
-    const pv=gc(pe,ps,pe_n1), jv=gc(jos,ps,jos_n1), tot=pv+jv;
+  const adm_lines=ADMIN_LINES.map(([label,pe_n1,jos_n1,prc,useMix])=>{
+    const pv=useMix?gcMixN1(pe,ps,pe_n1):gc(pe,ps,pe_n1);
+    const jv=useMix?gcMixN1(jos,ps,jos_n1):gc(jos,ps,jos_n1);
+    const tot=pv+jv;
     adm_tot+=tot;
     const projV=-spv(pp,ps,[prc])-spv(pj,ps,[prc]);
     return{label,pv,jv,tot,projV,pe_n1,jos_n1};
@@ -777,7 +781,7 @@ function renderPL(ps, targetId='main-pl') {
   </div>
   ${plBlock('Planeta Empanada','bdg-pe','PE',pe_ing,pe_v,pe_oi,pe_p,pe_rb,pe_c,pe_rop,pp_v,pp_p,pp_c,pp_rop=pp_v-pp_p-pp_c,pe_vD,pe_pD,pe_cD,'xpe','gt-pe',ps,'pe',pp_v,pp,ppv_detail,ppc_detail)}
   ${plBlock('Joselito','bdg-jos','JOS',jos_ing,jos_v,jos_oi,jos_p,jos_rb,jos_c,jos_rop,jp_v,jp_p,jp_c,jp_rop=jp_v-jp_p-jp_c,jos_vD,jos_pD,jos_cD,'xjos','gt-jos',ps,'jos',jp_v,pj,jpv_detail,jpc_detail)}
-  ${consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_resai,int_tot,p_int,res_fin,p_resfin,pe_int,jos_int,pe_fci,ps,pp_v+jp_v)}`;
+  ${consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_resai,int_tot,p_int,res_fin,p_resfin,pe_int,jos_int,pe_fci,ps,pp_v+jp_v,D)}`;
 }
 
 function plBlock(title,bdgCls,bdgTxt,base,v,oi,p,rb,c,rop,pv,pp,pc,prop,vD,pD,cD,xCls,gtCls,ps,empresa,p_base,proy_arr,vD_proy,cD_proy){
@@ -815,7 +819,56 @@ function plBlock(title,bdgCls,bdgTxt,base,v,oi,p,rb,c,rop,pv,pp,pc,prop,vD,pD,cD
     </div></div>`;
 }
 
-function consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_resai,int_tot,p_int,res_fin,p_resfin,pe_int,jos_int,pe_fci,ps,p_vt){
+function controlBlock(ps, res_fin, data){
+  // Sum all R+ and R- accounts directly from raw data
+  const pe_raw  = data.pe.filter(r=>ps.includes(r.p)).reduce((s,r)=>s+r.va, 0);
+  const jos_raw = data.jos.filter(r=>ps.includes(r.p)).reduce((s,r)=>s+r.va, 0);
+  const total_raw = pe_raw + jos_raw;
+  const diff = res_fin - total_raw;
+  const diffAbs = Math.abs(diff);
+  // Color: green if diff < 1 peso, yellow if < 100, red if >= 100
+  const diffColor = diffAbs < 1 ? 'var(--grn)' : diffAbs < 100 ? 'var(--gold)' : 'var(--red)';
+  const diffIcon  = diffAbs < 1 ? '✓' : diffAbs < 100 ? '≈' : '⚠';
+  const fmtExact = v => {
+    const abs = Math.abs(v);
+    const ints = Math.floor(abs);
+    const decs = Math.round((abs - ints) * 100).toString().padStart(2,'0');
+    const sg = v < 0 ? '-' : '';
+    return sg + ints.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.') + ',' + decs;
+  };
+  return `<div style="margin-top:10px;border:1px solid var(--brd2);border-radius:2px;background:rgba(0,0,0,.2)">
+    <div style="padding:6px 12px;border-bottom:1px solid var(--brd);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);font-weight:500">
+      Control de cuadre
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 140px 140px;font-size:10px">
+      <div style="padding:5px 12px;color:var(--mut)">Concepto</div>
+      <div style="padding:5px 8px;text-align:right;color:var(--mut)">Importe exacto</div>
+      <div style="padding:5px 8px;text-align:right;color:var(--mut)">Reporte</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 140px 140px;font-size:10px;border-top:1px solid var(--brd)">
+      <div style="padding:5px 12px;color:var(--pe)">∑ cuentas R+/R− Planeta</div>
+      <div style="padding:5px 8px;text-align:right;font-variant-numeric:tabular-nums">${fmtExact(pe_raw)}</div>
+      <div style="padding:5px 8px;text-align:right;color:var(--mut)">—</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 140px 140px;font-size:10px;border-top:1px solid var(--brd)">
+      <div style="padding:5px 12px;color:var(--jos)">∑ cuentas R+/R− Joselito</div>
+      <div style="padding:5px 8px;text-align:right;font-variant-numeric:tabular-nums">${fmtExact(jos_raw)}</div>
+      <div style="padding:5px 8px;text-align:right;color:var(--mut)">—</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 140px 140px;font-size:10px;border-top:1px solid var(--brd);font-weight:500">
+      <div style="padding:5px 12px;color:var(--gold)">Total (suma directa)</div>
+      <div style="padding:5px 8px;text-align:right;font-variant-numeric:tabular-nums;color:var(--gold)">${fmtExact(total_raw)}</div>
+      <div style="padding:5px 8px;text-align:right;font-variant-numeric:tabular-nums;color:var(--gold)">${fmtExact(res_fin)}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 140px 140px;font-size:10px;border-top:2px solid var(--brd2);background:rgba(0,0,0,.15)">
+      <div style="padding:6px 12px;color:${diffColor};font-weight:500">${diffIcon} Diferencia</div>
+      <div style="padding:6px 8px;text-align:right;color:${diffColor};font-weight:500;font-variant-numeric:tabular-nums">${fmtExact(diff)}</div>
+      <div style="padding:6px 8px;text-align:right;font-size:9px;color:var(--mut)">${diffAbs<1?'Cuadre exacto':diffAbs<100?'Diferencia de centavos (redondeo)':'Revisar clasificación'}</div>
+    </div>
+  </div>`;
+}
+
+function consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_resai,int_tot,p_int,res_fin,p_resfin,pe_int,jos_int,pe_fci,ps,p_vt,D){
   const ropVP=vp(rop,p_rop), admVP=vp(adm_tot,p_adm);
   const aiVP=vp(res_ai,p_resai), finVP=vp(res_fin,p_resfin);
   const admRows=adm_lines.map(({label,pv,jv,tot,projV,pe_n1,jos_n1})=>{
@@ -860,6 +913,7 @@ function consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_
     <div class="gap"></div>
     <div class="r gt-fin" style="${COLS5}"><div class="rc">RESULTADO NETO</div><div class="rv big ${res_fin<0?'neg':'pos'} gold-c">${fmt(res_fin)}</div><div class="rp">${pct(res_fin,vt)}</div><div class="rv proy">${p_resfin?fmt(p_resfin):'—'}</div><div class="rv proy" style="font-size:10px">${p_resfin?ppct(p_resfin,p_vt):'—'}</div><div class="rv var-${finVP.c}"><span class="vp ${finVP.c}">${finVP.t}</span></div></div>
     <div style="padding:5px 10px;font-size:8px;color:var(--mut);border-top:1px solid var(--brd)">▶ Hacé clic para expandir · % sobre ingresos totales consolidados</div>
+    ${controlBlock(ps,res_fin,D)}
   </div>`;
 }
 
