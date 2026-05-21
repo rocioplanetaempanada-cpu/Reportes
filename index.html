@@ -746,7 +746,8 @@ function renderPL(ps, targetId='main-pl') {
   const jos_v = gv(jos,ps,JOS_VENTAS), jos_oi=gv(jos,ps,JOS_OTROS);
   const jos_p = gc(jos,ps,JOS_PROD),   jos_c = gc(jos,ps,JOS_COML);
   const jos_ing=jos_v+jos_oi, jos_rb=jos_ing-jos_p, jos_rop=jos_rb-jos_c;
-  const jos_int=gc(jos,ps,JOS_INT);
+  const jos_fci=gv(jos,ps,[PE_FCI]);
+  const jos_int=gc(jos,ps,JOS_INT)-jos_fci;
 
   const rop=pe_rop+jos_rop, vt=pe_ing+jos_ing;
 
@@ -795,7 +796,7 @@ function renderPL(ps, targetId='main-pl') {
   </div>
   ${plBlock('Planeta Empanada','bdg-pe','PE',pe_ing,pe_v,pe_oi,pe_p,pe_rb,pe_c,pe_rop,pp_v,pp_p,pp_c,pp_rop,pe_vD,pe_pD,pe_cD,'xpe','gt-pe',ps,'pe',pp_v,pp,ppv_detail,ppc_detail)}
   ${plBlock('Joselito','bdg-jos','JOS',jos_ing,jos_v,jos_oi,jos_p,jos_rb,jos_c,jos_rop,jp_v,jp_p,jp_c,jp_rop,jos_vD,jos_pD,jos_cD,'xjos','gt-jos',ps,'jos',jp_v,pj,jpv_detail,jpc_detail)}
-  ${consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_resai,int_tot,p_int,res_fin,p_resfin,pe_int,jos_int,pe_fci,ps,pp_v+jp_v,D,pp_rop,jp_rop)}`;
+  ${consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_resai,int_tot,p_int,res_fin,p_resfin,pe_int,jos_int,pe_fci,ps,pp_v+jp_v,D,pp_rop,jp_rop,jos_fci)}`;
 }
 
 function plBlock(title,bdgCls,bdgTxt,base,v,oi,p,rb,c,rop,pv,pp,pc,prop,vD,pD,cD,xCls,gtCls,ps,empresa,p_base,proy_arr,vD_proy,cD_proy){
@@ -882,7 +883,7 @@ function controlBlock(ps, res_fin, data){
   </div>`;
 }
 
-function consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_resai,int_tot,p_int,res_fin,p_resfin,pe_int,jos_int,pe_fci,ps,p_vt,D,pp_rop,jp_rop){
+function consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_resai,int_tot,p_int,res_fin,p_resfin,pe_int,jos_int,pe_fci,ps,p_vt,D,pp_rop,jp_rop,jos_fci){
   const ropVP=vp(rop,p_rop), admVP=vp(adm_tot,p_adm);
   const aiVP=vp(res_ai,p_resai), finVP=vp(res_fin,p_resfin);
   const admRows=adm_lines.map(({label,pv,jv,tot,projV,pe_n1,jos_n1})=>{
@@ -1085,7 +1086,9 @@ function renderLOC(ps, targetId='main-loc'){
 
   const res={};
   LOCALES.forEach(l=>{
-    res[l]={ventas:0,oi:0,prod:0,coml_loc:0,coml_prorr:0};
+    res[l]={ventas:0,oi:0,prod:0,coml_loc:0,coml_prorr:0,
+      coml_logistica:0,coml_marketing:0,coml_impositivos:0,
+      sueldos_op:0,sueldos_del:0};
     LOC_SUBLINES.forEach(sl=>res[l][sl]=0);
   });
 
@@ -1113,11 +1116,20 @@ function renderLOC(ps, targetId='main-loc'){
     // Costos directos de local (cualquier N1, por N2 en N2_LOC)
     if(n2!==INDIR&&N2_LOC[n2]){
       const l=N2_LOC[n2];const sl=N2_SL[n2]||'otros';
-      res[l].coml_loc+=va;res[l][sl]+=va;return;
+      res[l].coml_loc+=va;res[l][sl]+=va;
+      // Sueldos sub-split
+      if(n2.startsWith('Sueldos Operacion')) res[l].sueldos_op+=va;
+      else if(n2.startsWith('Sueldos Delivery')||n2==='Sueldos Eventos Especiales') res[l].sueldos_del+=va;
+      return;
     }
     // Costos comerciales prorateables — mismo criterio que prod: % sobre TODOS los canales
     if(LOC_COML_PRORR_N1.has(n1)&&n2===INDIR){
-      LOCALES.forEach(l=>res[l].coml_prorr+=va*prodPct[l]);return;
+      LOCALES.forEach(l=>{
+        res[l].coml_prorr+=va*prodPct[l];
+        if(n1==='Costos Logisticos (6)')          res[l].coml_logistica +=va*prodPct[l];
+        else if(n1==='Costos Marketing y Publicidad (7)') res[l].coml_marketing +=va*prodPct[l];
+        else if(n1==='Costos Impositivos')         res[l].coml_impositivos+=va*prodPct[l];
+      });return;
     }
   });
 
@@ -1130,7 +1142,8 @@ function renderLOC(ps, targetId='main-loc'){
     r.pct  =locPct[l];
   });
 
-  const tot={ventas:0,oi:0,ing:0,prod:0,rb:0,coml_loc:0,coml_prorr:0,rop:0};
+  const tot={ventas:0,oi:0,ing:0,prod:0,rb:0,coml_loc:0,coml_prorr:0,rop:0,
+    coml_logistica:0,coml_marketing:0,coml_impositivos:0,sueldos_op:0,sueldos_del:0};
   const slTot={};LOC_SUBLINES.forEach(sl=>slTot[sl]=0);
   LOCALES.forEach(l=>{
     Object.keys(tot).forEach(k=>{if(res[l][k]!==undefined)tot[k]+=res[l][k];});
@@ -1184,6 +1197,24 @@ function locLines(res,tot,slTot,ps){
     </div>`;
     const subRows=LOC_SUBLINES.map(sl=>{
       if(slTot[sl]===0&&LOCALES.every(l=>res[l][sl]===0))return'';
+      // Sueldos: expandable with Operacion + Delivery sub-rows
+      if(sl==='sueldos'){
+        const sid='x'+(++_uid);
+        const subSueldos=[
+          ['sueldos_op','Sueldos Operación'],
+          ['sueldos_del','Sueldos Delivery'],
+        ].filter(([k])=>LOCALES.some(l=>res[l][k]!==0)||tot[k]!==0)
+        .map(([k,lbl])=>`<div class="r d2" style="${COLS_LOC}">
+          <div class="rc" style="padding-left:46px;font-size:9px">${lbl}</div>
+          ${LOCALES.map(l=>`<div class="rv" style="font-size:9px">${res[l][k]!==0?(res[l][k]<0?`<span style="color:var(--red)">-${fmt(-res[l][k])}</span>`:`<span style="color:var(--grn)">+${fmt(res[l][k])}</span>`):'<span style="color:var(--mut)">—</span>'}</div>`).join('')}
+          <div class="rv" style="font-size:9px">${tot[k]!==0?(tot[k]<0?`-${fmt(-tot[k])}`:fmt(tot[k])):'—'}</div>
+        </div>`).join('');
+        return `<div class="r d1 exp" style="${COLS_LOC}" onclick="xopen('${sid}','xloc')">
+          <div class="rc" style="padding-left:28px;font-size:9px"><em class="ti">▶</em>Sueldos</div>
+          ${LOCALES.map(l=>`<div class="rv" style="font-size:9px">${res[l][sl]!==0?(res[l][sl]<0?`<span style="color:var(--red)">-${fmt(-res[l][sl])}</span>`:`<span style="color:var(--grn)">+${fmt(res[l][sl])}</span>`):'<span style="color:var(--mut)">—</span>'}</div>`).join('')}
+          <div class="rv" style="font-size:9px">${slTot[sl]!==0?(slTot[sl]<0?`-${fmt(-slTot[sl])}`:fmt(slTot[sl])):'—'}</div>
+        </div><div class="dr" id="${sid}">${subSueldos}</div>`;
+      }
       return `<div class="r d1" style="${COLS_LOC}">
         <div class="rc" style="padding-left:28px;font-size:9px">${LOC_SL_LABELS[sl]}</div>
         ${LOCALES.map(l=>`<div class="rv" style="font-size:9px">${res[l][sl]!==0?(res[l][sl]<0?`<span style="color:var(--red)">-${fmt(-res[l][sl])}</span>`:`<span style="color:var(--grn)">+${fmt(res[l][sl])}</span>`):'<span style="color:var(--mut)">—</span>'}</div>`).join('')}
@@ -1199,7 +1230,9 @@ function locLines(res,tot,slTot,ps){
     simpleRow('Costo de Producción (prorrateo)','prod',true,false),
     simpleRow('Resultado Bruto','rb',false,true),
     comlLocExp(),
-    simpleRow('Costos Logíst. + Marketing + Impositivos (prorrateo)','coml_prorr',true,false),
+    tot.coml_logistica  ? simpleRow('Costos Logísticos (prorrateo)','coml_logistica',true,false)   : '',
+    tot.coml_marketing  ? simpleRow('Costos Marketing y Pub. (prorrateo)','coml_marketing',true,false) : '',
+    tot.coml_impositivos? simpleRow('Costos Impositivos (prorrateo)','coml_impositivos',true,false)    : '',
     simpleRow('Resultado Operativo','rop',false,true),
   ].join('');
 }
