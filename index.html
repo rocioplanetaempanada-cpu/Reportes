@@ -107,7 +107,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:12px;
 .r:hover{background:rgba(255,255,255,.01)}
 .r.sh{background:var(--sur2)}
 .r.sh .rc{font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--mut);padding:5px 10px;font-weight:500}
-.r.sh .rv,.r.sh .rp{font-size:9px;color:var(--mut);padding:5px 4px;font-weight:500}
+.r.sh .rv,.r.sh .rp{font-size:10px;color:var(--mut);padding:5px 4px;font-weight:500}
 .r.ind .rc{color:var(--dim);padding-left:22px}
 .r.sub-t{border-top:1px solid var(--brd);border-bottom:2px solid var(--brd2);font-size:13px;font-weight:500}
 .r.tot{border-top:2px solid var(--brd2);background:rgba(255,255,255,.02)}
@@ -123,7 +123,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:12px;
 .rv.pe-c{color:var(--pe);font-weight:500}.rv.jos-c{color:var(--jos);font-weight:500}
 .rv.gold-c{color:var(--gold);font-weight:500}.rv.big{font-family:var(--fs);font-size:1.15rem;font-weight:300}
 .rv.proy{color:var(--mut)}
-.rp{text-align:right;font-size:9px;color:var(--mut);padding:7px 8px 7px 2px}
+.rp{text-align:right;font-size:10px;color:var(--dim);padding:7px 8px 7px 2px}
 .gap{height:10px;background:var(--bg);border-left:1px solid var(--brd);border-right:1px solid var(--brd)}
 
 /* EXPANDABLE */
@@ -406,7 +406,7 @@ const N2_UN = {'Ventas Lamadrid':'Locales','Ventas Punta Alta':'Locales',
   'Sueldos Operacion Lamadrid':'Locales','Sueldos Operacion Zelarrayan':'Locales',
   'Sueldos Delivery Lamadrid':'Locales','Sueldos Delivery Zelarrayan':'Locales',
   'Sueldos Eventos Especiales':'Locales',
-  'Alquiler Lamdrid':'Locales','Alquiler Lamadrid':'Locales','Alquiler Monte Hermoso':'Locales','Alquiler Zelarrayan':'Locales','Alquiler Eventos Especiales':'Locales',
+  'Alquiler Lamdrid':'Locales','Alquiler Lamadrid':'Locales','Alquiler Monte Hermoso':'Locales','Alquiler Punta Alta':'Locales','Alquiler Zelarrayan':'Locales','Alquiler Eventos Especiales':'Locales',
   'Packaging Lamadrid':'Locales','Packaging Zelarrayan':'Locales','Packaging Eventos Especiales':'Locales',
   'PYA Lamadrid':'Locales','PYA Zelarrayan':'Locales','PYA Punta Alta':'Locales','PYA Monte Hermoso':'Locales',
   'Franquicias':'Franquicias',
@@ -430,7 +430,7 @@ const N2_LOC = {'Ventas Lamadrid':'Lamadrid','Ventas Monte Hermoso':'Monte Hermo
   'Sueldos Operacion Lamadrid':'Lamadrid','Sueldos Operacion Zelarrayan':'Zelarrayan',
   'Sueldos Delivery Lamadrid':'Lamadrid','Sueldos Delivery Zelarrayan':'Zelarrayan',
   'Sueldos Eventos Especiales':'Lamadrid',
-  'Alquiler Lamdrid':'Lamadrid','Alquiler Lamadrid':'Lamadrid','Alquiler Monte Hermoso':'Monte Hermoso','Alquiler Zelarrayan':'Zelarrayan','Alquiler Eventos Especiales':'Lamadrid',
+  'Alquiler Lamdrid':'Lamadrid','Alquiler Lamadrid':'Lamadrid','Alquiler Monte Hermoso':'Monte Hermoso','Alquiler Punta Alta':'Punta Alta','Alquiler Zelarrayan':'Zelarrayan','Alquiler Eventos Especiales':'Lamadrid',
   'Packaging Lamadrid':'Lamadrid','Packaging Zelarrayan':'Zelarrayan','Packaging Eventos Especiales':'Lamadrid',
   'PYA Lamadrid':'Lamadrid','PYA Zelarrayan':'Zelarrayan','PYA Punta Alta':'Punta Alta','PYA Monte Hermoso':'Monte Hermoso',
 };
@@ -440,7 +440,7 @@ const LOC_SL_LABELS= {'cv':'Costo de Ventas','alquiler':'Alquiler','sueldos':'Su
   'pya':'Pedido Ya','packaging':'Packaging','servicios':'Gs. Servicios','otros':'Administración'};
 const N2_SL = {
   'CV Lamadrid':'cv','CV Zelarrayan':'cv','CV Monte Hermoso':'cv','CV Punta Alta':'cv',
-  'Alquiler Lamdrid':'alquiler','Alquiler Lamadrid':'alquiler','Alquiler Monte Hermoso':'alquiler','Alquiler Zelarrayan':'alquiler','Alquiler Eventos Especiales':'alquiler',
+  'Alquiler Lamdrid':'alquiler','Alquiler Lamadrid':'alquiler','Alquiler Monte Hermoso':'alquiler','Alquiler Punta Alta':'alquiler','Alquiler Zelarrayan':'alquiler','Alquiler Eventos Especiales':'alquiler',
   'Sueldos Operacion Lamadrid':'sueldos','Sueldos Operacion Zelarrayan':'sueldos',
   'Sueldos Delivery Lamadrid':'sueldos','Sueldos Delivery Zelarrayan':'sueldos','Sueldos Eventos Especiales':'sueldos',
   'PYA Lamadrid':'pya','PYA Zelarrayan':'pya','PYA Punta Alta':'pya','PYA Monte Hermoso':'pya',
@@ -958,7 +958,7 @@ function renderUN(ps, targetId='main-un') {
     else if(n0==='R+'&&n1===PE_COML_MIX)line='coml'; // sobrantes
     if(!line)return;
     if(n2===INDIR){
-      if(n0==='R-'||(n0==='R+'&&UN_OI_N1.has(n1))){
+      if(n0==='R-'||(n0==='R+'&&UN_OI_N1.has(n1))||(n0==='R+'&&n1===PE_COML_MIX)){
         UNS.forEach(u=>res[u][line]+=va*pct_un[u]);
         // Track coml sub-components
         if(line==='coml'){
