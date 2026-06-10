@@ -163,8 +163,11 @@ body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:12px;
   <div class="nav on" onclick="showPage('pl')" id="nav-pl"><span class="nav-ic">📊</span>P&amp;L PE + JOS</div>
   <div class="nav-sep"></div>
   <div class="nav-section">Planeta Empanada</div>
-  <div class="nav" onclick="showPage('un')" id="nav-un"><span class="nav-ic">🏪</span>P&amp;L por U.N.</div>
-  <div class="nav" onclick="showPage('loc')" id="nav-loc"><span class="nav-ic">📍</span>P&amp;L por Local</div>
+  <div class="nav" onclick="showPage('un')" id="nav-un"><span class="nav-ic">🏪</span>P&amp;L PE por U.N.</div>
+  <div class="nav" onclick="showPage('loc')" id="nav-loc"><span class="nav-ic">📍</span>P&amp;L PE por Local</div>
+  <div class="nav-sep"></div>
+  <div class="nav-section">Joselito</div>
+  <div class="nav" onclick="showPage('jos_un')" id="nav-jos_un"><span class="nav-ic">🏭</span>P&amp;L JOS por U.N.</div>
 </nav>
 
 <!-- CONTENT WRAPPER -->
@@ -225,7 +228,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:12px;
 ════════════════════════════════════════════════════════════════ -->
 <div class="page" id="page-un">
   <div class="hdr">
-    <div><h1>P&amp;L Planeta <em>U.N.</em></h1><p class="hdr-sub">Por unidad de negocio · Planeta Empanada</p></div>
+    <div><h1>P&amp;L PE <em>U.N.</em></h1><p class="hdr-sub">Por unidad de negocio · Planeta Empanada</p></div>
     <div class="legend">
       <div class="leg"><div class="leg-d" style="background:var(--loc)"></div>Locales</div>
       <div class="leg"><div class="leg-d" style="background:var(--fra)"></div>Franquicias</div>
@@ -275,7 +278,7 @@ body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:12px;
 ════════════════════════════════════════════════════════════════ -->
 <div class="page" id="page-loc">
   <div class="hdr">
-    <div><h1>P&amp;L Planeta <em>por Local</em></h1><p class="hdr-sub">Resultado por local · Planeta Empanada</p></div>
+    <div><h1>P&amp;L PE <em>por Local</em></h1><p class="hdr-sub">Resultado por local · Planeta Empanada</p></div>
     <div class="legend">
       <div class="leg"><div class="leg-d" style="background:var(--loc)"></div>Lamadrid</div>
       <div class="leg"><div class="leg-d" style="background:var(--fra)"></div>Zelarrayan</div>
@@ -316,6 +319,44 @@ body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:12px;
         <span class="sel-info" id="info-locb">—</span>
       </div>
       <div class="main" id="main-locb" style="padding:14px 18px"></div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-jos_un">
+  <div style="display:flex;align-items:center;padding:6px 18px;background:var(--sur);border-bottom:1px solid var(--brd);gap:10px;flex-shrink:0">
+    <div class="split-toggle">
+      <button class="on" id="split-btn-jos_un" onclick="toggleSplit('jos_un')">◫ Comparar períodos</button>
+    </div>
+  </div>
+  <div class="split-wrap" id="split-wrap-jos_un">
+    <div class="split-panel">
+      <div class="split-ctrl">
+        <span class="split-lbl">A</span>
+        <div class="pills" id="pills-jos_un"></div>
+        <div class="qbtns">
+          <button class="qbtn" onclick="qsel('jos_un','last1')">Últ.</button>
+          <button class="qbtn" onclick="qsel('jos_un','last3')">Últ.3</button>
+          <button class="qbtn" onclick="qsel('jos_un','y2026')">2026</button>
+          <button class="qbtn" onclick="qsel('jos_un','all')">Todo</button>
+        </div>
+        <span class="sel-info" id="info-jos_un">—</span>
+      </div>
+      <div class="main" id="main-jos_un" style="padding:14px 18px"></div>
+    </div>
+    <div class="split-panel" id="panel-b-jos_un" style="display:none">
+      <div class="split-ctrl">
+        <span class="split-lbl b">B</span>
+        <div class="pills" id="pills-jos_unb"></div>
+        <div class="qbtns">
+          <button class="qbtn" onclick="qsel('jos_unb','last1')">Últ.</button>
+          <button class="qbtn" onclick="qsel('jos_unb','last3')">Últ.3</button>
+          <button class="qbtn" onclick="qsel('jos_unb','y2026')">2026</button>
+          <button class="qbtn" onclick="qsel('jos_unb','all')">Todo</button>
+        </div>
+        <span class="sel-info" id="info-jos_unb">—</span>
+      </div>
+      <div class="main" id="main-jos_unb" style="padding:14px 18px"></div>
     </div>
   </div>
 </div>
@@ -366,6 +407,7 @@ const ADMIN_LINES = [
   // useMix=true: sum ALL signs (R+ and R-) like gcMix — for accounts with sobrantes/faltantes
   ['Comercial',          ['Comercial'],                ['Comercial'],          'Comercial',          false],
   ['Administración',     ['Administracion'],           ['Administracion'],     'Administracion',     false],
+  ['Producción',         ['Gastos de Produccion'],     ['Gastos de Produccion'],'Gastos de Produccion',false],
   ['RRHH',               ['RRHH'],                     ['RRHH'],               'RRHH',               false],
   ['Calidad',            ['calidad','Calidad'],        ['Calidad'],            'Calidad',            false],
   ['Honorarios externos',['Honorarios externos'],      ['Honorarios externos'],'Honorarios externos',false],
@@ -456,7 +498,7 @@ const LOC_COML_PRORR_N1 = new Set(['Costos Logisticos (6)','Costos Marketing y P
 // ════════════════════════════════════════════════════════════════
 // STATE
 // ════════════════════════════════════════════════════════════════
-let D = null; // loaded data
+let D = null, _pe_rop_last = null, _jos_rop_last = null; // loaded data
 const SEL = {pl: new Set(), un: new Set(), loc: new Set(), plb: new Set(), unb: new Set(), locb: new Set()};
 const ALL_P = {pl:[], un:[], loc:[]};
 const MN = ['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
@@ -489,6 +531,11 @@ function initAll() {
   ALL_P.plb = allPeriods;
   ALL_P.unb = pePeriods;
   ALL_P.locb= pePeriods;
+  ALL_P.jos_un = josPeriods;
+  ALL_P.jos_unb= josPeriods;
+  SEL['jos_un']  = new Set(); SEL['jos_un'].add(josPeriods[josPeriods.length-1]);
+  SEL['jos_unb'] = new Set();
+  buildPills('jos_un');
 
   // Default: last period for panel A; last 3 for panel B
   ['pl','un','loc'].forEach(pg => {
@@ -538,6 +585,7 @@ function refresh(pg) {
   if (pg==='pl'||pg==='plb')  renderPL(ps, pg==='plb'?'main-plb':'main-pl');
   if (pg==='un'||pg==='unb')  renderUN(ps, pg==='unb'?'main-unb':'main-un');
   if (pg==='loc'||pg==='locb')renderLOC(ps, pg==='locb'?'main-locb':'main-loc');
+  if (pg==='jos_un'||pg==='jos_unb')renderJOSUN(ps, pg==='jos_unb'?'main-jos_unb':'main-jos_un');
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -740,12 +788,14 @@ function renderPL(ps, targetId='main-pl') {
   const pe_v  = gv(pe,ps,PE_VENTAS),  pe_oi = gv(pe,ps,PE_OTROS);
   const pe_p  = gc(pe,ps,PE_PROD),     pe_c  = gcMix(pe,ps,PE_COML_MIX)+gc(pe,ps,PE_COML.filter(x=>x!==PE_COML_MIX));
   const pe_ing= pe_v+pe_oi, pe_rb=pe_ing-pe_p, pe_rop=pe_rb-pe_c;
+  _pe_rop_last=pe_rop;
   const pe_fci= gv(pe,ps,[PE_FCI]);
   const pe_int= gc(pe,ps,PE_INT)-pe_fci;
 
   const jos_v = gv(jos,ps,JOS_VENTAS), jos_oi=gv(jos,ps,JOS_OTROS);
   const jos_p = gc(jos,ps,JOS_PROD),   jos_c = gc(jos,ps,JOS_COML);
   const jos_ing=jos_v+jos_oi, jos_rb=jos_ing-jos_p, jos_rop=jos_rb-jos_c;
+  _jos_rop_last=jos_rop;
   const jos_fci=gv(jos,ps,[PE_FCI]);
   const jos_int=gc(jos,ps,JOS_INT)-jos_fci;
 
@@ -833,6 +883,124 @@ function plBlock(title,bdgCls,bdgTxt,base,v,oi,p,rb,c,rop,pv,pp,pc,prop,vD,pD,cD
       <div class="rv var-${ropVP.c}"><span class="vp ${ropVP.c}">${ropVP.t}</span></div>
     </div></div>`;
 }
+
+// ════════════════════════════════════════════════════════════════
+// RENDER P&L JOS POR UNIDAD DE NEGOCIO
+// ════════════════════════════════════════════════════════════════
+function renderJOSUN(ps, targetId='main-jos_un'){
+  const jos=D.jos;
+  const COLS_JOS='grid-template-columns:1fr 130px 130px 130px';
+  const JOS_V_MAY=['Ventas Agentes','Ventas Grupos','Ventas Planeta','Ventas Tiendas y Comercios'];
+  const JOS_V_MIN=['Ventas Mostrador'];
+  const JOS_PROD=['Costo MP (3)','Costo MO (2)','Costo CF (4)'];
+  const JOS_COML_MAY_N1=['Comisiones Agentes'];
+  const JOS_COML_MIN_N2=['Alquiler Vieytes','Servicios Vieytes','Sueldos Vieytes','PYA Vieytes'];
+  const JOS_COML_PRORR=['Costos Logisticos (6)','Costos Marketing y Publicidad (7)','Costos Impositivos'];
+
+  const res={
+    Mayorista:{ventas:0,oi:0,prod:0,coml:0,coml_may:0,coml_min:0,coml_prorr:0},
+    Minorista:{ventas:0,oi:0,prod:0,coml:0,coml_may:0,coml_min:0,coml_prorr:0},
+  };
+  const det={May:{ventas:{},prod:{},coml_may:{},coml_prorr:{}},Min:{ventas:{},prod:{},coml_min:{},coml_prorr:{}}};
+  const addD=(b,r,scale=1)=>{const k=r.nro+'|'+r.deno;b[k]=(b[k]||0)+r.va*scale;};
+
+  const v_may=jos.filter(r=>ps.includes(r.p)&&r.n0==='R+'&&JOS_V_MAY.includes(r.n1)).reduce((s,r)=>s+r.va,0);
+  const v_min=jos.filter(r=>ps.includes(r.p)&&r.n0==='R+'&&JOS_V_MIN.includes(r.n1)).reduce((s,r)=>s+r.va,0);
+  const v_tot=v_may+v_min;
+  const pm=v_tot?v_may/v_tot:0.5, pn=v_tot?v_min/v_tot:0.5;
+
+  jos.filter(r=>ps.includes(r.p)).forEach(r=>{
+    const {n0,n1,n2,va}=r;
+    if(n0==='R+'&&JOS_V_MAY.includes(n1)){res.Mayorista.ventas+=va;addD(det.May.ventas,r);return;}
+    if(n0==='R+'&&JOS_V_MIN.includes(n1)){res.Minorista.ventas+=va;addD(det.Min.ventas,r);return;}
+    if(n0==='R+'&&n1==='Otros Ingresos'){res.Mayorista.oi+=va*pm;res.Minorista.oi+=va*pn;return;}
+    if(n0==='R-'&&JOS_PROD.includes(n1)){
+      res.Mayorista.prod+=va*pm;addD(det.May.prod,r,pm);
+      res.Minorista.prod+=va*pn;addD(det.Min.prod,r,pn);return;
+    }
+    if(n0==='R-'&&JOS_COML_MAY_N1.includes(n1)){res.Mayorista.coml+=va;res.Mayorista.coml_may+=va;addD(det.May.coml_may,r);return;}
+    if(n0==='R-'&&JOS_COML_MIN_N2.includes(n2)){res.Minorista.coml+=va;res.Minorista.coml_min+=va;addD(det.Min.coml_min,r);return;}
+    if(n0==='R-'&&JOS_COML_PRORR.includes(n1)){
+      res.Mayorista.coml+=va*pm;res.Mayorista.coml_prorr+=va*pm;addD(det.May.coml_prorr,r,pm);
+      res.Minorista.coml+=va*pn;res.Minorista.coml_prorr+=va*pn;addD(det.Min.coml_prorr,r,pn);return;
+    }
+  });
+
+  const UNS=['Mayorista','Minorista'];
+  UNS.forEach(u=>{const r=res[u];r.ing=r.ventas+r.oi;r.rb=r.ing+r.prod;r.rop=r.rb+r.coml;});
+  const tot={};['ventas','oi','ing','prod','rb','coml','coml_may','coml_min','coml_prorr','rop'].forEach(k=>tot[k]=UNS.reduce((s,u)=>s+res[u][k],0));
+
+  const pct=(v,b)=>b?`${Math.abs(v/b*100).toFixed(1).replace('.',',')}%`:'—';
+  const cv=(v,b,cost)=>{if(!v)return`<div class="rv" style="font-size:10px;color:var(--mut)">—</div>`;
+    const c=cost?(v<0?'var(--red)':'var(--grn)'):'var(--txt)';
+    return`<div class="rv" style="font-size:10px;color:${c}">${cost&&v<0?'-'+fmt(-v):fmt(v)}<div style="font-size:8px;color:var(--mut)">${pct(v,b)}</div></div>`;};
+  const ct=(v,b,bold)=>{if(!v)return`<div class="rv" style="font-size:10px;color:var(--mut)">—</div>`;
+    const c=v<0?'var(--red)':'var(--grn)';
+    return`<div class="rv" style="font-size:${bold?12:10}px;color:${c};font-weight:${bold?600:400}">${v<0?'-'+fmt(-v):fmt(v)}<div style="font-size:8px;color:var(--mut)">${pct(v,b)}</div></div>`;};
+
+  const drows=(bucket)=>Object.entries(bucket).filter(([,v])=>Math.abs(v)>0.5)
+    .sort(([,a],[,b])=>Math.abs(b)-Math.abs(a))
+    .map(([k,v])=>{const[nro,deno]=k.split('|');
+      return`<div class="r d2" style="${COLS_JOS};background:rgba(0,0,0,.22)">
+        <div class="rc" style="padding-left:46px;font-size:8px;color:var(--dim)">${nro} · ${deno}</div>
+        <div class="rv" style="font-size:8px;color:var(--mut)">—</div><div class="rv" style="font-size:8px;color:var(--mut)">—</div>
+        <div class="rv" style="font-size:8px;color:${v<0?'var(--red)':'var(--grn)'}">${v<0?'-'+fmt(-v):'+'+fmt(v)}</div>
+      </div>`;}).join('');
+
+  const expR=(lbl,mv,nv,tv,bm,bn,bt,cost,dm,dn)=>{
+    const id='x'+(++_uid);
+    const sub=[[mv,'Mayorista',dm,bm],[nv,'Minorista',dn,bn]].map(([v,u,d,b])=>{
+      if(!v&&(!d||!Object.keys(d).length))return'';
+      const dr=drows(d||{});if(!dr)return'';
+      const sid='x'+(++_uid);
+      return`<div class="r d1 exp" style="${COLS_JOS}" onclick="xopen('${sid}','xjos')">
+        <div class="rc" style="padding-left:28px;font-size:9px"><em class="ti">▶</em>${u}</div>
+        <div class="rv" style="font-size:9px;color:${v<0?'var(--red)':'var(--grn)'}">${v?(cost&&v<0?'-'+fmt(-v):fmt(v)):'—'}</div>
+        <div class="rv" style="font-size:9px;color:var(--mut)">—</div><div class="rv" style="font-size:9px;color:var(--mut)">—</div>
+      </div><div class="dr" id="${sid}">${dr}</div>`;}).join('');
+    return`<div class="r ind exp" style="${COLS_JOS}" onclick="xopen('${id}','xjos')">
+      <div class="rc dim"><em class="ti">▶</em>${lbl}</div>${cv(mv,bm,cost)}${cv(nv,bn,cost)}${ct(tv,bt,false)}
+    </div><div class="dr" id="${id}">${sub}</div>`;};
+
+  const simR=(lbl,mv,nv,tv,bm,bn,bt,isRes)=>{
+    const cls=isRes?'r gt-jos':'r sub-t';
+    return`<div class="${cls}" style="${COLS_JOS}">
+      <div class="rc">${lbl}</div>${isRes?ct(mv,bm,true):cv(mv,bm,false)}${isRes?ct(nv,bn,true):cv(nv,bn,false)}${ct(tv,bt,isRes)}
+    </div>`;};
+
+  const bm=res.Mayorista.ing||1,bn=res.Minorista.ing||1,bt=tot.ing||1;
+
+  document.getElementById(targetId).innerHTML=`
+  <div class="blk full">
+    <div class="blk-hdr"><span class="bdg bdg-jos">JOS</span>
+      <h1 style="font-family:var(--fs);font-size:15px;font-weight:600">P&L Joselito <em style="color:var(--jos)">por U.N.</em></h1>
+      <p class="hdr-sub">Mayorista · Minorista · Joselito</p>
+    </div>
+    <div class="r sh" style="${COLS_JOS}">
+      <div class="rc">CONCEPTO</div>
+      <div class="rv" style="color:var(--jos);font-weight:600">Mayorista</div>
+      <div class="rv" style="color:var(--pe);font-weight:600">Minorista</div>
+      <div class="rv" style="color:var(--gold);font-weight:600">Total</div>
+    </div>
+    ${expR('Ventas Totales (1)',res.Mayorista.ventas,res.Minorista.ventas,tot.ventas,bm,bn,bt,false,det.May.ventas,det.Min.ventas)}
+    <div class="r ind" style="${COLS_JOS}"><div class="rc dim">+ Otros Ingresos</div>${cv(res.Mayorista.oi,bm,false)}${cv(res.Minorista.oi,bn,false)}${ct(tot.oi,bt,false)}</div>
+    ${expR('- Costo Producción (prorrateo)',res.Mayorista.prod,res.Minorista.prod,tot.prod,bm,bn,bt,true,det.May.prod,det.Min.prod)}
+    ${simR('Resultado Bruto',res.Mayorista.rb,res.Minorista.rb,tot.rb,bm,bn,bt,false)}
+    <div class="r ind exp" style="${COLS_JOS}" onclick="xopen('xjos_coml_${_uid}','xjos')">
+      <div class="rc dim"><em class="ti">▶</em>- Costo Comercialización</div>
+      ${cv(res.Mayorista.coml,bm,true)}${cv(res.Minorista.coml,bn,true)}${ct(tot.coml,bt,false)}
+    </div>
+    <div class="dr" id="xjos_coml_${_uid-1}">
+      ${expR('Comisiones Agentes',res.Mayorista.coml_may,0,res.Mayorista.coml_may,bm,bn,bm,true,det.May.coml_may,{})}
+      ${expR('Costos Local Vieytes',0,res.Minorista.coml_min,res.Minorista.coml_min,bm,bn,bn,true,{},det.Min.coml_min)}
+      ${expR('Logíst. + Marketing + Impositivos (prorrateo)',res.Mayorista.coml_prorr,res.Minorista.coml_prorr,tot.coml_prorr,bm,bn,bt,true,det.May.coml_prorr,det.Min.coml_prorr)}
+    </div>
+    ${simR('Resultado Operativo',res.Mayorista.rop,res.Minorista.rop,tot.rop,bm,bn,bt,true)}
+    <div style="padding:5px 10px;font-size:8px;color:var(--mut);border-top:1px solid var(--brd)">Producción y costos compartidos prorrateados por % de ventas · Pendiente: prorrateo por kilos producidos</div>
+    ${ropControlBar(tot.rop,'ROP JOS · P&L por U.N.')}
+  </div>`;
+}
+
 
 function controlBlock(ps, res_fin, data){
   // Sum all R+ and R- accounts directly from raw data
@@ -1195,31 +1363,74 @@ function locLines(res,tot,slTot,ps){
       ${LOCALES.map(l=>vCell(res[l].coml_loc,base(l),true,false)).join('')}
       <div class="rv" style="font-size:10px">-${fmt(-tot.coml_loc)}<div style="font-size:8px;color:var(--mut)">${pct(-tot.coml_loc,tBase)}</div></div>
     </div>`;
+
+    // Build account-level detail for a given set of N2s and optional sub-N2 filter
+    const acctDetail=(n2Filter,depth=3)=>{
+      const pl=depth===3?62:78;
+      // Group by nro+deno+local — each account in its local column
+      // byAcct[k] = {nro, deno, byLocal: {Lamadrid:0,...}}
+      const byAcct={};
+      const addRec=(r)=>{
+        const loc=N2_LOC[r.n2]; if(!loc)return;
+        const k=r.nro+'|'+r.deno;
+        if(!byAcct[k]) byAcct[k]={nro:r.nro,deno:r.deno,byLocal:{}};
+        byAcct[k].byLocal[loc]=(byAcct[k].byLocal[loc]||0)+r.va;
+      };
+      D.pe.filter(r=>ps.includes(r.p)&&n2Filter(r.n2)&&r.n0==='R-').forEach(addRec);
+      D.pe.filter(r=>ps.includes(r.p)&&n2Filter(r.n2)&&r.n0==='R+'&&r.n1==='Costos Locales (5)').forEach(addRec);
+      return Object.values(byAcct)
+        .filter(a=>Object.values(a.byLocal).some(v=>v!==0))
+        .sort((a,b)=>{
+          const ta=Object.values(a.byLocal).reduce((s,v)=>s+Math.abs(v),0);
+          const tb=Object.values(b.byLocal).reduce((s,v)=>s+Math.abs(v),0);
+          return tb-ta;
+        })
+        .map(a=>{
+          const tot=Object.values(a.byLocal).reduce((s,v)=>s+v,0);
+          return `<div class="r d2" style="${COLS_LOC};background:rgba(0,0,0,.28)">
+            <div class="rc" style="padding-left:${pl}px;font-size:8px;color:var(--dim)">${a.nro} · ${a.deno}</div>
+            ${LOCALES.map(l=>{const v=a.byLocal[l]||0;return`<div class="rv" style="font-size:8px">${v!==0?`<span style="color:${v<0?'var(--red)':'var(--grn)'}">${v<0?'-'+fmt(-v):'+'+fmt(v)}</span>`:'<span style="color:var(--mut)">—</span>'}</div>`;}).join('')}
+            <div class="rv" style="font-size:8px;color:${tot<0?'var(--red)':'var(--grn)'}">${tot!==0?(tot<0?'-'+fmt(-tot):'+'+fmt(tot)):'—'}</div>
+          </div>`;
+        }).join('');
+    };
+
     const subRows=LOC_SUBLINES.map(sl=>{
       if(slTot[sl]===0&&LOCALES.every(l=>res[l][sl]===0))return'';
-      // Sueldos: expandable with Operacion + Delivery sub-rows
+      const sid='x'+(++_uid);
+      const lbl=sl==='sueldos'?'Sueldos':LOC_SL_LABELS[sl];
+
+      // For sueldos: two sub-groups Operacion + Delivery, each with account detail
       if(sl==='sueldos'){
-        const sid='x'+(++_uid);
         const subSueldos=[
-          ['sueldos_op','Sueldos Operación'],
-          ['sueldos_del','Sueldos Delivery'],
+          ['sueldos_op','Sueldos Operación', n2=>n2.startsWith('Sueldos Operacion')],
+          ['sueldos_del','Sueldos Delivery',  n2=>n2.startsWith('Sueldos Delivery')||n2==='Sueldos Eventos Especiales'],
         ].filter(([k])=>LOCALES.some(l=>res[l][k]!==0)||tot[k]!==0)
-        .map(([k,lbl])=>`<div class="r d2" style="${COLS_LOC}">
-          <div class="rc" style="padding-left:46px;font-size:9px">${lbl}</div>
-          ${LOCALES.map(l=>`<div class="rv" style="font-size:9px">${res[l][k]!==0?(res[l][k]<0?`<span style="color:var(--red)">-${fmt(-res[l][k])}</span>`:`<span style="color:var(--grn)">+${fmt(res[l][k])}</span>`):'<span style="color:var(--mut)">—</span>'}</div>`).join('')}
-          <div class="rv" style="font-size:9px">${tot[k]!==0?(tot[k]<0?`-${fmt(-tot[k])}`:fmt(tot[k])):'—'}</div>
-        </div>`).join('');
+        .map(([k,slbl,n2f])=>{
+          const ssid='x'+(++_uid);
+          const detail=acctDetail(n2f,3);
+          return `<div class="r d2 exp" style="${COLS_LOC}" onclick="xopen('${ssid}','xloc')">
+            <div class="rc" style="padding-left:46px;font-size:9px"><em class="ti">▶</em>${slbl}</div>
+            ${LOCALES.map(l=>`<div class="rv" style="font-size:9px">${res[l][k]!==0?(res[l][k]<0?`<span style="color:var(--red)">-${fmt(-res[l][k])}</span>`:`<span style="color:var(--grn)">+${fmt(res[l][k])}</span>`):'<span style="color:var(--mut)">—</span>'}</div>`).join('')}
+            <div class="rv" style="font-size:9px">${tot[k]!==0?(tot[k]<0?`-${fmt(-tot[k])}`:fmt(tot[k])):'—'}</div>
+          </div><div class="dr" id="${ssid}">${detail}</div>`;
+        }).join('');
         return `<div class="r d1 exp" style="${COLS_LOC}" onclick="xopen('${sid}','xloc')">
           <div class="rc" style="padding-left:28px;font-size:9px"><em class="ti">▶</em>Sueldos</div>
           ${LOCALES.map(l=>`<div class="rv" style="font-size:9px">${res[l][sl]!==0?(res[l][sl]<0?`<span style="color:var(--red)">-${fmt(-res[l][sl])}</span>`:`<span style="color:var(--grn)">+${fmt(res[l][sl])}</span>`):'<span style="color:var(--mut)">—</span>'}</div>`).join('')}
           <div class="rv" style="font-size:9px">${slTot[sl]!==0?(slTot[sl]<0?`-${fmt(-slTot[sl])}`:fmt(slTot[sl])):'—'}</div>
         </div><div class="dr" id="${sid}">${subSueldos}</div>`;
       }
-      return `<div class="r d1" style="${COLS_LOC}">
-        <div class="rc" style="padding-left:28px;font-size:9px">${LOC_SL_LABELS[sl]}</div>
+
+      // For all other sub-lines: expandable with account detail
+      // Determine N2 filter for this sub-line
+      const slN2f=n2=>Object.entries(N2_SL).some(([k,v])=>v===sl&&k===n2);
+      const detail=acctDetail(slN2f,3);
+      return `<div class="r d1 exp" style="${COLS_LOC}" onclick="xopen('${sid}','xloc')">
+        <div class="rc" style="padding-left:28px;font-size:9px"><em class="ti">▶</em>${lbl}</div>
         ${LOCALES.map(l=>`<div class="rv" style="font-size:9px">${res[l][sl]!==0?(res[l][sl]<0?`<span style="color:var(--red)">-${fmt(-res[l][sl])}</span>`:`<span style="color:var(--grn)">+${fmt(res[l][sl])}</span>`):'<span style="color:var(--mut)">—</span>'}</div>`).join('')}
         <div class="rv" style="font-size:9px">${slTot[sl]!==0?(slTot[sl]<0?`-${fmt(-slTot[sl])}`:fmt(slTot[sl])):'—'}</div>
-      </div>`;
+      </div><div class="dr" id="${sid}">${detail}</div>`;
     }).join('');
     return hdr+`<div class="dr" id="${id}">${subRows}</div>`;
   };
@@ -1240,6 +1451,45 @@ function locLines(res,tot,slTot,ps){
 // ════════════════════════════════════════════════════════════════
 // PAGE NAVIGATION
 // ════════════════════════════════════════════════════════════════
+function ropControlBar(actual, label){
+  const isJOS=label.includes('JOS');
+  const ref_v=isJOS?_jos_rop_last:_pe_rop_last;
+  if(ref_v===null) return '';
+  const ref   = ref_v;
+  const diff  = actual - ref;
+  const diffAbs = Math.abs(diff);
+  const pct_diff = ref ? (diff/Math.abs(ref)*100) : 0;
+  const ok    = diffAbs < 1000;
+  const warn  = !ok && diffAbs < 50000;
+  const color = ok ? 'var(--grn)' : warn ? 'var(--gold)' : 'var(--red)';
+  const icon  = ok ? '✓' : warn ? '≈' : '⚠';
+  const fmtS  = v => { const s=Math.abs(v)<1000?'0':(Math.abs(v)/1e6).toFixed(2)+'M'; return (v<0?'-':v>0?'+':'')+s; };
+  return `<div style="margin-top:12px;border:1px solid var(--brd2);border-radius:2px;
+    background:rgba(0,0,0,.2);padding:0">
+    <div style="padding:5px 12px;font-size:8px;letter-spacing:.1em;text-transform:uppercase;
+      color:var(--mut);font-weight:600;border-bottom:1px solid var(--brd)">
+      Control — Resultado Operativo PE
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 140px 140px 100px;
+      font-size:10px;padding:8px 12px;gap:4px;align-items:center">
+      <div style="color:var(--mut)">ROP PE (Reporte 1)</div>
+      <div style="text-align:right;font-variant-numeric:tabular-nums;color:var(--gold);font-weight:500">${fmt(ref)}</div>
+      <div></div><div></div>
+      <div style="color:var(--mut)">${label}</div>
+      <div style="text-align:right;font-variant-numeric:tabular-nums;color:var(--gold);font-weight:500">${fmt(actual)}</div>
+      <div></div><div></div>
+    </div>
+    <div style="border-top:1px solid var(--brd);padding:6px 12px;
+      display:grid;grid-template-columns:1fr 140px 140px 100px;font-size:10px;
+      background:rgba(0,0,0,.15)">
+      <div style="color:${color};font-weight:600">${icon} Diferencia</div>
+      <div style="text-align:right;color:${color};font-weight:600;font-variant-numeric:tabular-nums">${fmtS(diff)}</div>
+      <div style="text-align:right;color:${color};font-size:9px">${Math.abs(pct_diff)<0.01?'0,00%':Math.abs(pct_diff).toFixed(2).replace('.',',')+'%'}</div>
+      <div style="font-size:8px;color:var(--mut)">${ok?'Cuadra ✓':warn?'Diferencia menor':'Revisar'}</div>
+    </div>
+  </div>`;
+}
+
 function showPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.nav').forEach(n=>n.classList.remove('on'));
@@ -1248,8 +1498,8 @@ function showPage(id){
 }
 
 // ── SPLIT SCREEN ──────────────────────────────────────────────────
-const SPLIT_ACTIVE = {pl:false, un:false, loc:false};
-const PANEL_B_PG = {pl:'plb', un:'unb', loc:'locb'};
+const SPLIT_ACTIVE = {pl:false, un:false, loc:false, jos_un:false};
+const PANEL_B_PG = {pl:'plb', un:'unb', loc:'locb', jos_un:'jos_unb'};
 
 function toggleSplit(pg){
   SPLIT_ACTIVE[pg] = !SPLIT_ACTIVE[pg];
@@ -1364,7 +1614,7 @@ function processExcel(wb){
   };
 
   const loadUnits=(sn)=>{
-    const ws=wb.Sheets[sn];if(!ws)return[];
+    const ws=wb.Sheets[sn]||wb.Sheets[sn+' PE']||wb.Sheets[sn.replace(' PE','')];if(!ws)return[];
     const rows=XLSX.utils.sheet_to_json(ws,{header:1,defval:null});
     const out=[];
     for(let i=1;i<rows.length;i++){
@@ -1382,7 +1632,7 @@ function processExcel(wb){
     version:1,
     pe:  loadBalance('Balances PE',  clPE,  2, 9, 7),
     jos: loadBalance('Balances JOS', clJOS, 2, 9, 7),
-    units: loadUnits('Unidades'),
+    units: loadUnits('Unidades PE'),
     proy_pe:  loadProy('ER proyectado PE'),
     proy_jos: loadProy('ER proyectado JOS'),
   };
