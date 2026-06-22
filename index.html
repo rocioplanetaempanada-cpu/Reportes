@@ -160,11 +160,17 @@ body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:12px;
 <!-- SIDEBAR -->
 <nav class="sb">
   <div class="sb-logo"><h2>Gestión</h2><span>PE + JOS</span></div>
+  <div class="nav-section">Contexto</div>
+  <div class="nav" onclick="showPage('ctx')" id="nav-ctx"><span class="nav-ic">🌐</span>Contexto</div>
+  <div class="nav-sep"></div>
+  <div class="nav-section">Consolidado</div>
   <div class="nav on" onclick="showPage('pl')" id="nav-pl"><span class="nav-ic">📊</span>P&amp;L PE + JOS</div>
+  <div class="nav" onclick="showPage('evol')" id="nav-evol"><span class="nav-ic">📈</span>Evolución P&L PE + JOS</div>
   <div class="nav-sep"></div>
   <div class="nav-section">Planeta Empanada</div>
   <div class="nav" onclick="showPage('un')" id="nav-un"><span class="nav-ic">🏪</span>P&amp;L PE por U.N.</div>
   <div class="nav" onclick="showPage('loc')" id="nav-loc"><span class="nav-ic">📍</span>P&amp;L PE por Local</div>
+  <div class="nav" onclick="showPage('loc_canal')" id="nav-loc_canal"><span class="nav-ic">🔀</span>P&L PE Local por Canal</div>
   <div class="nav-sep"></div>
   <div class="nav-section">Joselito</div>
   <div class="nav" onclick="showPage('jos_un')" id="nav-jos_un"><span class="nav-ic">🏭</span>P&amp;L JOS por U.N.</div>
@@ -176,6 +182,23 @@ body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:12px;
 <!-- ══════════════════════════════════════════════════════════════
      PAGE 1 — P&L CONSOLIDADO PE + JOS
 ════════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-ctx">
+  <div style="display:flex;align-items:center;padding:6px 18px;background:var(--sur);border-bottom:1px solid var(--brd);gap:10px;flex-shrink:0">
+    <div class="split-toggle">
+      <span style="font-size:11px;color:var(--mut);letter-spacing:.05em">PERÍODO ANALIZADO</span>
+    </div>
+    <div class="pills" id="pills-ctx" style="flex:1"></div>
+    <div class="qbtns">
+      <button class="qbtn" onclick="qsel('ctx','last1')">Últ.</button>
+      <button class="qbtn" onclick="qsel('ctx','last3')">Últ.3</button>
+      <button class="qbtn" onclick="qsel('ctx','y2026')">2026</button>
+      <button class="qbtn" onclick="qsel('ctx','all')">Todo</button>
+    </div>
+    <span class="sel-info" id="info-ctx">—</span>
+  </div>
+  <div class="main" id="main-ctx" style="padding:14px 18px"></div>
+</div>
+
 <div class="page on" id="page-pl">
   <div class="hdr">
     <div><h1>Estado de <em>Resultados</em></h1><p class="hdr-sub">Consolidado PE + JOS · Real vs Proyectado</p></div>
@@ -226,6 +249,20 @@ body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:12px;
 <!-- ══════════════════════════════════════════════════════════════
      PAGE 2 — P&L PLANETA POR U.N.
 ════════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-evol">
+  <div style="display:flex;align-items:center;padding:6px 18px;background:var(--sur);border-bottom:1px solid var(--brd);gap:10px;flex-shrink:0">
+    <div class="pills" id="pills-evol"></div>
+    <div class="qbtns">
+      <button class="qbtn" onclick="qsel('evol','last1')">Últ.</button>
+      <button class="qbtn" onclick="qsel('evol','last3')">Últ.3</button>
+      <button class="qbtn" onclick="qsel('evol','y2026')">2026</button>
+      <button class="qbtn" onclick="qsel('evol','all')">Todo</button>
+    </div>
+    <span class="sel-info" id="info-evol">—</span>
+  </div>
+  <div class="main" id="main-evol" style="padding:14px 18px"></div>
+</div>
+
 <div class="page" id="page-un">
   <div class="hdr">
     <div><h1>P&amp;L PE <em>U.N.</em></h1><p class="hdr-sub">Por unidad de negocio · Planeta Empanada</p></div>
@@ -321,6 +358,23 @@ body{background:var(--bg);color:var(--txt);font-family:var(--fn);font-size:12px;
       <div class="main" id="main-locb" style="padding:14px 18px"></div>
     </div>
   </div>
+</div>
+
+<div class="page" id="page-loc_canal">
+  <div style="display:flex;align-items:center;padding:6px 18px;background:var(--sur);border-bottom:1px solid var(--brd);gap:10px;flex-shrink:0;flex-wrap:wrap">
+    <div class="pills" id="pills-loc_canal"></div>
+    <div class="qbtns">
+      <button class="qbtn" onclick="qsel('loc_canal','last1')">Últ.</button>
+      <button class="qbtn" onclick="qsel('loc_canal','last3')">Últ.3</button>
+      <button class="qbtn" onclick="qsel('loc_canal','y2026')">2026</button>
+      <button class="qbtn" onclick="qsel('loc_canal','all')">Todo</button>
+    </div>
+    <div id="loc_canal-local-pills" style="display:flex;gap:4px;flex-wrap:wrap;align-items:center">
+      <span style="font-size:9px;color:var(--mut);letter-spacing:.06em">LOCAL:</span>
+    </div>
+    <span class="sel-info" id="info-loc_canal">—</span>
+  </div>
+  <div class="main" id="main-loc_canal" style="padding:14px 18px"></div>
 </div>
 
 <div class="page" id="page-jos_un">
@@ -507,6 +561,9 @@ const pLbl = p => MN[p%100]+"'"+String(Math.floor(p/100)).slice(2);
 // ════════════════════════════════════════════════════════════════
 // DATA LOADING
 // ════════════════════════════════════════════════════════════════
+const gcN = (arr,ps,n1) => -arr.filter(r=>ps.includes(r.p)&&r.n0==='R-'&&r.n1===n1).reduce((s,r)=>s+r.va,0);
+const gvN = (arr,ps,n1) =>  arr.filter(r=>ps.includes(r.p)&&r.n0==='R+'&&r.n1===n1).reduce((s,r)=>s+r.va,0);
+
 function showUpload() {
   // Show upload zone over the first page
   document.getElementById('upload-screen').style.display='flex';
@@ -524,7 +581,17 @@ function initAll() {
   const josPeriods = [...new Set(D.jos.map(r=>r.p))].sort();
   const allPeriods = [...new Set([...pePeriods,...josPeriods])].sort();
 
+  ALL_P.ctx = allPeriods;
+  SEL['ctx'] = new Set(); SEL['ctx'].add(allPeriods[allPeriods.length-1]);
+  buildPills('ctx');
   ALL_P.pl  = allPeriods;
+  ALL_P.evol= allPeriods;
+  ALL_P['loc_canal']= allPeriods;
+  SEL['loc_canal']= new Set(); SEL['loc_canal'].add(allPeriods[allPeriods.length-1]);
+  buildPills('loc_canal');
+  buildLocalPills();
+  SEL['evol']= new Set(); SEL['evol'].add(allPeriods[allPeriods.length-1]);
+  buildPills('evol');
   ALL_P.un  = pePeriods;
   ALL_P.loc = pePeriods;
   // Panel B shares same period list as panel A
@@ -582,9 +649,12 @@ function refresh(pg) {
 
   if (!ps.length) { document.getElementById('main-'+pg).innerHTML=''; return; }
 
+  if (pg==='ctx')renderCTX(ps,'main-ctx');
+  if (pg==='evol') renderEVOL(ps,'main-evol');
   if (pg==='pl'||pg==='plb')  renderPL(ps, pg==='plb'?'main-plb':'main-pl');
   if (pg==='un'||pg==='unb')  renderUN(ps, pg==='unb'?'main-unb':'main-un');
   if (pg==='loc'||pg==='locb')renderLOC(ps, pg==='locb'?'main-locb':'main-loc');
+  if (pg==='loc_canal')renderPELOCCANAL(ps,'main-loc_canal');
   if (pg==='jos_un'||pg==='jos_unb')renderJOSUN(ps, pg==='jos_unb'?'main-jos_unb':'main-jos_un');
 }
 
@@ -778,9 +848,468 @@ function adminDetailRows(peV, josV, peNivel1s, josNivel1s, ps, base){
   ].join('');
 }
 
+function consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_resai,int_tot,p_int,res_fin,p_resfin,pe_int,jos_int,pe_fci,ps,p_vt,D,pp_rop,jp_rop,jos_fci){
+  const ropVP=vp(rop,p_rop), admVP=vp(-adm_tot,-p_adm), aiVP=vp(res_ai,p_resai), intVP=vp(-int_tot,-p_int), finVP=vp(res_fin,p_resfin);
+  const pe_ropVP=vp(pe_rop,pp_rop), jos_ropVP=vp(jos_rop,jp_rop);
+
+  const admRows = adm_lines.map(({label,pv,jv,tot,projV,pe_n1,jos_n1})=>{
+    const id='x'+(++_uid);
+    const hasDetail = pv!==0 || jv!==0;
+    const detRows = hasDetail ? adminDetailRows(pv,jv,pe_n1,jos_n1,ps,vt) : '';
+    const devio=projV?(()=>{const d=(-tot-(-projV))/Math.abs(projV)*100;const c=d>0?'var(--grn)':'var(--red)';return`<span style="color:${c};font-weight:500">${d>0?'+':''}${d.toFixed(1).replace('.',',')}%</span>`;})():'<span style="color:var(--mut)">—</span>';
+    return `<div class="r ind ${hasDetail?'exp':''}" style="${COLS5}" ${hasDetail?`onclick="xopen('${id}','xadm')"`:''}>
+      <div class="rc" style="padding-left:14px">${hasDetail?'<em class="ti">▶</em>':''}${label}</div>
+      <div class="rv neg" style="font-size:10px">-${fmt(tot)}</div>
+      <div class="rp" style="font-size:10px">${pct(tot,vt)}</div>
+      <div class="rv proy" style="font-size:10px">${projV?'-'+fmt(projV):'—'}</div>
+      <div class="rv proy" style="font-size:9px">${projV?pct(projV,p_vt):'—'}</div>
+      <div class="rv" style="font-size:9px">${devio}</div>
+    </div>${hasDetail?`<div class="dr" id="${id}">${detRows}</div>`:''}`;
+  }).join('');
+
+  // Otros ingresos/egresos financieros: calculados directamente (gcN/gvN)
+  const PE_FCI_N1='Otros ingresos/ egresos financieros';
+  const pe_int_cred  = gcN(D.pe, ps, 'Intereses Creditos');
+  const pe_int_plan  = gcN(D.pe, ps, 'Intereses Planes');
+  const pe_otros_rm  = gcN(D.pe, ps, PE_FCI_N1);
+  const pe_otros_rp  = gvN(D.pe, ps, PE_FCI_N1);
+  const pe_otros_neto = pe_otros_rm - pe_otros_rp;
+
+  const jos_int_cred  = gcN(D.jos, ps, 'Intereses Creditos');
+  const jos_int_plan  = gcN(D.jos, ps, 'Intereses Planes');
+  const jos_otros_rm  = gcN(D.jos, ps, PE_FCI_N1);
+  const jos_otros_rp  = gvN(D.jos, ps, PE_FCI_N1);
+  const jos_otros_neto = jos_otros_rm - jos_otros_rp;
+
+  const intLine=(lbl,v,color)=>{
+    const cls=v<0?'neg':'pos'; const sgn=v<0?'-':'+';
+    return `<div class="r d1" style="${COLS5}">
+      <div class="rc" style="padding-left:28px;color:${color}">${lbl}</div>
+      <div class="rv ${cls}" style="font-size:9px">${sgn}${fmt(Math.abs(v))}</div>
+      <div class="rp" style="font-size:9px">${pct(Math.abs(v),vt)}</div>
+      <div class="rv proy">—</div><div class="rv proy">—</div><div class="rv">—</div>
+    </div>`;
+  };
+
+  const intRows=[
+    intLine('PE — Intereses Créditos',         -pe_int_cred,    'var(--pe)'),
+    intLine('PE — Intereses Planes',           -pe_int_plan,    'var(--pe)'),
+    intLine('PE — Otros ing/egr financieros',  pe_otros_neto<0?pe_otros_neto:-pe_otros_neto, 'var(--pe)'),
+    intLine('JOS — Intereses Créditos',        -jos_int_cred,   'var(--jos)'),
+    intLine('JOS — Intereses Planes',          -jos_int_plan,   'var(--jos)'),
+    intLine('JOS — Otros ing/egr financieros', jos_otros_neto<0?jos_otros_neto:-jos_otros_neto,'var(--jos)'),
+  ].join('');
+
+  const id_int='x'+(++_uid);
+
+  return `<div class="blk full">
+    <div class="blk-hdr"><span class="blk-ttl">Consolidado PE + JOS</span><span class="bdg bdg-cons">CONSOLIDADO</span></div>
+
+    <div class="r sh" style="${COLS5}">
+      <div class="rc">RESULTADO OPERATIVO CONSOLIDADO</div>
+      <div class="rv">Real $</div><div class="rp">%Vta</div>
+      <div class="rv proy">Proy $</div><div class="rv proy" style="font-size:9px">%Proy</div><div class="rv">Desvío</div>
+    </div>
+    <div class="r ind" style="${COLS5}">
+      <div class="rc" style="color:var(--pe)">Resultado Operativo PE</div>
+      <div class="rv ${pe_rop<0?'neg':''}" style="color:var(--pe)">${fmt(pe_rop)}</div>
+      <div class="rp">${pct(pe_rop,vt)}</div>
+      <div class="rv proy">${fmt(pp_rop)}</div>
+      <div class="rv proy" style="font-size:9px">${pct(pp_rop,p_vt)}</div>
+      <div class="rv var-${pe_ropVP.c}"><span class="vp ${pe_ropVP.c}">${pe_ropVP.t}</span></div>
+    </div>
+    <div class="r ind" style="${COLS5}">
+      <div class="rc" style="color:var(--jos)">Resultado Operativo JOS</div>
+      <div class="rv ${jos_rop<0?'neg':''}" style="color:var(--jos)">${fmt(jos_rop)}</div>
+      <div class="rp">${pct(jos_rop,vt)}</div>
+      <div class="rv proy">${fmt(jp_rop)}</div>
+      <div class="rv proy" style="font-size:9px">${pct(jp_rop,p_vt)}</div>
+      <div class="rv var-${jos_ropVP.c}"><span class="vp ${jos_ropVP.c}">${jos_ropVP.t}</span></div>
+    </div>
+    <div class="r sub-t" style="${COLS5}">
+      <div class="rc">Resultado Operativo PE + JOS</div>
+      <div class="rv ${rop<0?'neg':''}">${fmt(rop)}</div>
+      <div class="rp">${pct(rop,vt)}</div>
+      <div class="rv proy">${fmt(p_rop)}</div>
+      <div class="rv proy" style="font-size:9px">${pct(p_rop,p_vt)}</div>
+      <div class="rv var-${ropVP.c}"><span class="vp ${ropVP.c}">${ropVP.t}</span></div>
+    </div>
+
+    <div class="r sh" style="${COLS5};margin-top:6px">
+      <div class="rc" style="color:var(--red)">COSTOS DE ADMINISTRACIÓN (8)</div>
+      <div class="rv">Real $</div><div class="rp">%Vta</div>
+      <div class="rv proy">Proy $</div><div class="rv proy" style="font-size:9px">%Proy</div><div class="rv">Desvío</div>
+    </div>
+    ${admRows}
+    <div class="r sub-t" style="${COLS5}">
+      <div class="rc" style="color:var(--red)">Total Costos Adm.</div>
+      <div class="rv neg">-${fmt(adm_tot)}</div>
+      <div class="rp">${pct(adm_tot,vt)}</div>
+      <div class="rv proy">-${fmt(p_adm)}</div>
+      <div class="rv proy" style="font-size:9px">${pct(p_adm,p_vt)}</div>
+      <div class="rv var-${admVP.c}"><span class="vp ${admVP.c}">${admVP.t}</span></div>
+    </div>
+
+    <div class="r gt-cons" style="${COLS5}">
+      <div class="rc">Resultado Neto antes de Intereses</div>
+      <div class="rv big ${res_ai<0?'neg':'pos'}">${fmt(res_ai)}</div>
+      <div class="rp">${pct(res_ai,vt)}</div>
+      <div class="rv proy">${fmt(p_resai)}</div>
+      <div class="rv proy" style="font-size:9px">${pct(p_resai,p_vt)}</div>
+      <div class="rv var-${aiVP.c}"><span class="vp ${aiVP.c}">${aiVP.t}</span></div>
+    </div>
+
+    <div class="r sh" style="${COLS5};margin-top:6px">
+      <div class="rc">INTERESES E INGRESOS FINANCIEROS</div>
+      <div class="rv">Real $</div><div class="rp">%Vta</div>
+      <div class="rv proy">Proy $</div><div class="rv proy" style="font-size:9px">%Proy</div><div class="rv">Desvío</div>
+    </div>
+    <div class="r ind exp" style="${COLS5}" onclick="xopen('${id_int}','xint')">
+      <div class="rc"><em class="ti">▶</em>Intereses financieros (neto)</div>
+      <div class="rv neg">-${fmt(int_tot)}</div>
+      <div class="rp">${pct(int_tot,vt)}</div>
+      <div class="rv proy">-${fmt(p_int)}</div>
+      <div class="rv proy" style="font-size:9px">${pct(p_int,p_vt)}</div>
+      <div class="rv var-${intVP.c}"><span class="vp ${intVP.c}">${intVP.t}</span></div>
+    </div>
+    <div class="dr" id="${id_int}">${intRows}</div>
+
+    <div class="r gt-cons" style="${COLS5}">
+      <div class="rc" style="font-size:14px;font-weight:700">RESULTADO NETO</div>
+      <div class="rv big ${res_fin<0?'neg':'pos'}" style="font-size:18px">${fmt(res_fin)}</div>
+      <div class="rp">${pct(res_fin,vt)}</div>
+      <div class="rv proy">${fmt(p_resfin)}</div>
+      <div class="rv proy" style="font-size:9px">${pct(p_resfin,p_vt)}</div>
+      <div class="rv var-${finVP.c}"><span class="vp ${finVP.c}">${finVP.t}</span></div>
+    </div>
+  </div>`;
+}
+
 // ════════════════════════════════════════════════════════════════
 // RENDER P&L CONSOLIDADO
 // ════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
+// RENDER CONTEXTO
+// ════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
+// RENDER EVOLUCIÓN P&L PE + JOS
+// ════════════════════════════════════════════════════════════════
+function renderEVOL(ps, targetId='main-evol'){
+  if(!D||!ps||!ps.length){
+    document.getElementById(targetId).innerHTML='<div style="padding:40px;color:var(--mut);text-align:center">Cargá el Excel para ver la evolución</div>';
+    return;
+  }
+  const psSorted=[...ps].sort();
+  const N=psSorted.length;
+  const pe=D.pe, jos=D.jos, pp=D.proy_pe, pj=D.proy_jos;
+
+  const gcM =(arr,p,nl)=>{const s=new Set(nl);return -arr.filter(r=>r.p===p&&r.n0==='R-'&&s.has(r.n1)).reduce((a,r)=>a+r.va,0);};
+  const gvM =(arr,p,nl)=>{const s=new Set(nl);return  arr.filter(r=>r.p===p&&r.n0==='R+'&&s.has(r.n1)).reduce((a,r)=>a+r.va,0);};
+  const gcMixM=(arr,p,n1)=>-arr.filter(r=>r.p===p&&r.n1===n1).reduce((a,r)=>a+r.va,0);
+  const gcNM=(arr,p,n1)=>-arr.filter(r=>r.p===p&&r.n0==='R-'&&r.n1===n1).reduce((a,r)=>a+r.va,0);
+  const gvNM=(arr,p,n1)=>arr.filter(r=>r.p===p&&r.n0==='R+'&&r.n1===n1).reduce((a,r)=>a+r.va,0);
+  const spvM=(arr,p,keys)=>{const s=new Set(keys);return arr.filter(r=>r.p===p&&s.has(r.concepto)).reduce((a,r)=>a+Math.abs(r.v),0);};
+  const mLabel=p=>{const s=String(p);const mn=['','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];return mn[+s.slice(4)]+"'"+s.slice(2,4);};
+  const pc =(v,b)=>b?`${(v/b*100).toFixed(1).replace('.',',')}%`:'—';
+  const ppc=(v,b)=>b?`${(Math.abs(v)/Math.abs(b)*100).toFixed(1).replace('.',',')}%`:'—';
+  const dev=(r,p)=>{if(!p)return`<span style="color:var(--mut)">—</span>`;const d=(r-p)/Math.abs(p)*100;const c=d>0?'var(--grn)':'var(--red)';return `<span style="color:${c};font-weight:500">${d>0?'+':''}${d.toFixed(1).replace('.',',')}%</span>`;};
+  const fv=v=>`${v<0?'-':''}${fmt(Math.abs(v))}`;
+
+  const computeMonth=(p)=>{
+    const pe_v  = gvM(pe,p,PE_VENTAS)+gvM(pe,p,PE_OTROS);
+    const pe_p  = gcM(pe,p,PE_PROD);
+    const pe_c  = gcMixM(pe,p,'Costos Locales (5)')+gcM(pe,p,PE_COML.filter(x=>x!=='Costos Locales (5)'));
+    const jos_v = gvM(jos,p,JOS_VENTAS)+gvM(jos,p,JOS_OTROS);
+    const jos_p = gcM(jos,p,JOS_PROD);
+    const jos_c = gcM(jos,p,JOS_COML);
+    const vt=pe_v+jos_v;
+    const prod=pe_p+jos_p, coml=pe_c+jos_c;
+    const rb=vt-prod-coml, rop=rb;
+    let adm=0;
+    const admLines=ADMIN_LINES.map(([lbl,pe_n1,jos_n1,prc,useMix])=>{
+      const pv=useMix?gcMixM(pe,p,pe_n1[0]):gcM(pe,p,pe_n1);
+      const jv=useMix?gcMixM(jos,p,jos_n1[0]):gcM(jos,p,jos_n1);
+      adm+=pv+jv; return {lbl,val:pv+jv};
+    });
+    const res_ai=rop-adm;
+    const pe_int_cred=gcNM(pe,p,'Intereses Creditos');
+    const pe_int_plan=gcNM(pe,p,'Intereses Planes');
+    const pe_otros_neto=gcNM(pe,p,'Otros ingresos/ egresos financieros')-gvNM(pe,p,'Otros ingresos/ egresos financieros');
+    const jos_int_cred=gcNM(jos,p,'Intereses Creditos');
+    const jos_int_plan=gcNM(jos,p,'Intereses Planes');
+    const jos_otros_neto=gcNM(jos,p,'Otros ingresos/ egresos financieros')-gvNM(jos,p,'Otros ingresos/ egresos financieros');
+    const int_tot=pe_int_cred+pe_int_plan+pe_otros_neto+jos_int_cred+jos_int_plan+jos_otros_neto;
+    const res_fin=res_ai-int_tot;
+    const pp_v=spvM(pp,p,['Ventas Franquicias','Ventas Locales','Ventas Supermercados','Ventas Tiendas y Comercios']);
+    const jp_v=spvM(pj,p,['Ventas Agentes','Ventas Mostrador','Ventas Grupos','Ventas Planeta','Ventas Tiendas y Comercios']);
+    const pp_p=spvM(pp,p,['Costo MP (3)','Costo MO (2)','Costo CF (4)']);
+    const jp_p=spvM(pj,p,['Costo MP (3)','Costo MO (2)','Costo CF (4)']);
+    const pp_c=spvM(pp,p,['Costos Locales (5)','Costos Logisticos (6)','Costos Marketing y Publicidad (7)','Costos Impositivos']);
+    const jp_c=spvM(pj,p,['Costos Locales (5)','Costos Logisticos (6)','Costos Marketing y Publicidad (7)','Costos Impositivos']);
+    const p_vt=pp_v+jp_v, p_prod=pp_p+jp_p, p_coml=pp_c+jp_c;
+    const p_rb=(p_vt-p_prod-p_coml);
+    const p_adm=ADMIN_LINES.reduce((s,[,,,prc])=>s+spvM(pp,p,[prc])+spvM(pj,p,[prc]),0);
+    const p_rop=p_rb; const p_res_ai=p_rop-p_adm;
+    const p_int=spvM(pp,p,['Intereses Creditos','Intereses Planes','Otros ingresos/ egresos financieros'])+
+                spvM(pj,p,['Intereses Creditos','Intereses Planes','Otros ingresos/ egresos financieros']);
+    const p_fin=p_res_ai-p_int;
+    return {p,vt,prod,coml,rb,rop,adm,admLines,res_ai,int_tot,res_fin,
+            p_vt,p_prod,p_coml,p_rb,p_rop,p_adm,p_res_ai,p_int,p_fin};
+  };
+
+  const months=psSorted.map(computeMonth);
+  const S=k=>months.reduce((a,m)=>a+m[k],0);
+  const A={
+    vt:S('vt'),prod:S('prod'),coml:S('coml'),rb:S('rb'),rop:S('rop'),
+    adm:S('adm'),res_ai:S('res_ai'),int_tot:S('int_tot'),res_fin:S('res_fin'),
+    p_vt:S('p_vt'),p_prod:S('p_prod'),p_coml:S('p_coml'),p_rb:S('p_rb'),p_rop:S('p_rop'),
+    p_adm:S('p_adm'),p_res_ai:S('p_res_ai'),p_int:S('p_int'),p_fin:S('p_fin'),
+    admLines:ADMIN_LINES.map((_,i)=>({lbl:ADMIN_LINES[i][0],val:months.reduce((a,m)=>a+m.admLines[i].val,0)})),
+  };
+
+  const FC=6;
+  const FIXED_W=[220,110,46,110,46,54];
+  const MON_W=[110,46];
+  const fixedPx=FIXED_W.join('px ')+'px';
+  const monPx=Array(N).fill(MON_W.join('px ')+'px').join(' ');
+  const gridCols=`${fixedPx} ${monPx}`;
+  const totalCols=FC+N*2;
+
+  const mkRow=(concept, aReal, aProy, bR, bP, mVals, mBases, opts={})=>{
+    const {bold,color,neg,dim,indent,gap}=opts;
+    const rCls=aReal<0?'neg':'';
+    const rFmt=v=>`${v<0?'-':''}${fmt(Math.abs(v))}`;
+    const cells=[
+      `<div class="rc" style="${indent?'padding-left:26px;':''}${bold?'font-weight:600;':''}${color?'color:'+color+';':''}font-size:${bold?'13':'12'}px">${concept}</div>`,
+      `<div class="rv ${rCls}" style="font-size:${bold?'13':'12'}px">${rFmt(aReal)}</div>`,
+      `<div class="rp">${pc(aReal,bR)}</div>`,
+      `<div class="rv" style="font-size:${bold?'13':'12'}px;color:var(--dim)">${aProy?rFmt(aProy):'—'}</div>`,
+      `<div class="rp" style="color:var(--dim)">${aProy?ppc(aProy,bP):'—'}</div>`,
+      `<div class="rv">${dev(aReal,aProy)}</div>`,
+    ];
+    mVals.forEach((v,i)=>{
+      const base=mBases[i]||1;
+      cells.push(`<div class="rv ${v<0?'neg':''}" style="font-size:${bold?'13':'12'}px">${rFmt(v)}</div>`);
+      cells.push(`<div class="rp">${pc(v,base)}</div>`);
+    });
+    const rowCls=gap?'evol-gap':bold?'evol-tot':'evol-row';
+    const bg=dim?'background:rgba(0,0,0,.15);':'';
+    return `<div class="evol-r ${rowCls}" style="${bg}">${cells.join('')}</div>`;
+  };
+
+  const mkHeader=()=>{
+    const cells=[
+      `<div class="rc evol-hdr">CONCEPTO</div>`,
+      `<div class="rv evol-hdr" style="color:var(--gold)">Acum Real $</div>`,
+      `<div class="rp evol-hdr">%Vta</div>`,
+      `<div class="rv evol-hdr" style="color:var(--dim)">Acum Proy $</div>`,
+      `<div class="rp evol-hdr" style="color:var(--dim)">%Proy</div>`,
+      `<div class="rv evol-hdr">Desvío</div>`,
+    ];
+    months.forEach(m=>{
+      cells.push(`<div class="rv evol-hdr" style="color:var(--gold)">${mLabel(m.p)}</div>`);
+      cells.push(`<div class="rp evol-hdr">%Vta</div>`);
+    });
+    return `<div class="evol-r evol-hdr-row">${cells.join('')}</div>`;
+  };
+
+  const mkGap=()=>{
+    const cells=Array(totalCols).fill('<div class="evol-gap-cell"></div>');
+    return `<div class="evol-r evol-gap">${cells.join('')}</div>`;
+  };
+
+  const rows=[
+    mkHeader(),
+    mkRow('Ventas PE + JOS',A.vt,A.p_vt,A.vt,A.p_vt,months.map(m=>m.vt),months.map(m=>m.vt),{bold:true,color:'var(--gold)'}),
+    mkRow('- Costo Producción',-A.prod,-A.p_prod,A.vt,A.p_vt,months.map(m=>-m.prod),months.map(m=>m.vt),{neg:true}),
+    mkRow('Resultado Bruto',A.rb,A.p_rb,A.vt,A.p_vt,months.map(m=>m.rb),months.map(m=>m.vt),{bold:true}),
+    mkRow('- Costo Comercialización',-A.coml,-A.p_coml,A.vt,A.p_vt,months.map(m=>-m.coml),months.map(m=>m.vt),{}),
+    mkRow('Resultado Operativo',A.rop,A.p_rop,A.vt,A.p_vt,months.map(m=>m.rop),months.map(m=>m.vt),{bold:true,color:'var(--grn)'}),
+    mkGap(),
+    mkRow('Costos Adm. (8)',-A.adm,-A.p_adm,A.vt,A.p_vt,months.map(m=>-m.adm),months.map(m=>m.vt),{color:'var(--red)'}),
+    ...A.admLines.map((al,i)=>{
+      const p_al=months.reduce((a,m)=>a+spvM(pp,m.p,[ADMIN_LINES[i][3]])+spvM(pj,m.p,[ADMIN_LINES[i][3]]),0);
+      return mkRow(al.lbl,-al.val,-p_al,A.vt,A.p_vt,months.map(m=>-m.admLines[i].val),months.map(m=>m.vt),{dim:true,indent:true});
+    }),
+    mkRow('Resultado s/Intereses',A.res_ai,A.p_res_ai,A.vt,A.p_vt,months.map(m=>m.res_ai),months.map(m=>m.vt),{bold:true}),
+    mkGap(),
+    mkRow('- Intereses',-A.int_tot,-A.p_int,A.vt,A.p_vt,months.map(m=>-m.int_tot),months.map(m=>m.vt),{}),
+    mkRow('Resultado Neto',A.res_fin,A.p_fin,A.vt,A.p_vt,months.map(m=>m.res_fin),months.map(m=>m.vt),{bold:true,color:A.res_fin<0?'var(--red)':'var(--grn)'}),
+  ].join('');
+
+  const uid=++_uid;
+  document.getElementById(targetId).innerHTML=`
+  <style>
+    #evol-${uid}{overflow-x:auto;scrollbar-width:thin;scrollbar-color:var(--brd2) transparent}
+    #evol-${uid}::-webkit-scrollbar{height:6px}
+    #evol-${uid}::-webkit-scrollbar-track{background:transparent}
+    #evol-${uid}::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:3px}
+    #evol-${uid} .evol-grid{display:grid;grid-template-columns:${gridCols};min-width:max-content}
+    #evol-${uid} .evol-r{display:contents}
+    #evol-${uid} .evol-r > div{padding:6px 7px;border-bottom:0.5px solid var(--brd);display:flex;align-items:center}
+    #evol-${uid} .evol-hdr-row > div{padding:6px 7px;border-bottom:1px solid var(--brd2);background:var(--sur);position:sticky;top:0;font-size:10px;font-weight:500;display:flex;align-items:center}
+    #evol-${uid} .evol-gap > div{height:4px;background:var(--brd2);padding:0;border:none}
+    #evol-${uid} .evol-tot > div{background:var(--sur)}
+    #evol-${uid} .rc{justify-content:flex-start}
+    #evol-${uid} .rv{justify-content:flex-end}
+    #evol-${uid} .rp{justify-content:flex-end;font-size:10px;color:var(--mut)}
+    #evol-${uid} .evol-hdr{color:var(--mut)}
+    #evol-${uid} .evol-grid > div:nth-child(${totalCols}n+1){position:sticky;left:0px;background:var(--bg);z-index:2;min-width:${FIXED_W[0]}px;max-width:${FIXED_W[0]}px}
+    #evol-${uid} .evol-grid > div:nth-child(${totalCols}n+2){position:sticky;left:${FIXED_W[0]}px;background:var(--bg);z-index:2}
+    #evol-${uid} .evol-grid > div:nth-child(${totalCols}n+3){position:sticky;left:${FIXED_W[0]+FIXED_W[1]}px;background:var(--bg);z-index:2}
+    #evol-${uid} .evol-grid > div:nth-child(${totalCols}n+4){position:sticky;left:${FIXED_W[0]+FIXED_W[1]+FIXED_W[2]}px;background:var(--bg);z-index:2}
+    #evol-${uid} .evol-grid > div:nth-child(${totalCols}n+5){position:sticky;left:${FIXED_W[0]+FIXED_W[1]+FIXED_W[2]+FIXED_W[3]}px;background:var(--bg);z-index:2;border-right:1px solid var(--brd2)}
+    #evol-${uid} .evol-hdr-row > div{z-index:3 !important}
+  </style>
+  <div class="blk full">
+    <div class="blk-hdr">
+      <span class="blk-ttl">Evolución P&L PE + JOS</span><span class="bdg bdg-cons">CONSOLIDADO</span>
+    </div>
+    <div id="evol-${uid}">
+      <div class="evol-grid">${rows}</div>
+    </div>
+  </div>`;
+}
+
+
+function renderCTX(ps, targetId='main-ctx'){
+  const IPC_MONTHS=[
+    {m:'Jun\'25',v:1.6,q:false},{m:'Jul\'25',v:1.5,q:false},{m:'Ago\'25',v:2.1,q:false},
+    {m:'Sep\'25',v:2.4,q:false},{m:'Oct\'25',v:2.7,q:false},{m:'Nov\'25',v:2.4,q:false},
+    {m:'Dic\'25',v:2.8,q:false},{m:'Ene\'26',v:2.9,q:false},
+    {m:'Feb\'26',v:2.9,q:false},{m:'Mar\'26',v:3.4,q:true},
+    {m:'Abr\'26',v:2.58,q:true},{m:'May\'26',v:2.4,q:true,last:true},
+  ];
+  const maxIPC=Math.max(...IPC_MONTHS.map(d=>d.v));
+  const acum12=34.05, pico=3.4, picomes="Marzo 2026", trim=8.6, ult=2.4, ultmes="Mayo 2026";
+
+  const JOS={ vAnual:22.7, vTrim:5.2, mpAnual:47.8, mpTrim:40.8, moAnual:34.4, moTrim:10.3, cfAnual:6.2, cfTrim:0 };
+  const PE ={ vAnual:57.1, vTrim:15.0, mpAnual:36.5, mpTrim:11.6, moAnual:30.9, moTrim:9.2, cfAnual:69.4, cfTrim:8.3 };
+
+  const fp=v=>`${v.toFixed(1).replace('.',',')}%`;
+  const badge=(v,ref=0)=>{
+    const cl=v>ref?'badge-up':v<ref?'badge-dn':'badge-neu';
+    const sign=v>0?'+':'';
+    return `<span class="ctx-badge ${cl}">${sign}${fp(v)}</span>`;
+  };
+
+  const barHTML=IPC_MONTHS.map(d=>{
+    const h=Math.round((d.v/maxIPC)*64);
+    const col=d.last?'#c8a96e':d.q?'#e24b4a':'#888780';
+    return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0">
+      <div style="font-size:8.5px;font-weight:500;color:${col};white-space:nowrap">${d.v}%</div>
+      <div style="height:${h}px;width:100%;background:${col};border-radius:3px 3px 0 0;min-height:3px"></div>
+      <div style="font-size:8px;color:var(--mut);white-space:nowrap">${d.m}</div>
+    </div>`;
+  }).join('');
+
+  const kpi=(lbl,val,sub,color='var(--txt)')=>`<div class="ctx-kpi">
+    <div class="ctx-kpi-lbl">${lbl}</div>
+    <div class="ctx-kpi-val" style="color:${color}">${val}</div>
+    <div class="ctx-kpi-sub">${sub}</div>
+  </div>`;
+
+  const indBox=(lbl,anual,trim,color)=>`<div class="ctx-ind">
+    <div class="ctx-ind-lbl">${lbl}</div>
+    <div class="ctx-ind-val" style="color:${color}">${fp(anual)} ${badge(trim)}</div>
+    <div class="ctx-ind-note">Anual · Trimestral</div>
+  </div>`;
+
+  document.getElementById(targetId).innerHTML=`
+  <style>
+    .ctx-card{background:var(--bg);border:1px solid var(--brd2);border-radius:4px;padding:14px 16px;margin-bottom:12px}
+    .ctx-card-pe{border-left:3px solid #c8a96e}
+    .ctx-card-jos{border-left:3px solid var(--red)}
+    .ctx-sec{font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:0 0 10px}
+    .ctx-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+    .ctx-kpi{background:var(--sur);border-radius:3px;padding:10px 12px}
+    .ctx-kpi-lbl{font-size:10px;color:var(--mut);margin-bottom:2px}
+    .ctx-kpi-val{font-size:19px;font-weight:500}
+    .ctx-kpi-sub{font-size:9px;color:var(--dim);margin-top:1px}
+    .ctx-emp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+    .ctx-emp-name{font-size:13px;font-weight:500;margin-bottom:1px}
+    .ctx-emp-sub{font-size:10px;color:var(--mut);margin-bottom:8px}
+    .ctx-emp-adj{font-size:20px;font-weight:500;margin-bottom:1px}
+    .ctx-emp-adj-sub{font-size:10px;color:var(--mut);margin-bottom:10px}
+    .ctx-ind-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .ctx-ind{border:1px solid var(--brd);border-radius:3px;padding:9px 11px}
+    .ctx-ind-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin-bottom:3px}
+    .ctx-ind-val{font-size:17px;font-weight:500}
+    .ctx-ind-note{font-size:9px;color:var(--dim);margin-top:1px}
+    .ctx-badge{display:inline-block;font-size:10px;font-weight:500;padding:1px 7px;border-radius:99px;margin-left:5px;vertical-align:middle}
+    .badge-up{background:#fcebeb;color:#a32d2d}
+    .badge-dn{background:#eaf3de;color:#3b6d11}
+    .badge-neu{background:var(--sur);color:var(--mut)}
+    .ctx-divider{height:1px;background:var(--brd);margin:10px 0}
+    .ctx-footnote{font-size:9px;color:var(--dim);margin-top:8px}
+  </style>
+
+  <div class="ctx-card">
+    <div class="ctx-sec">Inflación mensual Argentina — IPC INDEC &nbsp;·&nbsp; Jun 2025 → May 2026</div>
+    <div style="display:flex;gap:4px;align-items:flex-end;height:82px;margin-bottom:8px">${barHTML}</div>
+    <div style="font-size:9px;color:var(--dim);margin-bottom:10px">
+      <span style="color:#e24b4a;font-weight:500">■</span> Trimestre analizado (Mar–Abr–May)&nbsp;&nbsp;
+      <span style="color:#c8a96e;font-weight:500">■</span> Último dato disponible
+    </div>
+    <div class="ctx-kpi-row">
+      ${kpi('Acumulado 12 meses',`${fp(acum12)}`,'Jun 2025 → May 2026','var(--txt)')}
+      ${kpi('Pico del período',`${fp(pico)}`,`${picomes} (educación)`,'var(--red)')}
+      ${kpi('Trimestre Mar–Abr–May',`${fp(trim)}`,'3,4% + 2,58% + 2,4%','var(--txt)')}
+      ${kpi('Último dato',`${fp(ult)}`,`${ultmes} (INDEC)`,'#c8a96e')}
+    </div>
+  </div>
+
+  <div class="ctx-emp-grid">
+    <div class="ctx-card ctx-card-jos">
+      <div class="ctx-emp-name" style="color:var(--red)">Joselito — Ajuste de precios</div>
+      <div class="ctx-emp-sub">Últimos 12 meses · Trimestre</div>
+      <div class="ctx-emp-adj">+${fp(JOS.vAnual)} anual ${badge(JOS.vTrim)} trimestral</div>
+      <div class="ctx-emp-adj-sub">Inflación acumulada período: ${fp(acum12)} · Precios rezagados +${fp(acum12-JOS.vAnual)} pp</div>
+      <div class="ctx-divider"></div>
+      <div class="ctx-ind-grid">
+        ${indBox('Precios de venta',JOS.vAnual,JOS.vTrim,'var(--red)')}
+        ${indBox('Materia prima',JOS.mpAnual,JOS.mpTrim,'var(--red)')}
+        ${indBox('Mano de obra',JOS.moAnual,JOS.moTrim,'var(--red)')}
+        ${indBox('Costos fijos',JOS.cfAnual,JOS.cfTrim,'var(--red)')}
+      </div>
+    </div>
+    <div class="ctx-card ctx-card-pe">
+      <div class="ctx-emp-name" style="color:#c8a96e">Planeta Empanada — Ajuste de precios</div>
+      <div class="ctx-emp-sub">Últimos 12 meses · Trimestre</div>
+      <div class="ctx-emp-adj">+${fp(PE.vAnual)} anual ${badge(PE.vTrim)} trimestral</div>
+      <div class="ctx-emp-adj-sub">Inflación acumulada período: ${fp(acum12)} · Precios adelantados +${fp(PE.vAnual-acum12)} pp</div>
+      <div class="ctx-divider"></div>
+      <div class="ctx-ind-grid">
+        ${indBox('Precios de venta',PE.vAnual,PE.vTrim,'#c8a96e')}
+        ${indBox('Materia prima',PE.mpAnual,PE.mpTrim,'#c8a96e')}
+        ${indBox('Mano de obra',PE.moAnual,PE.moTrim,'#c8a96e')}
+        ${indBox('Costos fijos',PE.cfAnual,PE.cfTrim,'#c8a96e')}
+      </div>
+    </div>
+  </div>
+  <div class="ctx-footnote">Fuente inflación: INDEC (datos oficiales, ipc.com.ar). Ajuste de precios y costos: datos internos PE + JOS.</div>
+  <div style="margin-top:14px;border:1px solid var(--brd2);border-radius:3px;overflow:hidden">
+    <div style="padding:7px 14px;background:var(--sur);border-bottom:1px solid var(--brd);font-size:10px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)">Comentarios</div>
+    <div style="padding:12px 14px;display:flex;flex-direction:column;gap:10px">
+      <div>
+        <div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin-bottom:4px">Precios de venta — último trimestre</div>
+        <div style="font-size:12px;color:var(--txt);line-height:1.6">
+          Último aumento de precios <span style="color:var(--red);font-weight:500">Joselito</span>: 13/04/2026 &nbsp;·&nbsp;
+          Último aumento de precios <span style="color:#c8a96e;font-weight:500">Planeta Empanada</span>: 06/05/2026
+        </div>
+      </div>
+      <div style="height:0.5px;background:var(--brd)"></div>
+      <div>
+        <div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin-bottom:4px">Precios materias primas — último trimestre</div>
+        <div style="font-size:12px;color:var(--txt);line-height:1.6">
+          <span style="color:var(--red);font-weight:500">Joselito</span>: aumento en grasas del orden del <span style="font-weight:500">64%</span> &nbsp;·&nbsp; harina <span style="font-weight:500">13%</span>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+
 function renderPL(ps, targetId='main-pl') {
   const pe=D.pe, jos=D.jos, pp=D.proy_pe, pj=D.proy_jos;
 
@@ -887,222 +1416,437 @@ function plBlock(title,bdgCls,bdgTxt,base,v,oi,p,rb,c,rop,pv,pp,pc,prop,vD,pD,cD
 // ════════════════════════════════════════════════════════════════
 // RENDER P&L JOS POR UNIDAD DE NEGOCIO
 // ════════════════════════════════════════════════════════════════
+
+// ════════════════════════════════════════════════════════════════
+// RENDER P&L JOS POR UNIDAD DE NEGOCIO  (4 canales + kilos)
+// ════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
+// RENDER P&L PE LOCAL POR CANAL (Mostrador / Delivery / PY)
+// ════════════════════════════════════════════════════════════════
+
+// ════════════════════════════════════════════════════════════════
+// RENDER P&L PE LOCAL POR CANAL (Mostrador / Delivery / PY)
+// ════════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════
+// RENDER P&L JOS POR UNIDAD DE NEGOCIO  (4 canales + kilos)
+// ════════════════════════════════════════════════════════════════
 function renderJOSUN(ps, targetId='main-jos_un'){
   const jos=D.jos;
-  const COLS_JOS='grid-template-columns:1fr 130px 130px 130px';
-  const JOS_V_MAY=['Ventas Agentes','Ventas Grupos','Ventas Planeta','Ventas Tiendas y Comercios'];
-  const JOS_V_MIN=['Ventas Mostrador'];
+  const CANALES=['Minorista','Agentes','Planeta','Venta directa'];
+  const COL_CANAL=130, COL_PCT=40;
+
+  const gcM =(arr,p,nl)=>{const s=new Set(nl);return -arr.filter(r=>r.p===p&&r.n0==='R-'&&s.has(r.n1)).reduce((a,r)=>a+r.va,0);};
+  const gvM =(arr,p,nl)=>{const s=new Set(nl);return  arr.filter(r=>r.p===p&&r.n0==='R+'&&s.has(r.n1)).reduce((a,r)=>a+r.va,0);};
+  const pc  =(v,b)=>b?`${(v/b*100).toFixed(1).replace('.',',')}%`:'—';
+  const fv  =v=>`${v<0?'-':''}${fmt(Math.abs(v))}`;
+
+  const APERTURA_MAP={'Agentes':'Agente','Planeta':'Planeta','Venta directa':'Venta directa'};
+  const N2_CANAL={'Minorista':'Canal Minorista','Agentes':'Canal Agentes','Venta directa':'Canal Venta Directa'};
   const JOS_PROD=['Costo MP (3)','Costo MO (2)','Costo CF (4)'];
-  const JOS_COML_MAY_N1=['Comisiones Agentes'];
-  const JOS_COML_MIN_N2=['Alquiler Vieytes','Servicios Vieytes','Sueldos Vieytes','PYA Vieytes'];
-  const JOS_COML_PRORR=['Costos Logisticos (6)','Costos Marketing y Publicidad (7)','Costos Impositivos'];
+  const JOS_PRORR=['Costos Logisticos (6)','Costos Marketing y Publicidad (7)','Costos Impositivos'];
 
-  const res={
-    Mayorista:{ventas:0,oi:0,prod:0,coml:0,coml_may:0,coml_min:0,coml_prorr:0},
-    Minorista:{ventas:0,oi:0,prod:0,coml:0,coml_may:0,coml_min:0,coml_prorr:0},
-  };
-  const det={May:{ventas:{},prod:{},coml_may:{},coml_prorr:{}},Min:{ventas:{},prod:{},coml_min:{},coml_prorr:{}}};
-  const addD=(b,r,scale=1)=>{const k=r.nro+'|'+r.deno;b[k]=(b[k]||0)+r.va*scale;};
+  const res={};
+  CANALES.forEach(c=>res[c]={ventas:0,oi:0,prod:0,coml_dir:0,coml_prorr:0});
+  const det={};
+  CANALES.forEach(c=>{det[c]={};});
 
-  const v_may=jos.filter(r=>ps.includes(r.p)&&r.n0==='R+'&&JOS_V_MAY.includes(r.n1)).reduce((s,r)=>s+r.va,0);
-  const v_min=jos.filter(r=>ps.includes(r.p)&&r.n0==='R+'&&JOS_V_MIN.includes(r.n1)).reduce((s,r)=>s+r.va,0);
-  const v_tot=v_may+v_min;
-  const pm=v_tot?v_may/v_tot:0.5, pn=v_tot?v_min/v_tot:0.5;
+  ps.forEach(p=>{
+    const vtaApertura_p={};
+    if(D.apertura_jos) D.apertura_jos.filter(r=>r.p===p).forEach(r=>{
+      const canal=Object.keys(APERTURA_MAP).find(k=>APERTURA_MAP[k]===r.canal);
+      if(canal) vtaApertura_p[canal]=(vtaApertura_p[canal]||0)+r.importe;
+    });
+    res['Minorista'].ventas += gvM(jos,p,['Ventas Mostrador']);
+    ['Agentes','Planeta','Venta directa'].forEach(c=>{res[c].ventas+=(vtaApertura_p[c]||0);});
 
-  jos.filter(r=>ps.includes(r.p)).forEach(r=>{
-    const {n0,n1,n2,va}=r;
-    if(n0==='R+'&&JOS_V_MAY.includes(n1)){res.Mayorista.ventas+=va;addD(det.May.ventas,r);return;}
-    if(n0==='R+'&&JOS_V_MIN.includes(n1)){res.Minorista.ventas+=va;addD(det.Min.ventas,r);return;}
-    if(n0==='R+'&&n1==='Otros Ingresos'){res.Mayorista.oi+=va*pm;res.Minorista.oi+=va*pn;return;}
-    if(n0==='R-'&&JOS_PROD.includes(n1)){
-      res.Mayorista.prod+=va*pm;addD(det.May.prod,r,pm);
-      res.Minorista.prod+=va*pn;addD(det.Min.prod,r,pn);return;
-    }
-    if(n0==='R-'&&JOS_COML_MAY_N1.includes(n1)){res.Mayorista.coml+=va;res.Mayorista.coml_may+=va;addD(det.May.coml_may,r);return;}
-    if(n0==='R-'&&JOS_COML_MIN_N2.includes(n2)){res.Minorista.coml+=va;res.Minorista.coml_min+=va;addD(det.Min.coml_min,r);return;}
-    if(n0==='R-'&&JOS_COML_PRORR.includes(n1)){
-      res.Mayorista.coml+=va*pm;res.Mayorista.coml_prorr+=va*pm;addD(det.May.coml_prorr,r,pm);
-      res.Minorista.coml+=va*pn;res.Minorista.coml_prorr+=va*pn;addD(det.Min.coml_prorr,r,pn);return;
-    }
+    // Kilos por canal para este período
+    const kg_p={};
+    CANALES.forEach(c=>kg_p[c]=0);
+    if(D.units_jos) D.units_jos.filter(r=>r.p===p).forEach(r=>{
+      if(kg_p[r.canal]!==undefined) kg_p[r.canal]+=r.kilos;
+    });
+    const kg_tot_p=CANALES.reduce((s,c)=>s+kg_p[c],0);
+
+    // Otros Ingresos — prorrateo por kilos
+    const oi_p=gvM(jos,p,['Otros Ingresos']);
+    CANALES.forEach(c=>{res[c].oi+=oi_p*(kg_tot_p?kg_p[c]/kg_tot_p:0);});
+
+    // Producción — prorrateo por kilos
+    const prod_p=gcM(jos,p,JOS_PROD);
+    CANALES.forEach(c=>{res[c].prod+=prod_p*(kg_tot_p?kg_p[c]/kg_tot_p:0);});
+
+    // Costos directos por N2 — con detalle de cuenta
+    ['Minorista','Agentes','Venta directa'].forEach(c=>{
+      const n2=N2_CANAL[c];
+      jos.filter(r=>r.p===p&&r.n0==='R-'&&r.n2===n2).forEach(r=>{
+        const k=r.nro+'|'+r.deno;
+        det[c][k]=(det[c][k]||0)+r.va;  // r.va negative (R-), kept for display
+        res[c].coml_dir-=r.va;          // negate → positive cost
+      });
+    });
+
+    // Costos prorrateables (Log+Mkt+Imp) — por kilos
+    const prorr_p=gcM(jos,p,JOS_PRORR);
+    CANALES.forEach(c=>{res[c].coml_prorr+=prorr_p*(kg_tot_p?kg_p[c]/kg_tot_p:0);});
   });
 
-  const UNS=['Mayorista','Minorista'];
-  UNS.forEach(u=>{const r=res[u];r.ing=r.ventas+r.oi;r.rb=r.ing+r.prod;r.rop=r.rb+r.coml;});
-  const tot={};['ventas','oi','ing','prod','rb','coml','coml_may','coml_min','coml_prorr','rop'].forEach(k=>tot[k]=UNS.reduce((s,u)=>s+res[u][k],0));
+  CANALES.forEach(c=>{
+    const r=res[c];
+    r.ing=r.ventas+(r.oi||0);
+    r.rb=r.ing-r.prod;
+    r.coml=r.coml_dir+r.coml_prorr;
+    r.rop=r.rb-r.coml;
+  });
+  const tot={};
+  ['ventas','oi','ing','prod','rb','coml_dir','coml_prorr','coml','rop'].forEach(k=>{
+    tot[k]=CANALES.reduce((s,c)=>s+res[c][k],0);
+  });
+  const vtot=(tot.ventas+(tot.oi||0))||1;
 
-  const pct=(v,b)=>b?`${Math.abs(v/b*100).toFixed(1).replace('.',',')}%`:'—';
-  const cv=(v,b,cost)=>{if(!v)return`<div class="rv" style="font-size:10px;color:var(--mut)">—</div>`;
-    const c=cost?(v<0?'var(--red)':'var(--grn)'):'var(--txt)';
-    return`<div class="rv" style="font-size:10px;color:${c}">${cost&&v<0?'-'+fmt(-v):fmt(v)}<div style="font-size:8px;color:var(--mut)">${pct(v,b)}</div></div>`;};
-  const ct=(v,b,bold)=>{if(!v)return`<div class="rv" style="font-size:10px;color:var(--mut)">—</div>`;
-    const c=v<0?'var(--red)':'var(--grn)';
-    return`<div class="rv" style="font-size:${bold?12:10}px;color:${c};font-weight:${bold?600:400}">${v<0?'-'+fmt(-v):fmt(v)}<div style="font-size:8px;color:var(--mut)">${pct(v,b)}</div></div>`;};
+  const kgByCanal={};
+  CANALES.forEach(c=>kgByCanal[c]=0);
+  if(D.units_jos){
+    D.units_jos.filter(r=>ps.includes(r.p)).forEach(r=>{
+      if(kgByCanal[r.canal]!==undefined) kgByCanal[r.canal]+=r.kilos;
+    });
+  }
+  const kgTot=CANALES.reduce((s,c)=>s+kgByCanal[c],0);
+  const pctKg={};
+  CANALES.forEach(c=>pctKg[c]=kgTot?kgByCanal[c]/kgTot:0);
 
-  const drows=(bucket)=>Object.entries(bucket).filter(([,v])=>Math.abs(v)>0.5)
-    .sort(([,a],[,b])=>Math.abs(b)-Math.abs(a))
-    .map(([k,v])=>{const[nro,deno]=k.split('|');
-      return`<div class="r d2" style="${COLS_JOS};background:rgba(0,0,0,.22)">
-        <div class="rc" style="padding-left:46px;font-size:8px;color:var(--dim)">${nro} · ${deno}</div>
-        <div class="rv" style="font-size:8px;color:var(--mut)">—</div><div class="rv" style="font-size:8px;color:var(--mut)">—</div>
-        <div class="rv" style="font-size:8px;color:${v<0?'var(--red)':'var(--grn)'}">${v<0?'-'+fmt(-v):'+'+fmt(v)}</div>
-      </div>`;}).join('');
+  const STICKY=1;
+  const uid=++_uid;
+  const NCOLS=1+CANALES.length*2+2;
+  const CC={'Minorista':'var(--pe)','Agentes':'var(--jos)','Planeta':'#c8a96e','Venta directa':'#9b8ec4'};
 
-  const expR=(lbl,mv,nv,tv,bm,bn,bt,cost,dm,dn)=>{
-    const id='x'+(++_uid);
-    const sub=[[mv,'Mayorista',dm,bm],[nv,'Minorista',dn,bn]].map(([v,u,d,b])=>{
-      if(!v&&(!d||!Object.keys(d).length))return'';
-      const dr=drows(d||{});if(!dr)return'';
-      const sid='x'+(++_uid);
-      return`<div class="r d1 exp" style="${COLS_JOS}" onclick="xopen('${sid}','xjos')">
-        <div class="rc" style="padding-left:28px;font-size:9px"><em class="ti">▶</em>${u}</div>
-        <div class="rv" style="font-size:9px;color:${v<0?'var(--red)':'var(--grn)'}">${v?(cost&&v<0?'-'+fmt(-v):fmt(v)):'—'}</div>
-        <div class="rv" style="font-size:9px;color:var(--mut)">—</div><div class="rv" style="font-size:9px;color:var(--mut)">—</div>
-      </div><div class="dr" id="${sid}">${dr}</div>`;}).join('');
-    return`<div class="r ind exp" style="${COLS_JOS}" onclick="xopen('${id}','xjos')">
-      <div class="rc dim"><em class="ti">▶</em>${lbl}</div>${cv(mv,bm,cost)}${cv(nv,bn,cost)}${ct(tv,bt,false)}
-    </div><div class="dr" id="${id}">${sub}</div>`;};
+  const thC=(txt,color='')=>`<th style="position:sticky;left:0;top:0;background:var(--sur);z-index:4;text-align:left;font-size:9px;font-weight:500;color:${color||'var(--mut)'};padding:5px 8px;width:200px;min-width:200px">${txt}</th>`;
+  const thV=(txt,color='',w=COL_CANAL)=>`<th style="position:sticky;top:0;background:var(--sur);z-index:1;text-align:right;font-size:9px;font-weight:500;color:${color||'var(--mut)'};padding:5px 6px;width:${w}px;min-width:${w}px">${txt}</th>`;
+  const thKg=(txt,color='')=>`<th colspan="2" style="position:sticky;top:0;background:var(--sur);z-index:1;text-align:center;font-size:9px;font-weight:500;color:${color||'var(--mut)'};padding:5px 6px;border-bottom:1px solid var(--brd2)">${txt}</th>`;
 
-  const simR=(lbl,mv,nv,tv,bm,bn,bt,isRes)=>{
-    const cls=isRes?'r gt-jos':'r sub-t';
-    return`<div class="${cls}" style="${COLS_JOS}">
-      <div class="rc">${lbl}</div>${isRes?ct(mv,bm,true):cv(mv,bm,false)}${isRes?ct(nv,bn,true):cv(nv,bn,false)}${ct(tv,bt,isRes)}
-    </div>`;};
+  const rowVals=(key,negate=false)=>
+    [...CANALES.map(c=>({v:negate?-res[c][key]:res[c][key],base:res[c].ing||1})),
+     {v:negate?-tot[key]:tot[key],base:vtot}];
 
-  const bm=res.Mayorista.ing||1,bn=res.Minorista.ing||1,bt=tot.ing||1;
+  const mkSimpleRow=(concept,vals,opts)=>{
+    const{bold,color,dim,gap,indent}=opts||{};
+    if(gap) return `<tr><td colspan="${NCOLS}" style="height:4px;background:var(--brd2);padding:0;border:none"></td></tr>`;
+    const fs=bold?'12px':'11px'; const fw=bold?'font-weight:600;':'';
+    const bg=dim?'background:rgba(0,0,0,.13);':'';
+    return `<tr style="${bg}">
+      <td style="position:sticky;left:0;background:${dim?'rgba(0,0,0,.13)':'var(--bg)'};z-index:2;font-size:${fs};${fw}${color?'color:'+color+';':''}${indent?'padding-left:26px;':''}padding:5px 8px">${concept}</td>
+      ${vals.map(({v,base})=>`
+        <td style="text-align:right;font-size:${fs};padding:5px 6px;${v<0?'color:var(--red);':''}">${v!==0?fv(v):'—'}</td>
+        <td style="text-align:right;font-size:9px;color:var(--mut);padding:5px 3px">${v!==0?pc(v,base):'—'}</td>
+      `).join('')}
+    </tr>`;
+  };
 
   document.getElementById(targetId).innerHTML=`
+  <style>
+    #jt-${uid}{overflow-x:auto;scrollbar-width:thin;scrollbar-color:var(--brd2) transparent;width:100%}
+    #jt-${uid}::-webkit-scrollbar{height:6px}
+    #jt-${uid}::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:3px}
+    #jt-${uid} table{border-collapse:collapse;table-layout:fixed;min-width:100%}
+    #jt-${uid} td,#jt-${uid} th{border-bottom:0.5px solid var(--brd);white-space:nowrap;box-sizing:border-box}
+    #jt-${uid} tr:hover td{background:rgba(255,255,255,.03)}
+  </style>
   <div class="blk full">
     <div class="blk-hdr"><span class="bdg bdg-jos">JOS</span>
       <h1 style="font-family:var(--fs);font-size:15px;font-weight:600">P&L Joselito <em style="color:var(--jos)">por U.N.</em></h1>
-      <p class="hdr-sub">Mayorista · Minorista · Joselito</p>
+      <p class="hdr-sub">Minorista · Agentes · Planeta · Venta directa</p>
     </div>
-    <div class="r sh" style="${COLS_JOS}">
-      <div class="rc">CONCEPTO</div>
-      <div class="rv" style="color:var(--jos);font-weight:600">Mayorista</div>
-      <div class="rv" style="color:var(--pe);font-weight:600">Minorista</div>
-      <div class="rv" style="color:var(--gold);font-weight:600">Total</div>
+    <div id="jt-${uid}">
+      <table>
+        <thead>
+          <tr>
+            ${thC('CONCEPTO')}
+            ${CANALES.map(c=>`${thKg(c,CC[c])}`).join('')}
+            ${thKg('Total','var(--gold)')}
+          </tr>
+          <tr>
+            <th style="position:sticky;left:0;top:0;background:var(--sur);z-index:4;padding:5px 8px;font-size:9px;color:var(--mut);border-bottom:1px solid var(--brd2)">
+              Kilos: ${CANALES.map(c=>`<span style="color:${CC[c]}">${c[0]}</span>=${(kgByCanal[c]/1000).toFixed(1)}t (${(pctKg[c]*100).toFixed(0)}%)`).join(' · ')}
+            </th>
+            ${CANALES.map(()=>`${thV('$')}${thV('%Vta','',COL_PCT)}`).join('')}
+            ${thV('$','var(--gold)')}${thV('%Vta','',COL_PCT)}
+          </tr>
+        </thead>
+        <tbody>
+          ${mkSimpleRow('Ventas',rowVals('ventas'),{bold:true,color:'var(--gold)'})}
+          ${tot.oi?mkSimpleRow('+ Otros Ingresos (prorr. kg)',[...CANALES.map(c=>({v:res[c].oi||0,base:res[c].ing||1})),{v:tot.oi,base:vtot}],{}):''}
+          ${mkSimpleRow('- Costo Producción (prorr. kg)',rowVals('prod',true),{})}
+          ${mkSimpleRow('Resultado Bruto',rowVals('rb'),{bold:true})}
+          ${mkSimpleRow('',null,{gap:true})}
+          ${(()=>{
+            const hdrCells=[...CANALES.map(c=>({v:-res[c].coml_dir,base:res[c].ing||1})),{v:-tot.coml_dir,base:vtot}];
+            const expId='x'+(++_uid);
+            const detRowsHTML=CANALES.map(c=>{
+              const cIdx=CANALES.indexOf(c);
+              return Object.entries(det[c])
+                .filter(([,v])=>v!==0)
+                .sort(([,a],[,b])=>Math.abs(b)-Math.abs(a))
+                .map(([k,va])=>{
+                  const[nro,deno]=k.split('|');
+                  const absPct=pc(-va, res[c].ing||1);
+                  const totAbsPct=pc(-va,vtot);
+                  const colCells=CANALES.map((_,i)=>i===cIdx
+                    ?`<td style="text-align:right;font-size:9px;padding:4px 6px;color:var(--red)">${fv(va)}</td>
+                      <td style="text-align:right;font-size:8px;color:var(--mut);padding:4px 3px">${absPct}</td>`
+                    :`<td style="text-align:right;font-size:9px;padding:4px 6px;color:var(--mut)">—</td>
+                      <td style="text-align:right;font-size:8px;color:var(--mut);padding:4px 3px">—</td>`
+                  ).join('');
+                  return `<tr style="background:rgba(0,0,0,.22)">
+                    <td style="position:sticky;left:0;background:rgba(15,17,23,.95);z-index:2;font-size:8px;color:var(--dim);padding:4px 8px 4px 36px">${nro} · ${deno}</td>
+                    ${colCells}
+                    <td style="text-align:right;font-size:9px;padding:4px 6px;color:var(--red)">${fv(va)}</td>
+                    <td style="text-align:right;font-size:8px;color:var(--mut);padding:4px 3px">${totAbsPct}</td>
+                  </tr>`;
+                }).join('');
+            }).join('');
+            return `<tr onclick="(()=>{const d=document.getElementById('${expId}');const ti=this.querySelector('.ti');const open=d.style.display!=='none';d.style.display=open?'none':'';ti.textContent=open?'▶':'▼';})()" style="cursor:pointer">
+              <td style="position:sticky;left:0;background:var(--bg);z-index:2;font-size:11px;padding:5px 8px;padding-left:26px"><em class="ti">▶</em> - Costos directos canal</td>
+              ${hdrCells.map(({v,base})=>`
+                <td style="text-align:right;font-size:11px;padding:5px 6px;${v<0?'color:var(--red)':''}">${v?fv(v):'—'}</td>
+                <td style="text-align:right;font-size:9px;color:var(--mut);padding:5px 3px">${v?pc(v,base):'—'}</td>`).join('')}
+            </tr>
+            <tbody id="${expId}" style="display:none">${detRowsHTML}</tbody>`;
+          })()}
+          ${mkSimpleRow('- Log. + Mkt + Imp. (prorr. kg)',rowVals('coml_prorr',true),{indent:true})}
+          ${mkSimpleRow('Resultado Operativo',rowVals('rop'),{bold:true,color:'var(--grn)'})}
+        </tbody>
+      </table>
     </div>
-    ${expR('Ventas Totales (1)',res.Mayorista.ventas,res.Minorista.ventas,tot.ventas,bm,bn,bt,false,det.May.ventas,det.Min.ventas)}
-    <div class="r ind" style="${COLS_JOS}"><div class="rc dim">+ Otros Ingresos</div>${cv(res.Mayorista.oi,bm,false)}${cv(res.Minorista.oi,bn,false)}${ct(tot.oi,bt,false)}</div>
-    ${expR('- Costo Producción (prorrateo)',res.Mayorista.prod,res.Minorista.prod,tot.prod,bm,bn,bt,true,det.May.prod,det.Min.prod)}
-    ${simR('Resultado Bruto',res.Mayorista.rb,res.Minorista.rb,tot.rb,bm,bn,bt,false)}
-    <div class="r ind exp" style="${COLS_JOS}" onclick="xopen('xjos_coml_${_uid}','xjos')">
-      <div class="rc dim"><em class="ti">▶</em>- Costo Comercialización</div>
-      ${cv(res.Mayorista.coml,bm,true)}${cv(res.Minorista.coml,bn,true)}${ct(tot.coml,bt,false)}
+    <div style="padding:6px 10px;font-size:8px;color:var(--mut);border-top:1px solid var(--brd)">
+      Producción y costos compartidos prorrateados por kilos vendidos por canal · Costos directos asignados por N2
     </div>
-    <div class="dr" id="xjos_coml_${_uid-1}">
-      ${expR('Comisiones Agentes',res.Mayorista.coml_may,0,res.Mayorista.coml_may,bm,bn,bm,true,det.May.coml_may,{})}
-      ${expR('Costos Local Vieytes',0,res.Minorista.coml_min,res.Minorista.coml_min,bm,bn,bn,true,{},det.Min.coml_min)}
-      ${expR('Logíst. + Marketing + Impositivos (prorrateo)',res.Mayorista.coml_prorr,res.Minorista.coml_prorr,tot.coml_prorr,bm,bn,bt,true,det.May.coml_prorr,det.Min.coml_prorr)}
-    </div>
-    ${simR('Resultado Operativo',res.Mayorista.rop,res.Minorista.rop,tot.rop,bm,bn,bt,true)}
-    <div style="padding:5px 10px;font-size:8px;color:var(--mut);border-top:1px solid var(--brd)">Producción y costos compartidos prorrateados por % de ventas · Pendiente: prorrateo por kilos producidos</div>
-    ${ropControlBar(tot.rop,'ROP JOS · P&L por U.N.')}
+    ${(()=>{
+      const jos_v_ref  = ps.reduce((s,p)=>s+gvM(jos,p,['Ventas Agentes','Ventas Mostrador','Ventas Grupos','Ventas Planeta','Ventas Tiendas y Comercios']),0);
+      const jos_oi_ref = ps.reduce((s,p)=>s+gvM(jos,p,['Otros Ingresos']),0);
+      const jos_p_ref  = ps.reduce((s,p)=>s+gcM(jos,p,['Costo MP (3)','Costo MO (2)','Costo CF (4)']),0);
+      const jos_c_ref  = ps.reduce((s,p)=>s+gcM(jos,p,['Costos Locales (5)','Costos Logisticos (6)','Costos Marketing y Publicidad (7)','Comisiones Agentes','Costos Impositivos']),0);
+      const jos_rop_ref = (jos_v_ref+jos_oi_ref) - jos_p_ref - jos_c_ref;
+      _jos_rop_last = jos_rop_ref;
+      return ropControlBar(tot.rop,'ROP JOS · P&L por U.N.');
+    })()}
   </div>`;
 }
 
 
-function controlBlock(ps, res_fin, data){
-  // Sum all R+ and R- accounts directly from raw data
-  const pe_raw  = data.pe.filter(r=>ps.includes(r.p)).reduce((s,r)=>s+r.va, 0);
-  const jos_raw = data.jos.filter(r=>ps.includes(r.p)).reduce((s,r)=>s+r.va, 0);
-  const total_raw = pe_raw + jos_raw;
-  const diff = res_fin - total_raw;
-  const diffAbs = Math.abs(diff);
-  // Color: green if diff < 1 peso, yellow if < 100, red if >= 100
-  const diffColor = diffAbs < 1 ? 'var(--grn)' : diffAbs < 100 ? 'var(--gold)' : 'var(--red)';
-  const diffIcon  = diffAbs < 1 ? '✓' : diffAbs < 100 ? '≈' : '⚠';
-  const fmtExact = v => {
-    const abs = Math.abs(v);
-    const ints = Math.floor(abs);
-    const decs = Math.round((abs - ints) * 100).toString().padStart(2,'0');
-    const sg = v < 0 ? '-' : '';
-    return sg + ints.toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.') + ',' + decs;
+
+// ════════════════════════════════════════════════════════════════
+// RENDER P&L PE LOCAL POR CANAL (Mostrador / Delivery / PY)
+// ════════════════════════════════════════════════════════════════
+function renderPELOCCANAL(ps, targetId='main-loc_canal'){
+  const pe=D.pe, units=D.units||[];
+  const CANALES=['Mostrador','Delivery','PY'];
+  const CC={'Mostrador':'#c8a96e','Delivery':'var(--pe)','PY':'#9b8ec4'};
+  const LOCS=LOC_CANAL_LOCALES.filter(l=>SEL_LOCALES_CANAL.has(l));
+  if(!LOCS.length){
+    document.getElementById(targetId).innerHTML=
+      '<div style="padding:40px;color:var(--mut);text-align:center">Seleccioná al menos un local</div>';
+    return;
+  }
+
+  // ── Helpers ──────────────────────────────────────────────────
+  const pc=(v,b)=>b?`${(v/b*100).toFixed(1).replace('.',',')}%`:'—';
+  const fv=v=>`${v<0?'-':''}${fmt(Math.abs(v))}`;
+
+  // ── Unit weights — SAME logic as renderLOC ───────────────────
+  const locU={};LOC_CANAL_LOCALES.forEach(l=>locU[l]=0);
+  units.forEach(r=>{
+    if(ps.includes(r.p)&&r.un_p==='Locales'&&locU[r.un_s]!==undefined)
+      locU[r.un_s]+=r.u;
+  });
+  const totAll=units.filter(r=>ps.includes(r.p)).reduce((s,r)=>s+r.u,0);
+  const totLoc=LOC_CANAL_LOCALES.reduce((s,l)=>s+locU[l],0);
+  // prodPct = share of ALL channels (same as renderLOC for prod AND log/mkt/imp)
+  const prodPct={};LOC_CANAL_LOCALES.forEach(l=>prodPct[l]=totAll?locU[l]/totAll:0);
+
+  // ── Per-canal units & % from Unidades PE ─────────────────────
+  // For each local × period: get units and pctV (nivel terciario)
+  const getCanal=(p,loc)=>{
+    const rows=units.filter(r=>r.p===p&&r.n1==='Locales'&&r.n2===loc&&['Mostrador','Delivery','PY'].includes(r.n3));
+    const uM=rows.find(r=>r.n3==='Mostrador')?.units||0;
+    const uD=rows.find(r=>r.n3==='Delivery' )?.units||0;
+    const uP=rows.find(r=>r.n3==='PY'       )?.units||0;
+    const uTot=uM+uD+uP;
+    const pctU={Mostrador:uTot?uM/uTot:1/3,Delivery:uTot?uD/uTot:1/3,PY:uTot?uP/uTot:1/3};
+    const pctVsum=rows.reduce((s,r)=>s+r.pct,0);
+    const pctV={Mostrador:0,Delivery:0,PY:0};
+    rows.forEach(r=>{if(r.n3 in pctV)pctV[r.n3]=r.pct;});
+    // If no pctV data, fall back to pctU
+    if(pctVsum<0.01){pctV.Mostrador=pctU.Mostrador;pctV.Delivery=pctU.Delivery;pctV.PY=pctU.PY;}
+    return{pctU,pctV,uTot};
   };
-  return `<div style="margin-top:10px;border:1px solid var(--brd2);border-radius:2px;background:rgba(0,0,0,.2)">
-    <div style="padding:6px 12px;border-bottom:1px solid var(--brd);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);font-weight:500">
-      Control de cuadre
+
+  // ── Accumulate ────────────────────────────────────────────────
+  const res={};
+  CANALES.forEach(c=>res[c]={ventas:0,oi:0,prod:0,cv:0,coml_loc:0,
+    dir_del:0,dir_py:0,mkt_dir:0,indir:0});
+
+  ps.forEach(p=>{
+    // Global prorated costs for this period (same as renderLOC)
+    // Use same N2===INDIR filter as renderLOC
+    const prod_p =-pe.filter(r=>r.p===p&&r.n0==='R-'&&PE_PROD.includes(r.n1)&&r.n2===INDIR).reduce((a,r)=>a+r.va,0);
+    const log_p  =-pe.filter(r=>r.p===p&&r.n0==='R-'&&r.n1==='Costos Logisticos (6)'&&r.n2===INDIR).reduce((a,r)=>a+r.va,0);
+    const mkt_p  =-pe.filter(r=>r.p===p&&r.n0==='R-'&&r.n1==='Costos Marketing y Publicidad (7)'&&r.n2===INDIR).reduce((a,r)=>a+r.va,0);
+    const imp_p  =-pe.filter(r=>r.p===p&&r.n0==='R-'&&r.n1==='Costos Impositivos'&&r.n2===INDIR).reduce((a,r)=>a+r.va,0);
+
+    LOCS.forEach(loc=>{
+      // Check if this local has any activity in this period
+      const hasAct=pe.some(r=>r.p===p&&(N2_LOC[r.n2]===loc||(r.n2===INDIR&&(r.n0==='R+'||r.n0==='R-'))));
+      // More specific: any record with N2_LOC[n2]===loc
+      const hasLocAct=pe.some(r=>r.p===p&&N2_LOC[r.n2]===loc);
+      const hasProrr=locU[loc]>0;
+      if(!hasLocAct&&!hasProrr) return;
+
+      const{pctU,pctV,uTot}=getCanal(p,loc);
+      const pLoc=prodPct[loc]||0;  // % of ALL channels for this local
+
+      // Iterate ALL pe records for this period, same as renderLOC
+      pe.filter(r=>r.p===p).forEach(r=>{
+        const{n0,n1,n2,n3,va}=r;
+
+        // Ventas directas del local (N2_LOC[n2]===loc, n0=R+, n1 starts 'Ventas')
+        if(n0==='R+'&&n1.startsWith('Ventas')&&N2_LOC[n2]===loc){
+          CANALES.forEach(c=>res[c].ventas+=va*pctV[c]); return;
+        }
+        // Sobrante de caja / R+ en Costos Locales con N2_LOC
+        if(n0==='R+'&&n1==='Costos Locales (5)'&&N2_LOC[n2]===loc){
+          CANALES.forEach(c=>res[c].ventas+=va*pctU[c]); return;
+        }
+        // Otros Ingresos indirectos (N2===INDIR)
+        if(n0==='R+'&&n1==='Otros Ingresos'&&n2===INDIR){
+          CANALES.forEach(c=>res[c].oi+=va*pLoc*pctU[c]); return;
+        }
+        if(n0!=='R-') return;
+
+        // Producción (N2===INDIR) — prorr. por TODOS los canales
+        if(PE_PROD.includes(n1)&&n2===INDIR){
+          CANALES.forEach(c=>res[c].prod+=-va*pLoc*pctU[c]); return;
+        }
+        // Log / Mkt / Imp (N2===INDIR) — prorr. por TODOS los canales (same as prod)
+        if(n1==='Costos Logisticos (6)'&&n2===INDIR){
+          CANALES.forEach(c=>res[c].indir+=-va*pLoc*pctU[c]); return;
+        }
+        if(n1==='Costos Marketing y Publicidad (7)'&&n2===INDIR){
+          CANALES.forEach(c=>res[c].indir+=-va*pLoc*pctU[c]); return;
+        }
+        if(n1==='Costos Impositivos'&&n2===INDIR){
+          CANALES.forEach(c=>res[c].indir+=-va*pLoc*pctU[c]); return;
+        }
+
+        // Costos directos del local (N2_LOC[n2]===loc, N2!==INDIR)
+        if(n2!==INDIR&&N2_LOC[n2]===loc){
+          if(n3==='DELIVERY'){res['Delivery'].dir_del+=-va; return;}
+          if(n3==='PY'){res['PY'].dir_py+=-va; return;}
+          if(n3==='MARKETING DIRECTO'){res['PY'].mkt_dir+=-va; return;}
+          // CV
+          if(n2.startsWith('CV')){CANALES.forEach(c=>res[c].cv+=-va*pctU[c]); return;}
+          // Resto costos locales (Costos Locales, sueldos, etc.)
+          CANALES.forEach(c=>res[c].coml_loc+=-va*pctU[c]); return;
+        }
+      });
+    });
+  });
+
+  // ROP per canal
+  CANALES.forEach(c=>{
+    const r=res[c];
+    r.rop=r.ventas+r.oi-r.prod-r.cv-r.coml_loc-r.dir_del-r.dir_py-r.mkt_dir-r.indir;
+  });
+  const tot={};
+  ['ventas','oi','prod','cv','coml_loc','dir_del','dir_py','mkt_dir','indir','rop'].forEach(k=>{
+    tot[k]=CANALES.reduce((s,c)=>s+res[c][k],0);
+  });
+  const vtot=tot.ventas||1;
+
+  // ── Table ─────────────────────────────────────────────────────
+  const COL=110, PCT=40;
+  const NCOLS=1+CANALES.length*2+2;
+  const tableW=200+CANALES.length*(COL+PCT)+COL+PCT;
+  const uid=++_uid;
+
+  const thC=txt=>`<th style="position:sticky;left:0;top:0;background:var(--sur);z-index:4;text-align:left;font-size:9px;font-weight:500;color:var(--mut);padding:5px 8px;width:200px;min-width:200px">${txt}</th>`;
+  const thV=(txt,color='',w=COL)=>`<th style="position:sticky;top:0;z-index:1;background:var(--sur);text-align:right;font-size:9px;font-weight:500;color:${color||'var(--mut)'};padding:5px 6px;width:${w}px;min-width:${w}px">${txt}</th>`;
+
+  const mkTR=(concept,vals,opts={})=>{
+    const{bold,color,dim,gap,indent}=opts;
+    if(gap) return `<tr><td colspan="${NCOLS}" style="height:4px;background:var(--brd2);padding:0;border:none"></td></tr>`;
+    const fs=bold?'12px':'11px'; const fw=bold?'font-weight:600;':'';
+    const bg=dim?'background:rgba(0,0,0,.13)':'';
+    return `<tr style="${bg}">
+      <td style="position:sticky;left:0;background:${dim?'rgba(0,0,0,.13)':'var(--bg)'};z-index:2;font-size:${fs};${fw}${color?'color:'+color+';':''}${indent?'padding-left:26px;':''}padding:5px 8px">${concept}</td>
+      ${vals.map(({v,base})=>`
+        <td style="text-align:right;font-size:${fs};padding:5px 6px;${v<0?'color:var(--red)':''}">${fv(v)}</td>
+        <td style="text-align:right;font-size:9px;color:var(--mut);padding:5px 3px">${pc(v,base)}</td>`).join('')}
+    </tr>`;
+  };
+
+  const rv=(key,negate=false,onlyCanal=null)=>
+    [...CANALES.map(c=>({
+      v:(negate?-1:1)*(onlyCanal&&onlyCanal!==c?0:res[c][key]),
+      base:res[c].ventas||1})),
+     {v:(negate?-1:1)*(onlyCanal
+       ?CANALES.reduce((s,c)=>s+(onlyCanal===c?res[c][key]:0),0)
+       :tot[key]),
+      base:vtot}];
+
+  const rvSum=(keys,negate=false,onlyCanal=null)=>
+    [...CANALES.map(c=>({
+      v:(negate?-1:1)*(onlyCanal&&onlyCanal!==c?0:keys.reduce((s,k)=>s+res[c][k],0)),
+      base:res[c].ventas||1})),
+     {v:(negate?-1:1)*keys.reduce((s,k)=>s+(onlyCanal?CANALES.reduce((ss,c)=>ss+(onlyCanal===c?res[c][k]:0),0):tot[k]),0),
+      base:vtot}];
+
+  document.getElementById(targetId).innerHTML=`
+  <style>
+    #lcc-${uid}{overflow-x:auto;scrollbar-width:thin;width:100%}
+    #lcc-${uid}::-webkit-scrollbar{height:6px}
+    #lcc-${uid}::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:3px}
+    #lcc-${uid} table{border-collapse:collapse;table-layout:fixed;width:${tableW}px}
+    #lcc-${uid} td,#lcc-${uid} th{border-bottom:0.5px solid var(--brd);white-space:nowrap;box-sizing:border-box}
+    #lcc-${uid} tr:hover td{background:rgba(255,255,255,.03)}
+  </style>
+  <div class="blk full">
+    <div class="blk-hdr">
+      <span class="bdg bdg-pe">PE</span>
+      <h1 style="font-family:var(--fs);font-size:15px;font-weight:600">P&L PE <em style="color:var(--pe)">Local por Canal</em></h1>
+      <p class="hdr-sub">Mostrador · Delivery · PY &nbsp;·&nbsp; Locales: ${LOCS.join(', ')}</p>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 140px 140px;font-size:10px">
-      <div style="padding:5px 12px;color:var(--mut)">Concepto</div>
-      <div style="padding:5px 8px;text-align:right;color:var(--mut)">Importe exacto</div>
-      <div style="padding:5px 8px;text-align:right;color:var(--mut)">Reporte</div>
+    <div id="lcc-${uid}">
+      <table>
+        <thead><tr>
+          ${thC('CONCEPTO')}
+          ${CANALES.map(c=>`${thV(c,CC[c])}${thV('%Vta','',PCT)}`).join('')}
+          ${thV('Total','var(--gold)')}${thV('%Vta','',PCT)}
+        </tr></thead>
+        <tbody>
+          ${mkTR('Ventas',rv('ventas'),{bold:true,color:'var(--gold)'})}
+          ${tot.oi?mkTR('+ Otros Ingresos (prorr.)',rv('oi'),{indent:true}):''}
+          ${mkTR('- Costo Producción (prorr.)',rv('prod',true),{indent:true})}
+          ${mkTR('Resultado Bruto',[...CANALES.map(c=>({v:res[c].ventas+res[c].oi-res[c].prod,base:res[c].ventas||1})),{v:tot.ventas+tot.oi-tot.prod,base:vtot}],{bold:true})}
+          ${mkTR('',null,{gap:true})}
+          ${mkTR('Costos Directos',rvSum(['dir_del','dir_py','mkt_dir'],true),{color:'var(--red)'})}
+          ${mkTR('- Delivery',rv('dir_del',true,'Delivery'),{indent:true,dim:true})}
+          ${mkTR('- PY',rv('dir_py',true,'PY'),{indent:true,dim:true})}
+          ${mkTR('- Marketing Directo (PYA)',rv('mkt_dir',true,'PY'),{indent:true,dim:true})}
+          ${mkTR('Costos Indirectos (prorr. unid)',rvSum(['cv','coml_loc','indir'],true),{color:'var(--red)'})}
+          ${mkTR('- Costo de Venta (CV)',rv('cv',true),{indent:true,dim:true})}
+          ${mkTR('- Costos Locales (prorr.)',rv('coml_loc',true),{indent:true,dim:true})}
+          ${mkTR('- Log. + Mkt + Imp. (prorr.)',rv('indir',true),{indent:true,dim:true})}
+          ${mkTR('',null,{gap:true})}
+          ${mkTR('Resultado Operativo',rv('rop'),{bold:true,color:'var(--grn)'})}
+        </tbody>
+      </table>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 140px 140px;font-size:10px;border-top:1px solid var(--brd)">
-      <div style="padding:5px 12px;color:var(--pe)">∑ cuentas R+/R− Planeta</div>
-      <div style="padding:5px 8px;text-align:right;font-variant-numeric:tabular-nums">${fmtExact(pe_raw)}</div>
-      <div style="padding:5px 8px;text-align:right;color:var(--mut)">—</div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 140px 140px;font-size:10px;border-top:1px solid var(--brd)">
-      <div style="padding:5px 12px;color:var(--jos)">∑ cuentas R+/R− Joselito</div>
-      <div style="padding:5px 8px;text-align:right;font-variant-numeric:tabular-nums">${fmtExact(jos_raw)}</div>
-      <div style="padding:5px 8px;text-align:right;color:var(--mut)">—</div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 140px 140px;font-size:10px;border-top:1px solid var(--brd);font-weight:500">
-      <div style="padding:5px 12px;color:var(--gold)">Total (suma directa)</div>
-      <div style="padding:5px 8px;text-align:right;font-variant-numeric:tabular-nums;color:var(--gold)">${fmtExact(total_raw)}</div>
-      <div style="padding:5px 8px;text-align:right;font-variant-numeric:tabular-nums;color:var(--gold)">${fmtExact(res_fin)}</div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 140px 140px;font-size:10px;border-top:2px solid var(--brd2);background:rgba(0,0,0,.15)">
-      <div style="padding:6px 12px;color:${diffColor};font-weight:500">${diffIcon} Diferencia</div>
-      <div style="padding:6px 8px;text-align:right;color:${diffColor};font-weight:500;font-variant-numeric:tabular-nums">${fmtExact(diff)}</div>
-      <div style="padding:6px 8px;text-align:right;font-size:9px;color:var(--mut)">${diffAbs<1?'Cuadre exacto':diffAbs<100?'Diferencia de centavos (redondeo)':'Revisar clasificación'}</div>
+    <div style="padding:6px 10px;font-size:8px;color:var(--mut);border-top:1px solid var(--brd)">
+      Ventas: % nivel terciario (Unidades PE) · Prod/Log/Mkt/Imp: prorr. por unidades totales (mismo criterio que R3) · CV y Costos Locales: prorr. por unidades del local · Delivery y PY: costos directos N3
     </div>
   </div>`;
 }
 
-function consBlock(vt,pe_rop,jos_rop,rop,p_rop,adm_lines,adm_tot,p_adm,res_ai,p_resai,int_tot,p_int,res_fin,p_resfin,pe_int,jos_int,pe_fci,ps,p_vt,D,pp_rop,jp_rop,jos_fci){
-  const ropVP=vp(rop,p_rop), admVP=vp(adm_tot,p_adm);
-  const aiVP=vp(res_ai,p_resai), finVP=vp(res_fin,p_resfin);
-  const admRows=adm_lines.map(({label,pv,jv,tot,projV,pe_n1,jos_n1})=>{
-    if(!tot) return '';
-    const vv=vp(tot,projV);
-    const dRows=adminDetailRows(pv,jv,pe_n1,jos_n1,ps,vt);
-    const inner=`<div class="rc dim"><em class="ti">▶</em>${label}</div>
-      <div class="rv neg">-${fmt(tot)}</div><div class="rp">${pct(-tot,vt)}</div>
-      <div class="rv proy neg">${projV?'-'+fmt(projV):'—'}</div>
-      <div class="rv proy" style="font-size:10px">${projV?ppct(projV,p_vt):'—'}</div>
-      <div class="rv var-${vv.c}"><span class="vp ${vv.c}">${vv.t}</span></div>`;
-    return expRow('ind',inner,dRows,'xgold');
-  }).join('');
 
-  // Interest detail
-  const intRows=[
-    ...Object.entries(gcDetail(D.pe,ps,PE_INT)).map(([k,v])=>`<div class="r d1" style="${COLS5}"><div class="rc" style="padding-left:28px;color:var(--pe)">PE — ${k}</div><div class="rv neg" style="font-size:9px">-${fmt(v)}</div><div class="rp" style="font-size:9px">${pct(v,vt)}</div><div class="rv proy">—</div><div class="rv">—</div></div>`),
-    pe_fci>0?`<div class="r d1" style="${COLS5}"><div class="rc" style="padding-left:28px;color:var(--pe)">PE — Ing. FCI (neteado)</div><div class="rv pos" style="font-size:9px">+${fmt(pe_fci)}</div><div class="rp" style="font-size:9px">${pct(pe_fci,vt)}</div><div class="rv proy">—</div><div class="rv">—</div></div>`:'',
-    ...Object.entries(gcDetail(D.jos,ps,JOS_INT)).map(([k,v])=>`<div class="r d1" style="${COLS5}"><div class="rc" style="padding-left:28px;color:var(--jos)">JOS — ${k}</div><div class="rv neg" style="font-size:9px">-${fmt(v)}</div><div class="rp" style="font-size:9px">${pct(v,vt)}</div><div class="rv proy">—</div><div class="rv">—</div></div>`),
-  ].join('');
-  const intVP=vp(int_tot,p_int);
-  const intInner=`<div class="rc dim"><em class="ti">▶</em>Intereses financieros (neto)</div>
-    <div class="rv neg">-${fmt(int_tot)}</div><div class="rp">${pct(-int_tot,vt)}</div>
-    <div class="rv proy neg">${p_int?'-'+fmt(p_int):'—'}</div>
-    <div class="rv proy" style="font-size:10px">${p_int?ppct(p_int,p_vt):'—'}</div>
-    <div class="rv var-${intVP.c}"><span class="vp ${intVP.c}">${intVP.t}</span></div>`;
-
-  return `<div class="blk full"><div class="blk-hdr"><span class="blk-ttl">Consolidado PE + JOS</span><span class="bdg bdg-cons">CONSOLIDADO</span></div>
-    ${shRow('RESULTADO OPERATIVO CONSOLIDADO','var(--gold)')}
-    <div class="r" style="${COLS5}"><div class="rc">Resultado Operativo PE</div><div class="rv ${pe_rop<0?'neg':''} pe-c">${fmt(pe_rop)}</div><div class="rp">${pct(pe_rop,vt)}</div><div class="rv proy ${pp_rop<0?'neg':''}">${pp_rop?fmt(pp_rop):'—'}</div><div class="rv proy" style="font-size:10px">${pp_rop?ppct(pp_rop,p_vt):'—'}</div><div class="rv var-${vp(pe_rop,pp_rop).c}"><span class="vp ${vp(pe_rop,pp_rop).c}">${pp_rop?vp(pe_rop,pp_rop).t:'—'}</span></div></div>
-    <div class="r" style="${COLS5}"><div class="rc">Resultado Operativo JOS</div><div class="rv ${jos_rop<0?'neg':''} jos-c">${fmt(jos_rop)}</div><div class="rp">${pct(jos_rop,vt)}</div><div class="rv proy ${jp_rop<0?'neg':''}">${jp_rop?fmt(jp_rop):'—'}</div><div class="rv proy" style="font-size:10px">${jp_rop?ppct(jp_rop,p_vt):'—'}</div><div class="rv var-${vp(jos_rop,jp_rop).c}"><span class="vp ${vp(jos_rop,jp_rop).c}">${jp_rop?vp(jos_rop,jp_rop).t:'—'}</span></div></div>
-    <div class="r tot" style="${COLS5}"><div class="rc" style="font-weight:500">Resultado Operativo PE + JOS</div><div class="rv ${rop<0?'neg':''} gold-c">${fmt(rop)}</div><div class="rp">${pct(rop,vt)}</div><div class="rv proy">${p_rop?fmt(p_rop):'—'}</div><div class="rv proy" style="font-size:10px">${p_rop?ppct(p_rop,p_vt):'—'}</div><div class="rv var-${ropVP.c}"><span class="vp ${ropVP.c}">${ropVP.t}</span></div></div>
-    <div class="gap"></div>
-    ${shRow('COSTOS DE ADMINISTRACIÓN (8)','var(--red)')}
-    ${admRows}
-    <div class="r tot" style="${COLS5}"><div class="rc" style="color:var(--red)">Total Costos Adm.</div><div class="rv neg">-${fmt(adm_tot)}</div><div class="rp">${pct(-adm_tot,vt)}</div><div class="rv proy neg">${p_adm?'-'+fmt(p_adm):'—'}</div><div class="rv proy" style="font-size:10px">${p_adm?ppct(p_adm,p_vt):'—'}</div><div class="rv var-${admVP.c}"><span class="vp ${admVP.c}">${admVP.t}</span></div></div>
-    <div class="gap"></div>
-    <div class="r gt-cons" style="${COLS5}"><div class="rc">Resultado Neto antes de Intereses</div><div class="rv ${res_ai<0?'neg':'pos'} gold-c">${fmt(res_ai)}</div><div class="rp">${pct(res_ai,vt)}</div><div class="rv proy">${p_resai?fmt(p_resai):'—'}</div><div class="rv proy" style="font-size:10px">${p_resai?ppct(p_resai,p_vt):'—'}</div><div class="rv var-${aiVP.c}"><span class="vp ${aiVP.c}">${aiVP.t}</span></div></div>
-    <div class="gap"></div>
-    ${shRow('INTERESES E INGRESOS FINANCIEROS')}
-    ${expRow('ind',intInner,intRows,'xgold')}
-    <div class="gap"></div>
-    <div class="r gt-fin" style="${COLS5}"><div class="rc">RESULTADO NETO</div><div class="rv big ${res_fin<0?'neg':'pos'} gold-c">${fmt(res_fin)}</div><div class="rp">${pct(res_fin,vt)}</div><div class="rv proy">${p_resfin?fmt(p_resfin):'—'}</div><div class="rv proy" style="font-size:10px">${p_resfin?ppct(p_resfin,p_vt):'—'}</div><div class="rv var-${finVP.c}"><span class="vp ${finVP.c}">${finVP.t}</span></div></div>
-    <div style="padding:5px 10px;font-size:8px;color:var(--mut);border-top:1px solid var(--brd)">▶ Hacé clic para expandir · % sobre ingresos totales consolidados</div>
-    ${controlBlock(ps,res_fin,D)}
-  </div>`;
-}
-
-// ════════════════════════════════════════════════════════════════
-// RENDER P&L POR U.N.
-// ════════════════════════════════════════════════════════════════
 function renderUN(ps, targetId='main-un') {
   const pe=D.pe, units=D.units;
   // Unit weights
@@ -1464,15 +2208,16 @@ function ropControlBar(actual, label){
   const color = ok ? 'var(--grn)' : warn ? 'var(--gold)' : 'var(--red)';
   const icon  = ok ? '✓' : warn ? '≈' : '⚠';
   const fmtS  = v => { const s=Math.abs(v)<1000?'0':(Math.abs(v)/1e6).toFixed(2)+'M'; return (v<0?'-':v>0?'+':'')+s; };
+  const ropLabel = isJOS ? 'ROP JOS' : 'ROP PE';
   return `<div style="margin-top:12px;border:1px solid var(--brd2);border-radius:2px;
     background:rgba(0,0,0,.2);padding:0">
     <div style="padding:5px 12px;font-size:8px;letter-spacing:.1em;text-transform:uppercase;
       color:var(--mut);font-weight:600;border-bottom:1px solid var(--brd)">
-      Control — Resultado Operativo PE
+      Control — Resultado Operativo ${isJOS?'JOS':'PE'}
     </div>
     <div style="display:grid;grid-template-columns:1fr 140px 140px 100px;
       font-size:10px;padding:8px 12px;gap:4px;align-items:center">
-      <div style="color:var(--mut)">ROP PE (Reporte 1)</div>
+      <div style="color:var(--mut)">${ropLabel} (P&L ${isJOS?'JOS':'PE'} + JOS)</div>
       <div style="text-align:right;font-variant-numeric:tabular-nums;color:var(--gold);font-weight:500">${fmt(ref)}</div>
       <div></div><div></div>
       <div style="color:var(--mut)">${label}</div>
@@ -1498,8 +2243,8 @@ function showPage(id){
 }
 
 // ── SPLIT SCREEN ──────────────────────────────────────────────────
-const SPLIT_ACTIVE = {pl:false, un:false, loc:false, jos_un:false};
-const PANEL_B_PG = {pl:'plb', un:'unb', loc:'locb', jos_un:'jos_unb'};
+const SPLIT_ACTIVE = {ctx:false, evol:false, pl:false, loc_canal:false, un:false, loc:false, jos_un:false};
+const PANEL_B_PG = {ctx:'ctx', evol:'evol', pl:'plb', loc_canal:'loc_canal', un:'unb', loc:'locb', jos_un:'jos_unb'};
 
 function toggleSplit(pg){
   SPLIT_ACTIVE[pg] = !SPLIT_ACTIVE[pg];
@@ -1566,6 +2311,7 @@ function processExcel(wb){
       map[n]={n0:String(r[2]||'').replace(/'/g,'').trim(),
               n1:String(r[3]||'').replace(/'/g,'').trim().replace(/  +/g,' '),
               n2:String(r[4]||'').replace(/'/g,'').trim().replace(/  +/g,' '),
+              n3:String(r[5]||'').replace(/'/g,'').trim().replace(/  +/g,' '),
               deno:String(r[1]||'').replace(/'/g,'').trim()};
     }
     return map;
@@ -1594,7 +2340,7 @@ function processExcel(wb){
       if(!v)continue;
       const cl=clMap[nro];if(!cl||!cl.n0)continue;
       if(cl.n0!=='R+'&&cl.n0!=='R-')continue;
-      out.push({p,n0:cl.n0,n1:cl.n1,n2:cl.n2,nro,deno:cl.deno,va:Math.round(v*100)/100});
+      out.push({p,n0:cl.n0,n1:cl.n1,n2:cl.n2,n3:cl.n3||'',nro,deno:cl.deno,va:Math.round(v*100)/100});
     }
     return out;
   };
@@ -1619,9 +2365,14 @@ function processExcel(wb){
     const out=[];
     for(let i=1;i<rows.length;i++){
       const r=rows[i];if(!r||r[0]==null)continue;
-      const p=Number(r[0]),u=Number(r[4])||0;
-      if(!p||!u)continue;
-      out.push({p,un_p:String(r[1]||'').trim(),un_s:String(r[2]||'').trim(),u});
+      const p=Number(r[0]);
+      const n1=String(r[1]||'').replace(/'/g,'').trim();
+      const n2=String(r[2]||'').replace(/'/g,'').trim();
+      const n3=String(r[3]||'').replace(/'/g,'').trim();
+      const u=Number(r[4])||0;
+      const pct=Number(r[5])||0;
+      if(!p)continue;
+      out.push({p,n1,n2,n3,units:u,pct,un_p:n1,un_s:n2,u});
     }
     return out;
   };
@@ -1635,12 +2386,61 @@ function processExcel(wb){
     units: loadUnits('Unidades PE'),
     proy_pe:  loadProy('ER proyectado PE'),
     proy_jos: loadProy('ER proyectado JOS'),
+    units_jos: (()=>{
+      const ws=wb.Sheets['Unidades JOS']; if(!ws) return [];
+      const rows=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:null});
+      const out=[];
+      rows.slice(1).forEach(r=>{
+        if(!r[0]||!r[1]||r[2]==null) return;
+        const p=parseInt(String(r[0]).replace(/'/g,'').trim());
+        const canal=String(r[1]).replace(/'/g,'').trim();
+        const kilos=parseFloat(String(r[2]).replace(/'/g,'').trim())||0;
+        if(p&&canal&&kilos) out.push({p,canal,kilos});
+      });
+      return out;
+    })(),
+    apertura_jos: (()=>{
+      const ws=wb.Sheets['Apertura Ventas Mayoristas']; if(!ws) return [];
+      const rows=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:null});
+      const out=[];
+      rows.slice(1).forEach(r=>{
+        if(!r[0]||!r[1]||r[2]==null) return;
+        const p=parseInt(String(r[0]).replace(/'/g,'').trim());
+        const canal=String(r[1]).replace(/'/g,'').trim();
+        const importe=parseFloat(String(r[2]).replace(/'/g,'').trim())||0;
+        if(p&&canal&&importe) out.push({p,canal,importe});
+      });
+      return out;
+    })(),
   };
 }
 
 // ════════════════════════════════════════════════════════════════
 // BOOT — show upload zone on start
 // ════════════════════════════════════════════════════════════════
+// ── Local selector for PE Local por Canal ────────────────────────
+const LOC_CANAL_LOCALES = ['Lamadrid','Zelarrayan','Monte Hermoso','Punta Alta'];
+let SEL_LOCALES_CANAL = new Set(['Lamadrid','Zelarrayan','Monte Hermoso','Punta Alta']);
+function buildLocalPills(){
+  const cont=document.getElementById('loc_canal-local-pills');
+  if(!cont) return;
+  // keep label span
+  cont.innerHTML='<span style="font-size:9px;color:var(--mut);letter-spacing:.06em">LOCAL:</span>';
+  LOC_CANAL_LOCALES.forEach(loc=>{
+    const on=SEL_LOCALES_CANAL.has(loc);
+    const btn=document.createElement('button');
+    btn.className='pill'+(on?' on':'');
+    btn.textContent=loc;
+    btn.onclick=()=>{
+      if(SEL_LOCALES_CANAL.has(loc)) SEL_LOCALES_CANAL.delete(loc);
+      else SEL_LOCALES_CANAL.add(loc);
+      buildLocalPills();
+      if(document.getElementById('page-loc_canal').classList.contains('on'))
+        refresh('loc_canal');
+    };
+    cont.appendChild(btn);
+  });
+}
 showUpload();
 </script>
 </body>
