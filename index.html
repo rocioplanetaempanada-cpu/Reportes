@@ -1024,7 +1024,7 @@ function renderEVOL(ps, targetId='main-evol'){
     const jos_c = gcM(jos,p,JOS_COML);
     const vt=pe_v+jos_v;
     const prod=pe_p+jos_p, coml=pe_c+jos_c;
-    const rb=vt-prod-coml, rop=rb;
+    const rb=vt-prod, rop=rb-coml;
     let adm=0;
     const admLines=ADMIN_LINES.map(([lbl,pe_n1,jos_n1,prc,useMix])=>{
       const pv=useMix?gcMixM(pe,p,pe_n1[0]):gcM(pe,p,pe_n1);
